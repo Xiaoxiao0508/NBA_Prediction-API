@@ -23,14 +23,19 @@ namespace WebApi.Controllers
 
         // GET: api/Player
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Player>>> GetPlayers()
+        public async Task<ActionResult<IEnumerable<Player>>> GetPlayers([FromQuery] PaginationFilter filter)
         {
-        //   var player=await _context.Player.ToListAsync();
-          
-    // var player = await _context.Player.Where(p=> p.SEASON == sEASON,p.PLAYER_ID=pLAYER_ID).FirstOrDefaultAsync();
+       
             // return await _context.Player.ToListAsync();
-                var player = await _context.Player.FirstOrDefaultAsync();
-             return Ok(new Response<Player>(player));
+            //     var player = await _context.Player.FirstOrDefaultAsync();
+            //  return Ok(new Response<Player>(player));
+             var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
+             var pagedData = await _context.Player
+            .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+            .Take(validFilter.PageSize)
+            .ToListAsync();
+            var totalRecords = await _context.Player.CountAsync();
+            return Ok(new PageResponse<List<Player>>(pagedData, validFilter.PageNumber, validFilter.PageSize));
         
         }
 
