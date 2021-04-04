@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "rLQf7F7SKbbwPONmBqcxf2jWe9nu+x5+5wj2h+7u5aCU+t19+9SiXdrQq9NPKWL1jNTq6sJMx02/YVgAMI/6Yg==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\cxxme\\source\\NBA_WebApi\\WebApi.Models\\WebApi.Models.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\cxxme\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512"
+  ],
+  "logs": []
+}
