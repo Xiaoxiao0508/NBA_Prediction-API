@@ -7,18 +7,20 @@ namespace WebApi.Models
     public class Response<T>
     {
         public Response()
-    {
-    }
-    public Response(T data)
-    {
-        Succeeded = true;
-        Message = string.Empty;
-        Errors = null;
+        {
+        }
+  
+        public T Data { get; set; }
+        public bool Succeeded { get; set; }
+        public string[] Errors { get; set; }
+        public string Message { get; set; }
+
+        public Response(T data)
+        {
         Data = data;
-    }
-    public T Data { get; set; }
-    public bool Succeeded { get; set; }
-    public string[] Errors { get; set; }
-    public string Message { get; set; }
+        Succeeded = true;
+        Errors = null;
+        Message = string.Empty;
+        }
     }
 }

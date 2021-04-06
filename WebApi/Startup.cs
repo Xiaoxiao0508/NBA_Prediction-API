@@ -30,6 +30,7 @@ namespace WebApi
         {
 
             services.AddControllers();
+            // Register the DbContext with dependency injection container/Add DbContext class as a service to the API,Configure the connection details of the database
             services.AddDbContext<NBA_DBContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddSwaggerGen(c =>
             {

@@ -25,34 +25,43 @@ namespace WebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Player>>> GetPlayers([FromQuery] PaginationFilter filter)
         {
-       
-            // return await _context.Player.ToListAsync();
-            //     var player = await _context.Player.FirstOrDefaultAsync();
-            //  return Ok(new Response<Player>(player));
              var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
              var pagedData = await _context.Player
             .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
             .Take(validFilter.PageSize)
             .ToListAsync();
             var totalRecords = await _context.Player.CountAsync();
-            return Ok(new PageResponse<List<Player>>(pagedData, validFilter.PageNumber, validFilter.PageSize));
+            // return Ok(new PageResponse<List<Player>>(pagedData, validFilter.PageNumber, validFilter.PageSize));
+              return Ok(new Response<List<Player>>(pagedData));
         
         }
 
         // GET: api/Player/5
-        // [HttpGet("{PLAYER_NAME}")]
-        // public async Task<ActionResult<Player>> GetPlayer(string PLAYER_NAME)
-        // {
-        //     var player = await _context.Players.FindAsync(PLAYER_NAME);
+        [HttpGet("{search}")]
+        public async Task<ActionResult<Player>> GetPlayer(string searchstring)
+        {
+            var player = await _context.Player.FirstOrDefaultAsync(p=>EF.Functions.Like(p.FIRSTNAME, "searchstring%")||EF.Functions.Like(p.FIRSTNAME, "searchstring%"));
 
-        //     if (player == null)
-        //     {
-        //         return NotFound();
-        //     }
+            if (player == null)
+            {
+                return NotFound();
+            }
 
-        //     return player;
-        // }
+            return player;
+        }
+//  GET: api/Player/5
+//         [HttpGet("{PLAYER_NAME}")]
+//         public async Task<ActionResult<Player>> GetPlayer(string PLAYER_NAME)
+//         {
+//             var player = await _context.Players.FindAsync(PLAYER_NAME);
 
+//             if (player == null)
+//             {
+//                 return NotFound();
+//             }
+
+//             return player;
+//         }
         // PUT: api/Player/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         // [HttpPut("{id}")]
@@ -85,7 +94,7 @@ namespace WebApi.Controllers
         // }
 
         // POST: api/Player
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+      
         // [HttpPost]
         // public async Task<ActionResult<Player>> PostPlayer(Player player)
         // {
