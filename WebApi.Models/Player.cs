@@ -1,5 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApi.Models
 {
@@ -67,56 +68,80 @@ namespace WebApi.Models
         public int GP { get; set; }
         [JsonProperty("W")]
         public int W { get; set; }
-
         [JsonProperty("L")]
         public int L { get; set; }
         [JsonProperty("W_PCT")]
+        [Column(TypeName = "decimal(5,3)")]
         public decimal W_PCT { get; set; }
         [JsonProperty("MINS")]
+        [Column(TypeName = "decimal(4,1)")]
         public decimal MINS { get; set; }
         [JsonProperty("FGM")]
+         [Column(TypeName = "decimal(4,1)")]
         public decimal FGM { get; set; }
         [JsonProperty("FGA")]
+         [Column(TypeName = "decimal(4,1)")]
         public decimal FGA { get; set; }
         [JsonProperty("FG_PCT")]
+         [Column(TypeName = "decimal(5,3)")]
         public decimal FG_PCT { get; set; }
         [JsonProperty("FG3M")]
+         [Column(TypeName = "decimal(3,1)")]
         public decimal FG3M { get; set; }
         [JsonProperty("FG3A")]
+         [Column(TypeName = "decimal(4,1)")]
         public decimal FG3A { get; set; }
         [JsonProperty("FG3_PCT")]
+        [Column(TypeName = "decimal(5,3)")]
         public decimal FG3_PCT { get; set; }
         [JsonProperty("FTM")]
+          [Column(TypeName = "decimal(4,1)")]
         public decimal FTM { get; set; }
         [JsonProperty("FTA")]
+          [Column(TypeName = "decimal(4,1)")]
         public decimal FTA { get; set; }
         [JsonProperty("FT_PCT")]
+           [Column(TypeName = "decimal(5,3)")]
         public decimal FT_PCT { get; set; }
         [JsonProperty("OREB")]
+          [Column(TypeName = "decimal(3,1)")]
         public decimal OREB { get; set; }
         [JsonProperty("DREB")]
+         [Column(TypeName = "decimal(4,1)")]
         public decimal DREB { get; set; }
         [JsonProperty("REB")]
+         [Column(TypeName = "decimal(4,1)")]
         public decimal REB { get; set; }
         [JsonProperty("AST")]
+         [Column(TypeName = "decimal(4,1)")]
         public decimal AST { get; set; }
         [JsonProperty("TOV")]
+         [Column(TypeName = "decimal(3,1)")]
+      
         public decimal TOV { get; set; }
         [JsonProperty("STL")]
+         [Column(TypeName = "decimal(3,1)")]
         public decimal STL { get; set; }
         [JsonProperty("BLK")]
+         [Column(TypeName = "decimal(3,1)")]
         public decimal BLK { get; set; }
         [JsonProperty("BLKA")]
+         [Column(TypeName = "decimal(3,1)")]
         public decimal BLKA { get; set; }
         [JsonProperty("PF")]
+         [Column(TypeName = "decimal(3,1)")]
         public decimal PF { get; set; }
         [JsonProperty("PFD")]
+         [Column(TypeName = "decimal(3,1)")]
         public decimal PFD { get; set; }
         [JsonProperty("PTS")]
+         [Column(TypeName = "decimal(4,1)")]
         public decimal PTS { get; set; }
         [JsonProperty("PLUS_MINUS")]
+         [Column(TypeName = "decimal(5,1)")]
         public decimal PLUS_MINUS { get; set; }
         [JsonProperty("NBA_FANTASY_PTS")]
+         [Column(TypeName = "decimal(4,1)")]
         public decimal NBA_FANTASY_PTS { get; set; }
 
     }

@@ -9,3 +9,6 @@ GO
 
 select * 
 from Team
+select *
+from Player
+where FIRSTNAME LIKE 'L%'

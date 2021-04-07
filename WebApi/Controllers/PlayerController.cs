@@ -36,18 +36,15 @@ namespace WebApi.Controllers
         
         }
 
-        // GET: api/Player/5
+        // GET: api/Player
         [HttpGet("{search}")]
-        public async Task<ActionResult<Player>> GetPlayer(string searchstring)
+        // public async Task<ActionResult<Player>> GetPlayer(string searchstring)
+        // {
+             public async Task<ActionResult<IEnumerable<Player>>> GetPlayer([FromQuery] string searchstring)
         {
-            var player = await _context.Player.FirstOrDefaultAsync(p=>EF.Functions.Like(p.FIRSTNAME, "searchstring%")||EF.Functions.Like(p.FIRSTNAME, "searchstring%"));
-
-            if (player == null)
-            {
-                return NotFound();
-            }
-
-            return player;
+            var searchResult = await _context.Player.Where(p=>EF.Functions.Like(p.FIRSTNAME, $"{searchstring}%")||EF.Functions.Like(p.LASTNAME, $"{searchstring}%")).ToListAsync();
+  
+            return  Ok(new Response<List<Player>>(searchResult));
         }
 //  GET: api/Player/5
 //         [HttpGet("{PLAYER_NAME}")]

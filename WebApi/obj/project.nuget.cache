@@ -1,9 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "5cM3iBM4KbFaBIX+l5SCE6l2HmjJBCtyLPOHEnKpiPt/QWqfQxF81H5J746QeUlLVwqLsSYF/vbKsWD7xm8N+A==",
+  "dgSpecHash": "IqVht4NnwePOI15K6YehOeyVvzIxblEu6wq8C0o7Zgbs11iEN8xNcmxA/B0EI0uKyMBw7d2w0Kb2zve0gEAWfg==",
   "success": true,
   "projectFilePath": "C:\\Users\\cxxme\\source\\NBA_WebApi\\WebApi\\WebApi.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\cxxme\\.nuget\\packages\\corecompat.system.componentmodel.attributes\\4.2.3-rg\\corecompat.system.componentmodel.attributes.4.2.3-rg.nupkg.sha512",
+    "C:\\Users\\cxxme\\.nuget\\packages\\corecompat.system.componentmodel.dataannotations\\4.2.3-r7\\corecompat.system.componentmodel.dataannotations.4.2.3-r7.nupkg.sha512",
+    "C:\\Users\\cxxme\\.nuget\\packages\\corecompat.system.componentmodel.design\\4.2.3-r3\\corecompat.system.componentmodel.design.4.2.3-r3.nupkg.sha512",
+    "C:\\Users\\cxxme\\.nuget\\packages\\entityframework\\7.0.0-beta4\\entityframework.7.0.0-beta4.nupkg.sha512",
+    "C:\\Users\\cxxme\\.nuget\\packages\\entityframework.commands\\7.0.0-beta4\\entityframework.commands.7.0.0-beta4.nupkg.sha512",
     "C:\\Users\\cxxme\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\cxxme\\.nuget\\packages\\microsoft.aspnetcore.html.abstractions\\2.2.0\\microsoft.aspnetcore.html.abstractions.2.2.0.nupkg.sha512",
     "C:\\Users\\cxxme\\.nuget\\packages\\microsoft.aspnetcore.razor\\2.2.0\\microsoft.aspnetcore.razor.2.2.0.nupkg.sha512",
@@ -134,5 +139,16 @@
     "C:\\Users\\cxxme\\.nuget\\packages\\system.xml.xmldocument\\4.3.0\\system.xml.xmldocument.4.3.0.nupkg.sha512",
     "C:\\Users\\cxxme\\.nuget\\packages\\system.xml.xmlserializer\\4.3.0\\system.xml.xmlserializer.4.3.0.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'EntityFramework.Commands 7.0.0-beta4' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework 'net5.0'. This package may not be fully compatible with your project.",
+      "libraryId": "EntityFramework.Commands",
+      "targetGraphs": [
+        "net5.0"
+      ]
+    }
+  ]
 }
