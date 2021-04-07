@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using WebApi.Models;
 using WebApi_DB;
 
+
 namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
@@ -27,6 +28,7 @@ namespace WebApi.Controllers
         {
              var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
              var pagedData = await _context.Player
+             .OrderBy(p => p.PLAYER_ID)  
             .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
             .Take(validFilter.PageSize)
             .ToListAsync();
@@ -38,9 +40,8 @@ namespace WebApi.Controllers
 
         // GET: api/Player
         [HttpGet("{search}")]
-        // public async Task<ActionResult<Player>> GetPlayer(string searchstring)
-        // {
-             public async Task<ActionResult<IEnumerable<Player>>> GetPlayer([FromQuery] string searchstring)
+        
+         public async Task<ActionResult<IEnumerable<Player>>> GetPlayer([FromQuery] string searchstring)
         {
             var searchResult = await _context.Player.Where(p=>EF.Functions.Like(p.FIRSTNAME, $"{searchstring}%")||EF.Functions.Like(p.LASTNAME, $"{searchstring}%")).ToListAsync();
   
