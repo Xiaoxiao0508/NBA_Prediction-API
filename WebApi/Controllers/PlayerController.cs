@@ -24,15 +24,15 @@ namespace WebApi.Controllers
 
         // GET: api/Player
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Player>>> GetPlayers([FromQuery] PaginationFilter filter)
+        public async Task<ActionResult<IEnumerable<Player>>> GetallPlayers([FromQuery] PaginationFilter filter)
         {
              var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
-             var pagedData = await _context.Player
-             .OrderBy(p => p.PLAYER_ID)  
+             var pagedData = await _context.allPlayers
+             //.OrderBy(p => p.PLAYER_ID)  
             .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
             .Take(validFilter.PageSize)
             .ToListAsync();
-            var totalRecords = await _context.Player.CountAsync();
+            var totalRecords = await _context.allPlayers.CountAsync();
             // return Ok(new PageResponse<List<Player>>(pagedData, validFilter.PageNumber, validFilter.PageSize));
               return Ok(new Response<List<Player>>(pagedData));
         
@@ -43,7 +43,8 @@ namespace WebApi.Controllers
         
          public async Task<ActionResult<IEnumerable<Player>>> GetPlayer([FromQuery] string searchstring)
         {
-            var searchResult = await _context.Player.Where(p=>EF.Functions.Like(p.FIRSTNAME, $"{searchstring}%")||EF.Functions.Like(p.LASTNAME, $"{searchstring}%")).ToListAsync();
+            
+            var searchResult = await _context.allPlayers.Where(p=>EF.Functions.Like(p.FIRSTNAME, $"{searchstring}%")||EF.Functions.Like(p.LASTNAME, $"{searchstring}%")||EF.Functions.Like(p.FIRSTNAME +" "+ p.LASTNAME,$"{searchstring}%")).ToListAsync();
   
             return  Ok(new Response<List<Player>>(searchResult));
         }

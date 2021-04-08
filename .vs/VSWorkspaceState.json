@@ -1,0 +1,11 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\WebApi",
+    "\\WebApi.Models",
+    "\\WebApi\\Controllers",
+    "\\WebApi_DB"
+  ],
+  "SelectedNode": "\\WebApi.Models\\Player.cs",
+  "PreviewInSolutionExplorer": false
+}

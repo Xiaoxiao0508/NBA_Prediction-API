@@ -7485,32 +7485,34 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\cxxme\\.nuget\\packages\\": {}
+    "C:\\Users\\dnadi\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\cxxme\\source\\NBA_WebApi\\WebApi\\WebApi.csproj",
+      "projectUniqueName": "C:\\Users\\dnadi\\Desktop\\APIs\\Version 2 api View\\NBA_API\\WebApi\\WebApi.csproj",
       "projectName": "WebApi",
-      "projectPath": "C:\\Users\\cxxme\\source\\NBA_WebApi\\WebApi\\WebApi.csproj",
-      "packagesPath": "C:\\Users\\cxxme\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\cxxme\\source\\NBA_WebApi\\WebApi\\obj\\",
+      "projectPath": "C:\\Users\\dnadi\\Desktop\\APIs\\Version 2 api View\\NBA_API\\WebApi\\WebApi.csproj",
+      "packagesPath": "C:\\Users\\dnadi\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\dnadi\\Desktop\\APIs\\Version 2 api View\\NBA_API\\WebApi\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\cxxme\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\dnadi\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net5.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net5.0": {
           "targetAlias": "net5.0",
           "projectReferences": {
-            "C:\\Users\\cxxme\\source\\NBA_WebApi\\WebApi_DB\\WebApi_DB.csproj": {
-              "projectPath": "C:\\Users\\cxxme\\source\\NBA_WebApi\\WebApi_DB\\WebApi_DB.csproj"
+            "C:\\Users\\dnadi\\Desktop\\APIs\\Version 2 api View\\NBA_API\\WebApi_DB\\WebApi_DB.csproj": {
+              "projectPath": "C:\\Users\\dnadi\\Desktop\\APIs\\Version 2 api View\\NBA_API\\WebApi_DB\\WebApi_DB.csproj"
             }
           }
         }

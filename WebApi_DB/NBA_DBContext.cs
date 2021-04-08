@@ -16,7 +16,7 @@ namespace WebApi_DB
         // the property name need to map the database table
         // A DbSet represents the collection of all entities in the context, or that can be queried from the database,
         //  of a given type. DbSet objects are created from a DbContext using the DbContext.Set method.
-        public DbSet<Player> Player { get; set; }
+        public DbSet<Player> allPlayers { get; set; }
 
         public DbSet<Team> Team{ get; set; }
         
@@ -24,9 +24,7 @@ namespace WebApi_DB
        // configure the composite key and other property name as a key in the following method
         protected override void OnModelCreating(ModelBuilder builder)
          {
-            builder.Entity<Player>().HasKey(p => new {
-            p.SEASON, p.PLAYER_ID
-            });
+            builder.Entity<Player>().HasNoKey();
             builder.Entity<Team>().HasKey(t => new {
              t.TeamName
             });
