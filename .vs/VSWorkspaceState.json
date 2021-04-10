@@ -6,6 +6,6 @@
     "\\WebApi\\Controllers",
     "\\WebApi_DB"
   ],
-  "SelectedNode": "\\WebApi.Models\\Player.cs",
+  "SelectedNode": "\\WebApi\\Controllers\\PlayerController.cs",
   "PreviewInSolutionExplorer": false
 }

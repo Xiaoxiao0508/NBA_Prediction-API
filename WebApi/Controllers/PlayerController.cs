@@ -54,9 +54,21 @@ namespace WebApi.Controllers
         public async Task<ActionResult<IEnumerable<Player>>> GetPlayer([FromQuery] string searchstring)
         {
 
-            var searchResult = await _context.allPlayers.Where(p => EF.Functions.Like(p.FIRSTNAME, $"{searchstring}%") || EF.Functions.Like(p.Lastname, $"{searchstring}%") || EF.Functions.Like(p.FIRSTNAME + " " + p.Lastname, $"{searchstring}%")).ToListAsync();
-           
-            return Ok(new Response<List<Player>>(searchResult, 0)); // zero is a place holder for now
+            // partial first name and partial lastname search or player initials.
+            string[]? splitString = searchstring?.Split(' ');
+
+            if (splitString?.Length == 2)
+            { 
+                var searchResult = await _context.allPlayers.Where(p=>EF.Functions.Like(p.FIRSTNAME, $"{splitString[0]}%") && EF.Functions.Like(p.Lastname, $"{splitString[1]}%")).ToListAsync();
+                return  Ok(new Response<List<Player>>(searchResult,0)); // zero is a placeholder for now
+            }
+            else
+            {
+                //Partial firstname + lastname search
+                var searchResult = await _context.allPlayers.Where(p=>EF.Functions.Like(p.FIRSTNAME, $"{searchstring}%")||EF.Functions.Like(p.Lastname, $"{searchstring}%")||EF.Functions.Like(p.FIRSTNAME +" "+ p.Lastname,$"{searchstring}%")).ToListAsync();
+
+                return  Ok(new Response<List<Player>>(searchResult,0)); // zero is a placeholder for now
+            }
         }
 
         // GET: api/Player/5
