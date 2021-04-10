@@ -42,8 +42,36 @@ namespace WebApi.Controllers
             return team;
         }
 
+        [HttpPost]
+        public async Task<bool> PostTeam([FromBody] Team team)
+        {
+            try
+            {
+                _context.Team.Add(team);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException e)
+            {
+                return false;
+
+            }
+
+            return true;
+        }
+
+        // POST: api/Team
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // [HttpPost]
+        // public async Task<ActionResult<Team>> PostTeam(Team team)
+        // {
+        //     _context.Teams.Add(team);
+        //     await _context.SaveChangesAsync();
+
+        //     return CreatedAtAction("GetTeam", new { id = team.Id }, team);
+        // }
+
         // PUT: api/Team/5
-       
+
         // [HttpPut("{id}")]
         // public async Task<IActionResult> PutTeam(int id, Team team)
         // {
@@ -71,17 +99,6 @@ namespace WebApi.Controllers
         //     }
 
         //     return NoContent();
-        // }
-
-        // // POST: api/Team
-        // // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        // [HttpPost]
-        // public async Task<ActionResult<Team>> PostTeam(Team team)
-        // {
-        //     _context.Teams.Add(team);
-        //     await _context.SaveChangesAsync();
-
-        //     return CreatedAtAction("GetTeam", new { id = team.Id }, team);
         // }
 
         // // DELETE: api/Team/5

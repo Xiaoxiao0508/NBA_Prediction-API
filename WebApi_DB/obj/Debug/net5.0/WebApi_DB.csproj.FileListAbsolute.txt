@@ -43,3 +43,18 @@ C:\Users\dnadi\Desktop\APIs\Version 2 api View\NBA_API\WebApi_DB\bin\Debug\net5.
 C:\Users\dnadi\Desktop\APIs\Version 2 api View\NBA_API\WebApi_DB\bin\Debug\net5.0\WebApi.Models.dll
 C:\Users\dnadi\Desktop\APIs\Version 2 api View\NBA_API\WebApi_DB\bin\Debug\net5.0\WebApi.Models.pdb
 C:\Users\dnadi\Desktop\APIs\Version 2 api View\NBA_API\WebApi_DB\obj\Debug\net5.0\WebApi_DB.csproj.CopyComplete
+C:\Users\User\Desktop\newRepoAPI\NBA_API\WebApi_DB\obj\Debug\net5.0\WebApi_DB.dll
+C:\Users\User\Desktop\newRepoAPI\NBA_API\WebApi_DB\obj\Debug\net5.0\ref\WebApi_DB.dll
+C:\Users\User\Desktop\newRepoAPI\NBA_API\WebApi_DB\obj\Debug\net5.0\WebApi_DB.pdb
+C:\Users\User\Desktop\newRepoAPI\NBA_API\WebApi_DB\bin\Debug\net5.0\WebApi_DB.deps.json
+C:\Users\User\Desktop\newRepoAPI\NBA_API\WebApi_DB\bin\Debug\net5.0\WebApi_DB.dll
+C:\Users\User\Desktop\newRepoAPI\NBA_API\WebApi_DB\bin\Debug\net5.0\ref\WebApi_DB.dll
+C:\Users\User\Desktop\newRepoAPI\NBA_API\WebApi_DB\bin\Debug\net5.0\WebApi_DB.pdb
+C:\Users\User\Desktop\newRepoAPI\NBA_API\WebApi_DB\bin\Debug\net5.0\WebApi.Models.dll
+C:\Users\User\Desktop\newRepoAPI\NBA_API\WebApi_DB\bin\Debug\net5.0\WebApi.Models.pdb
+C:\Users\User\Desktop\newRepoAPI\NBA_API\WebApi_DB\obj\Debug\net5.0\WebApi_DB.csprojAssemblyReference.cache
+C:\Users\User\Desktop\newRepoAPI\NBA_API\WebApi_DB\obj\Debug\net5.0\WebApi_DB.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\User\Desktop\newRepoAPI\NBA_API\WebApi_DB\obj\Debug\net5.0\WebApi_DB.AssemblyInfoInputs.cache
+C:\Users\User\Desktop\newRepoAPI\NBA_API\WebApi_DB\obj\Debug\net5.0\WebApi_DB.AssemblyInfo.cs
+C:\Users\User\Desktop\newRepoAPI\NBA_API\WebApi_DB\obj\Debug\net5.0\WebApi_DB.csproj.CoreCompileInputs.cache
+C:\Users\User\Desktop\newRepoAPI\NBA_API\WebApi_DB\obj\Debug\net5.0\WebApi_DB.csproj.CopyComplete

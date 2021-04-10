@@ -26,41 +26,54 @@ namespace WebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Player>>> GetallPlayers([FromQuery] PaginationFilter filter)
         {
-             var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
-             var pagedData = await _context.allPlayers
-             //.OrderBy(p => p.PLAYER_ID)  
+            var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
+            var pagedData = await _context.allPlayers
+            .OrderBy(p => p.FIRSTNAME)
             .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
             .Take(validFilter.PageSize)
             .ToListAsync();
+
             var totalRecords = await _context.allPlayers.CountAsync();
+            var pagesCount = (decimal)totalRecords / (decimal)filter.PageSize;
+
+            if((pagesCount % 1) != 0){
+              pagesCount = Decimal.ToInt32(pagesCount) ;
+              pagesCount += 1;
+            }
+
+
             // return Ok(new PageResponse<List<Player>>(pagedData, validFilter.PageNumber, validFilter.PageSize));
-              return Ok(new Response<List<Player>>(pagedData));
-        
+            return Ok(new Response<List<Player>>(pagedData, Decimal.ToInt32(pagesCount)));
+
         }
+
 
         // GET: api/Player
         [HttpGet("{search}")]
-        
-         public async Task<ActionResult<IEnumerable<Player>>> GetPlayer([FromQuery] string searchstring)
+
+        public async Task<ActionResult<IEnumerable<Player>>> GetPlayer([FromQuery] string searchstring)
         {
-            
-            var searchResult = await _context.allPlayers.Where(p=>EF.Functions.Like(p.FIRSTNAME, $"{searchstring}%")||EF.Functions.Like(p.LASTNAME, $"{searchstring}%")||EF.Functions.Like(p.FIRSTNAME +" "+ p.LASTNAME,$"{searchstring}%")).ToListAsync();
-  
-            return  Ok(new Response<List<Player>>(searchResult));
+
+            var searchResult = await _context.allPlayers.Where(p => EF.Functions.Like(p.FIRSTNAME, $"{searchstring}%") || EF.Functions.Like(p.Lastname, $"{searchstring}%") || EF.Functions.Like(p.FIRSTNAME + " " + p.Lastname, $"{searchstring}%")).ToListAsync();
+           
+            return Ok(new Response<List<Player>>(searchResult, 0)); // zero is a place holder for now
         }
-//  GET: api/Player/5
-//         [HttpGet("{PLAYER_NAME}")]
-//         public async Task<ActionResult<Player>> GetPlayer(string PLAYER_NAME)
-//         {
-//             var player = await _context.Players.FindAsync(PLAYER_NAME);
 
-//             if (player == null)
-//             {
-//                 return NotFound();
-//             }
+        // GET: api/Player/5
+        // [HttpGet("{PLAYER_NAME}")]
+        // public async Task<ActionResult<Player>> GetPlayer(string PLAYER_NAME)
+        // {
+        //     var player = await _context.Players.FindAsync(PLAYER_NAME);
 
-//             return player;
-//         }
+        //     if (player == null)
+        //     {
+        //         return NotFound();
+        //     }
+
+        //     return player;
+        // }
+
+
         // PUT: api/Player/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         // [HttpPut("{id}")]
@@ -93,7 +106,6 @@ namespace WebApi.Controllers
         // }
 
         // POST: api/Player
-      
         // [HttpPost]
         // public async Task<ActionResult<Player>> PostPlayer(Player player)
         // {

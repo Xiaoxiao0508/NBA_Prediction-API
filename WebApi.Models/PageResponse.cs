@@ -13,6 +13,7 @@ namespace WebApi.Models
         public int TotalRecords { get; set; }
         public Uri NextPage { get; set; }
         public Uri PreviousPage { get; set; }
+
         public PageResponse(T data, int pageNumber, int pageSize)
         {
             this.PageNumber = pageNumber;
@@ -20,7 +21,6 @@ namespace WebApi.Models
             this.Data = data;
             this.Message = null;
             this.Succeeded = true;
-            this.Errors = null;
         }
     }
 }

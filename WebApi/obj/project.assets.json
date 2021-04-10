@@ -7485,34 +7485,32 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\dnadi\\.nuget\\packages\\": {}
+    "C:\\Users\\User\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\dnadi\\Desktop\\APIs\\Version 2 api View\\NBA_API\\WebApi\\WebApi.csproj",
+      "projectUniqueName": "C:\\Users\\User\\Desktop\\newRepoAPI\\NBA_API\\WebApi\\WebApi.csproj",
       "projectName": "WebApi",
-      "projectPath": "C:\\Users\\dnadi\\Desktop\\APIs\\Version 2 api View\\NBA_API\\WebApi\\WebApi.csproj",
-      "packagesPath": "C:\\Users\\dnadi\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\dnadi\\Desktop\\APIs\\Version 2 api View\\NBA_API\\WebApi\\obj\\",
+      "projectPath": "C:\\Users\\User\\Desktop\\newRepoAPI\\NBA_API\\WebApi\\WebApi.csproj",
+      "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\User\\Desktop\\newRepoAPI\\NBA_API\\WebApi\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\dnadi\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net5.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net5.0": {
           "targetAlias": "net5.0",
           "projectReferences": {
-            "C:\\Users\\dnadi\\Desktop\\APIs\\Version 2 api View\\NBA_API\\WebApi_DB\\WebApi_DB.csproj": {
-              "projectPath": "C:\\Users\\dnadi\\Desktop\\APIs\\Version 2 api View\\NBA_API\\WebApi_DB\\WebApi_DB.csproj"
+            "C:\\Users\\User\\Desktop\\newRepoAPI\\NBA_API\\WebApi_DB\\WebApi_DB.csproj": {
+              "projectPath": "C:\\Users\\User\\Desktop\\newRepoAPI\\NBA_API\\WebApi_DB\\WebApi_DB.csproj"
             }
           }
         }
@@ -7576,7 +7574,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.201\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.102\\RuntimeIdentifierGraph.json"
       }
     }
   },
