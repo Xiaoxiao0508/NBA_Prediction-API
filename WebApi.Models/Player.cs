@@ -6,9 +6,6 @@ namespace WebApi.Models
 {
     public class Player
     {
-        [JsonProperty("player_id")]
-        public int player_id { get; set; }
-
         [JsonProperty("FIRSTNAME")]
         public string FIRSTNAME { get; set; }
 
@@ -124,9 +121,8 @@ namespace WebApi.Models
 
         }
 
-        public Player(int player_id, string fIRSTNAME, string lastname, int aGE, int gP, decimal mINS, decimal pLUS_MINUS, decimal aST, decimal bLK, decimal bLKA, decimal oREB, decimal dREB, decimal fG_PCT, decimal fG3_PCT, decimal fG3A, decimal fG3M, decimal fGA, decimal fGM, decimal fT_PCT, decimal fTA, decimal fTM, int w, int l, decimal w_PCT, decimal pF, decimal pFD, decimal rEB, decimal tOV, decimal sTL, decimal pTS)
+        public Player(string fIRSTNAME, string lastname, int aGE, int gP, decimal mINS, decimal pLUS_MINUS, decimal aST, decimal bLK, decimal bLKA, decimal oREB, decimal dREB, decimal fG_PCT, decimal fG3_PCT, decimal fG3A, decimal fG3M, decimal fGA, decimal fGM, decimal fT_PCT, decimal fTA, decimal fTM, int w, int l, decimal w_PCT, decimal pF, decimal pFD, decimal rEB, decimal tOV, decimal sTL, decimal pTS)
         {
-            this.player_id = player_id;
             this.FIRSTNAME = fIRSTNAME;
             this.Lastname = lastname;
             this.AGE = aGE;
