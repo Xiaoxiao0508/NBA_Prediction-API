@@ -3,7 +3,8 @@
     "",
     "\\WebApi",
     "\\WebApi.Models",
-    "\\WebApi\\Controllers"
+    "\\WebApi\\Controllers",
+    "\\WebApi_DB"
   ],
   "SelectedNode": "\\WebApi\\Controllers\\PlayerController.cs",
   "PreviewInSolutionExplorer": false

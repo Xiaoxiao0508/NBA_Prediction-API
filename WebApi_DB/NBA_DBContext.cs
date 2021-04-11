@@ -15,6 +15,8 @@ namespace WebApi_DB
 
         public DbSet<Team> Team { get; set; }
 
+        public DbSet<ColumnHeaders> columnHeaders { get; set; }
+
         public NBA_DBContext(DbContextOptions<NBA_DBContext> options) : base(options)
         {
 
@@ -30,6 +32,8 @@ namespace WebApi_DB
             {
                 t.TeamName
             });
+
+            builder.Entity<ColumnHeaders>().HasNoKey();
         }
 
     }

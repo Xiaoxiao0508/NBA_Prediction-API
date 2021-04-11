@@ -107,6 +107,17 @@ namespace WebApi.Controllers
             }
         }
 
+        //Get Column Headers
+        [HttpGet("headers")]
+
+        public async Task<ActionResult<IEnumerable<ColumnHeaders>>> GetHeaders()
+        {
+            var Data = await _context.columnHeaders
+                .ToListAsync();
+
+            return Ok(new Response<List<ColumnHeaders>>(Data));
+        }
+
         // GET: api/Player/5
         // [HttpGet("{PLAYER_NAME}")]
         // public async Task<ActionResult<Player>> GetPlayer(string PLAYER_NAME)

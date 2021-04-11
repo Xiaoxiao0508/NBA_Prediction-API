@@ -15,6 +15,11 @@ namespace WebApi.Models
 
         }
 
+        public Response(T data)
+        {
+            Data = data;
+        }
+
         public Response(T data , int pagesCount)
         {
             Data = data;
