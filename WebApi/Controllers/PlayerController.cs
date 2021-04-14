@@ -24,12 +24,15 @@ namespace WebApi.Controllers
 
         // GET: api/Player
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Player>>> GetallPlayers([FromQuery] PaginationFilter filter)
+        public async Task<ActionResult<IEnumerable<Player>>> GetallPlayers([FromQuery] PaginationFilter filter, string filstring)
         {
-            var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
+            var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize); 
+            // var res = typeof(AllPlayer).GetProperties()
+            //             .Select(property => property.Name)
+            //             .ToArray();
             var pagedData = await _context.allPlayers
-            .OrderBy(p => p.FIRSTNAME)
-            .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+            // .OrderBy()
+            .Skip((validFilter.PageNumber - 1) * validFilter.PageSize) 
             .Take(validFilter.PageSize)
             .ToListAsync();
 
@@ -40,11 +43,22 @@ namespace WebApi.Controllers
               pagesCount = Decimal.ToInt32(pagesCount) ;
               pagesCount += 1;
             }
+//  string procedure_AddGame = "[dbo].[ADD_GAME]";
+//             SqlConnection connection = new SqlConnection(this.connnectionString);
+//             connection.Open();
+//             using (SqlCommand command = new SqlCommand(procedure_AddGame, connection))
+//             {
+//                 command.CommandType = CommandType.StoredProcedure;
+//                 command.Parameters.Add(new SqlParameter("@UserName", playerchoice.name));
+//                 command.Parameters.Add(new SqlParameter("@GameStarted", DateTime.Now.ToString("MM/dd/yyyy HH:mm")));
+//                 command.Parameters.Add(new SqlParameter("@GameResult", gameresult.result));
+//                 command.Parameters.Add(new SqlParameter("@NumOfTurns", playerchoice.numberofrounds));
 
+//                 command.ExecuteNonQuery();
+//             }
 
             // return Ok(new PageResponse<List<Player>>(pagedData, validFilter.PageNumber, validFilter.PageSize));
             return Ok(new Response<List<Player>>(pagedData, Decimal.ToInt32(pagesCount)));
-
         }
 
 

@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "hcgONuTGUUvkAv41e/2TBqrEaluLdRaLuTAHD1pUOkwnF+GQADRQqmLPVTxDbfUn1xlYoD4SIlArZhBKDS/lWQ==",
+  "dgSpecHash": "iiOZjF+vfK1+GSLSLbfGNU/cPsEPdzKD7ex/rh/uI9I6zIvQYXIVmuL1Xh7E52dV+zWA8HvVi5SEBELxRMek/w==",
   "success": true,
-  "projectFilePath": "C:\\Users\\dnadi\\Desktop\\NBA PROJ\\api\\github api\\NBA_API\\WebApi.Models\\WebApi.Models.csproj",
+  "projectFilePath": "C:\\Users\\User\\Desktop\\myRepositories\\NBA_API\\WebApi.Models\\WebApi.Models.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\dnadi\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512"
+    "C:\\Users\\User\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512"
   ],
   "logs": []
 }

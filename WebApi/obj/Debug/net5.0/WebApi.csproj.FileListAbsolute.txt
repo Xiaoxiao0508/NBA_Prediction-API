@@ -713,3 +713,13 @@ C:\Users\dnadi\Desktop\NBA PROJ\api\github api\NBA_API\WebApi\obj\Debug\net5.0\s
 C:\Users\dnadi\Desktop\NBA PROJ\api\github api\NBA_API\WebApi\obj\Debug\net5.0\WebApi.RazorTargetAssemblyInfo.cache
 C:\Users\dnadi\Desktop\NBA PROJ\api\github api\NBA_API\WebApi\obj\Debug\net5.0\WebApi.csproj.CopyComplete
 C:\Users\dnadi\Desktop\NBA PROJ\api\github api\NBA_API\WebApi\obj\Debug\net5.0\WebApi.genruntimeconfig.cache
+C:\Users\User\Desktop\myRepositories\NBA_API\WebApi\obj\Debug\net5.0\WebApi.csprojAssemblyReference.cache
+C:\Users\User\Desktop\myRepositories\NBA_API\WebApi\obj\Debug\net5.0\WebApi.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\User\Desktop\myRepositories\NBA_API\WebApi\obj\Debug\net5.0\WebApi.AssemblyInfoInputs.cache
+C:\Users\User\Desktop\myRepositories\NBA_API\WebApi\obj\Debug\net5.0\WebApi.AssemblyInfo.cs
+C:\Users\User\Desktop\myRepositories\NBA_API\WebApi\obj\Debug\net5.0\WebApi.csproj.CoreCompileInputs.cache
+C:\Users\User\Desktop\myRepositories\NBA_API\WebApi\obj\Debug\net5.0\WebApi.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\User\Desktop\myRepositories\NBA_API\WebApi\obj\Debug\net5.0\WebApi.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\User\Desktop\myRepositories\NBA_API\WebApi\obj\Debug\net5.0\WebApi.dll
+C:\Users\User\Desktop\myRepositories\NBA_API\WebApi\obj\Debug\net5.0\ref\WebApi.dll
+C:\Users\User\Desktop\myRepositories\NBA_API\WebApi\obj\Debug\net5.0\WebApi.pdb
