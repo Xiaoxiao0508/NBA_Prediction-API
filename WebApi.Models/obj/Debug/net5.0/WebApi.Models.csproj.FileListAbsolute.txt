@@ -70,3 +70,15 @@ C:\Users\User\Desktop\myRepositories\NBA_API\WebApi.Models\obj\Debug\net5.0\WebA
 C:\Users\User\Desktop\myRepositories\NBA_API\WebApi.Models\obj\Debug\net5.0\WebApi.Models.dll
 C:\Users\User\Desktop\myRepositories\NBA_API\WebApi.Models\obj\Debug\net5.0\ref\WebApi.Models.dll
 C:\Users\User\Desktop\myRepositories\NBA_API\WebApi.Models\obj\Debug\net5.0\WebApi.Models.pdb
+C:\Users\cxxme\source\NBA_API\WebApi.Models\bin\Debug\net5.0\WebApi.Models.deps.json
+C:\Users\cxxme\source\NBA_API\WebApi.Models\bin\Debug\net5.0\WebApi.Models.dll
+C:\Users\cxxme\source\NBA_API\WebApi.Models\bin\Debug\net5.0\ref\WebApi.Models.dll
+C:\Users\cxxme\source\NBA_API\WebApi.Models\bin\Debug\net5.0\WebApi.Models.pdb
+C:\Users\cxxme\source\NBA_API\WebApi.Models\obj\Debug\net5.0\WebApi.Models.csprojAssemblyReference.cache
+C:\Users\cxxme\source\NBA_API\WebApi.Models\obj\Debug\net5.0\WebApi.Models.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\cxxme\source\NBA_API\WebApi.Models\obj\Debug\net5.0\WebApi.Models.AssemblyInfoInputs.cache
+C:\Users\cxxme\source\NBA_API\WebApi.Models\obj\Debug\net5.0\WebApi.Models.AssemblyInfo.cs
+C:\Users\cxxme\source\NBA_API\WebApi.Models\obj\Debug\net5.0\WebApi.Models.csproj.CoreCompileInputs.cache
+C:\Users\cxxme\source\NBA_API\WebApi.Models\obj\Debug\net5.0\WebApi.Models.dll
+C:\Users\cxxme\source\NBA_API\WebApi.Models\obj\Debug\net5.0\ref\WebApi.Models.dll
+C:\Users\cxxme\source\NBA_API\WebApi.Models\obj\Debug\net5.0\WebApi.Models.pdb
