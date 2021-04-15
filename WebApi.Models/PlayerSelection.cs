@@ -1,24 +1,20 @@
 using System;
-using System.Collections.Generic;
 
 namespace WebApi.Models
 {
-    public class TeamPlayers
+    public class PlayerSelection
     {
-      
-
-        public string TeamName { get; set; }
-        public int Player_Key { get; set; }
-        
-        public TeamPlayers()
+        public PlayerSelection()
         {
         }
 
-        public TeamPlayers(string teamName, int player_Key)
+        public PlayerSelection(string teamName, int player_Key)
         {
             TeamName = teamName;
             Player_Key = player_Key;
         }
 
+        public string TeamName { get; set; }
+        public int Player_Key{get;set;}
     }
 }
