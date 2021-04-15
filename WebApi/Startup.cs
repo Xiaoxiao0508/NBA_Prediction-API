@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using WebApi_DB;
 using Microsoft.EntityFrameworkCore;
+using  WebApi.Models;;
 
 namespace WebApi
 {
@@ -28,7 +29,7 @@ namespace WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+         services.AddScoped(TeamPlayers);
             services.AddControllers();
             // Register the DbContext with dependency injection container/Add DbContext class as a service to the API,Configure the connection details of the database
             services.AddDbContext<NBA_DBContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
