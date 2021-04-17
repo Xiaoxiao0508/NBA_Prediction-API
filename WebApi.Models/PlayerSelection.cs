@@ -11,10 +11,10 @@ namespace WebApi.Models
         public PlayerSelection(string teamName, int player_Key)
         {
             TeamName = teamName;
-            Player_Key = player_Key;
+            Player_key = player_Key;
         }
 
         public string TeamName { get; set; }
-        public int Player_Key{get;set;}
+        public int Player_key{get;set;}
     }
 }

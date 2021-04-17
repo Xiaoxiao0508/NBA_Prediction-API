@@ -121,18 +121,19 @@ namespace WebApi.Controllers
         }
 
         // GET: api/Player/5
-        // [HttpGet("{PLAYER_NAME}")]
-        // public async Task<ActionResult<Player>> GetPlayer(string PLAYER_NAME)
-        // {
-        //     var player = await _context.Players.FindAsync(PLAYER_NAME);
+        // search player by player_key
+        [HttpGet("{Player_key}")]
+        public async Task<ActionResult<Player>> GetPlayer(int Player_key)
+        {
+            var player = await _context.allPlayers.FindAsync(Player_key);
 
-        //     if (player == null)
-        //     {
-        //         return NotFound();
-        //     }
+            if (player == null)
+            {
+                return NotFound();
+            }
 
-        //     return player;
-        // }
+            return player;
+        }
 
 
         // PUT: api/Player/5

@@ -16,6 +16,7 @@ namespace WebApi_DB
         public DbSet<Team> Team { get; set; }
 
         public DbSet<ColumnHeaders> columnHeaders { get; set; }
+        public DbSet<PlayerSelection> PlayerSelection{get;set;}
 
         public NBA_DBContext(DbContextOptions<NBA_DBContext> options) : base(options)
         {
@@ -36,6 +37,10 @@ namespace WebApi_DB
             });
 
             builder.Entity<ColumnHeaders>().HasNoKey();
+              builder.Entity<PlayerSelection>().HasKey(p => new
+            {
+                p.TeamName,p.Player_key
+            });
         }
 
     }
