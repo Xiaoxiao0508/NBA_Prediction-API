@@ -6,6 +6,8 @@ namespace WebApi.Models
 {
     public class Player
     {
+        [JsonProperty("Player_key")]
+        public int Player_key { get; set; }
         [JsonProperty("FIRSTNAME")]
         public string FIRSTNAME { get; set; }
 

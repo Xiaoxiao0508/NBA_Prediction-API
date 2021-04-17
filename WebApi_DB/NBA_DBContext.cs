@@ -27,7 +27,9 @@ namespace WebApi_DB
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<Player>().HasNoKey();
+            builder.Entity<Player>().HasKey(p=>new{
+                p.Player_key
+            });
             builder.Entity<Team>().HasKey(t => new
             {
                 t.TeamName
