@@ -36,8 +36,6 @@ namespace WebApi.Controllers
         {
             var DisplayData = await _context.PlayerSelection.Where(p => EF.Functions.Like(p.TeamName, $"{searchstring}%"))
                    .OrderBy(p => p.TeamName)
-                   // .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
-                   // .Take(validFilter.PageSize)
                    .ToListAsync();
 
             return Ok(new Response<List<PlayerSelection>>(DisplayData)); ;
@@ -61,8 +59,6 @@ namespace WebApi.Controllers
                 {
 
                     return false;
-
-
                 }
             }
             else
@@ -73,25 +69,23 @@ namespace WebApi.Controllers
             return true;
         }
 
-        // DELETE: api/PlayerSelection/5
-        // [HttpDelete("{id}")]
-        // public async Task<IActionResult> DeletePlayerSelection(string id)
-        // {
-        //     var playerSelection = await _context.PlayerSelection.FindAsync(id);
-        //     if (playerSelection == null)
-        //     {
-        //         return NotFound();
-        //     }
+        // DELETE: api/PlayerSelection/DeletePlayer
+        [HttpDelete("DeletePlayer")]
+        public async Task<bool> DeletePlayerSelection([FromBody] PlayerSelection playerSelection)
+        {
+            var PlayerDeleted = _context.PlayerSelection.Where(p => p.TeamName == playerSelection.TeamName);
 
-        //     _context.PlayerSelection.Remove(playerSelection);
-        //     await _context.SaveChangesAsync();
+            try
+            {
+                _context.PlayerSelection.Remove(playerSelection);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                return false;
+            }
 
-        //     return NoContent();
-        // }
-
-        // private bool PlayerSelectionExists(string id)
-        // {
-        //     return _context.PlayerSelection.Any(e => e.TeamName == id);
-        // }
+            return true;
+        }
     }
 }
