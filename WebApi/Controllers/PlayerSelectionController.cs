@@ -34,36 +34,40 @@ namespace WebApi.Controllers
         [HttpGet("ViewPlayers")]
         public async Task<ActionResult<PlayerSelection>> GetPlayerSelection([FromQuery] string searchstring)
         {
-             var DisplayData = await _context.PlayerSelection.Where(p => EF.Functions.Like(p.TeamName, $"{searchstring}%"))
-                    .OrderBy(p => p.TeamName)
-                    // .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
-                    // .Take(validFilter.PageSize)
-                    .ToListAsync();
+            var DisplayData = await _context.PlayerSelection.Where(p => EF.Functions.Like(p.TeamName, $"{searchstring}%"))
+                   .OrderBy(p => p.TeamName)
+                   // .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+                   // .Take(validFilter.PageSize)
+                   .ToListAsync();
 
-               return Ok(new Response<List<PlayerSelection>>(DisplayData));;
+            return Ok(new Response<List<PlayerSelection>>(DisplayData)); ;
         }
 
-    
+
         [HttpPost]
-        public async Task<bool> PostPlayer([FromBody]PlayerSelection playerSelection)
+        public async Task<bool> PostPlayer([FromBody] PlayerSelection playerSelection)
         {
-            var PlayerCount=_context.PlayerSelection.Where(p=>p.TeamName==playerSelection.TeamName).CountAsync().Result;
-            try
+            var PlayerCount = _context.PlayerSelection.Where(p => p.TeamName == playerSelection.TeamName).CountAsync().Result;
+
+            if (PlayerCount < 15)
             {
-                 _context.PlayerSelection.Add(playerSelection);
-           
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (PlayerCount==15)
+                try
                 {
+                    _context.PlayerSelection.Add(playerSelection);
+
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateException)
+                {
+
                     return false;
+
+
                 }
-                else
-                {
-                    return true;
-                }
+            }
+            else
+            {
+                return false;
             }
 
             return true;
