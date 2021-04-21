@@ -41,76 +41,10 @@ namespace WebApi.Controllers
             return Ok(new Response<List<PlayerSelection>>(DisplayData)); ;
         }
 
-
-        // [HttpPost]
-        // public async Task<bool> PostPlayer([FromBody] PlayerSelection playerSelection)
-        // {
-        //     var PlayerCount = _context.PlayerSelection.Where(p => p.TeamName == playerSelection.TeamName).CountAsync().Result;
-
-        //     if (PlayerCount < 15)
-        //     {
-        //         try
-        //         {
-        //             _context.PlayerSelection.Add(playerSelection);
-
-        //             await _context.SaveChangesAsync();
-        //         }
-        //         catch (DbUpdateException)
-        //         {
-
-        //             return false;
-        //         }
-        //     }
-        //     else
-        //     {
-        //         return false;
-        //     }
-
-        //     return true;
-        // }
-        // [HttpPost]
-        // public async Task<bool> PostPlayer([FromBody] PlayerSelections playerSelections)
-
-        // {
-        //     List<int> PlayerKeyList = new List<int>();
-        //     int[] list=
-        //     var selections = new PlayerSelections(playerSelections.TeamName, PlayerKeyList);
-
-        //     var PlayerCount = _context.PlayerSelection.Where(p => p.TeamName == playerSelections.TeamName).CountAsync().Result;
-
-        //     if (PlayerCount < 15)
-        //     {
-        //         try
-        //         {
-        //             foreach (int i in PlayerKeyList)
-        //             {
-        //               var selection=new PlayerSelection(playerSelections.TeamName,i);
-        //                 _context.PlayerSelection.Add(selection);
-
-        //                 await _context.SaveChangesAsync();
-        //             }
-
-        //         }
-        //         catch (DbUpdateException)
-        //         {
-
-        //             return false;
-        //         }
-        //     }
-        //     else
-        //     {
-        //         return false;
-        //     }
-
-        //     return true;
-        // }
-
          [HttpPost]
         public async Task<bool> PostPlayer([FromBody] PlayerSelections selections)
 
         {
-           
-
             var PlayerCount = _context.PlayerSelection.Where(p => p.TeamName == selections.TeamName).CountAsync().Result;
 
             if (PlayerCount < 15)
@@ -142,22 +76,22 @@ namespace WebApi.Controllers
 
 
         // DELETE: api/PlayerSelection/DeletePlayer
-        [HttpDelete("DeletePlayer")]
-        public async Task<bool> DeletePlayerSelection([FromBody] PlayerSelection playerSelection)
-        {
-            var PlayerDeleted = _context.PlayerSelection.Where(p => p.TeamName == playerSelection.TeamName);
+        // [HttpDelete("DeletePlayer")]
+        // public async Task<bool> DeletePlayerSelection([FromBody] PlayerSelection playerSelection)
+        // {
+        //     var PlayerDeleted = _context.PlayerSelection.Where(p => p.TeamName == playerSelection.TeamName);
 
-            try
-            {
-                _context.PlayerSelection.Remove(playerSelection);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                return false;
-            }
+        //     try
+        //     {
+        //         _context.PlayerSelection.Remove(playerSelection);
+        //         await _context.SaveChangesAsync();
+        //     }
+        //     catch (DbUpdateException)
+        //     {
+        //         return false;
+        //     }
 
-            return true;
-        }
+        //     return true;
+        // }
     }
 }

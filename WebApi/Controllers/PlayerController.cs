@@ -45,7 +45,7 @@ namespace WebApi.Controllers
                 return Ok(new Response<List<Player>>(pagedData, Decimal.ToInt32(pagesCount)));
 
             }
-            else if(filter.SortOrder=="DESC")
+            else if (filter.SortOrder == "DESC")
             {
                 var pagedData1 = await _context.allPlayers
            // .OrderByDescending(p =>"p."+validFilter.SortString)
@@ -60,6 +60,32 @@ namespace WebApi.Controllers
         }
 
         // GET: api/Player
+        // [Route("getPlayersFromTeam")]
+        // [HttpGet]
+        // public async Task<ActionResult<IEnumerable<Player>>> getPlayersFromTeam([FromBody] FullTeamRosterRequest teamReq)
+        // {
+        //     var validFilter = new FullTeamRosterRequest(teamReq.PageNumber, teamReq.PageSize, teamReq.SortString, teamReq.TeamName);
+        //     var userInput = teamReq.TeamName;
+        //     var pagedData = await _context.allPlayers
+        //     // .FromSqlRaw("getPlayersFromTeam @p0", userInput)
+        //         .FromSqlRaw("getPlayersFromTeam @p0", userInput)
+        //     // .OrderBy(p => EF.Property<object>(p, validFilter.SortString))
+        //     .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+        //     .Take(validFilter.PageSize)
+        //     .ToListAsync();
+
+        //     var totalRecords = await _context.allPlayers.CountAsync();
+        //     var pagesCount = (decimal)totalRecords / (decimal)teamReq.PageSize;
+
+        //     if ((pagesCount % 1) != 0)
+        //     {
+        //         pagesCount = Decimal.ToInt32(pagesCount);
+        //         pagesCount += 1;
+        //     }
+
+        //     return Ok(new Response<List<Player>>(pagedData, Decimal.ToInt32(pagesCount)));
+        // }
+
         [Route("getPlayersFromTeam")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Player>>> getPlayersFromTeam([FromBody] FullTeamRosterRequest teamReq)
@@ -67,11 +93,10 @@ namespace WebApi.Controllers
             var validFilter = new FullTeamRosterRequest(teamReq.PageNumber, teamReq.PageSize, teamReq.SortString, teamReq.TeamName);
             var userInput = teamReq.TeamName;
             var pagedData = await _context.allPlayers
-            .FromSqlRaw("getPlayersFromTeam @p0", userInput)
-            //.OrderByDescending(p => "p." + validFilter.SortString)
-            //.OrderBy(p => EF.Property<object>(p, validFilter.SortString))
-            //.Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
-            //.Take(validFilter.PageSize)
+                .FromSqlRaw("getPlayersFromTeam @p0", userInput)
+            // .OrderBy(p => EF.Property<object>(p, validFilter.SortString))
+            // .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+            // .Take(validFilter.PageSize)
             .ToListAsync();
 
             var totalRecords = await _context.allPlayers.CountAsync();
@@ -85,8 +110,6 @@ namespace WebApi.Controllers
 
             return Ok(new Response<List<Player>>(pagedData, Decimal.ToInt32(pagesCount)));
         }
-
-
 
 
         // GET: api/Player
