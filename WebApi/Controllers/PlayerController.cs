@@ -47,6 +47,35 @@ namespace WebApi.Controllers
             return Ok(new Response<List<Player>>(pagedData, Decimal.ToInt32(pagesCount)));
         }
 
+        // GET: api/Player
+        [Route("getPlayersFromTeam")]
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Player>>> getPlayersFromTeam([FromBody] FullTeamRosterRequest teamReq)
+        {
+            var validFilter = new FullTeamRosterRequest(teamReq.PageNumber, teamReq.PageSize, teamReq.SortString, teamReq.TeamName);
+            var userInput = teamReq.TeamName;
+            var pagedData = await _context.allPlayers
+            .FromSqlRaw("getPlayersFromTeam @p0", userInput)
+            //.OrderByDescending(p => "p." + validFilter.SortString)
+            //.OrderBy(p => EF.Property<object>(p, validFilter.SortString))
+            //.Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+            //.Take(validFilter.PageSize)
+            .ToListAsync();
+
+            var totalRecords = await _context.allPlayers.CountAsync();
+            var pagesCount = (decimal)totalRecords / (decimal)teamReq.PageSize;
+
+            if ((pagesCount % 1) != 0)
+            {
+                pagesCount = Decimal.ToInt32(pagesCount);
+                pagesCount += 1;
+            }
+
+            return Ok(new Response<List<Player>>(pagedData, Decimal.ToInt32(pagesCount)));
+        }
+
+
+
 
         // GET: api/Player
         [HttpGet("{search}")]
