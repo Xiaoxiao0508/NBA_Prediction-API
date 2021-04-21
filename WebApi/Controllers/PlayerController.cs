@@ -26,22 +26,34 @@ namespace WebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Player>>> GetallPlayers([FromQuery] PaginationFilter filter)
         {
-            var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize,filter.SortString);
-        
+            var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize, filter.SortString, filter.SortOrder);
+            var totalRecords = await _context.allPlayers.CountAsync();
+            var pagesCount = (decimal)totalRecords / (decimal)filter.PageSize;
             var pagedData = await _context.allPlayers
             // .OrderByDescending(p =>"p."+validFilter.SortString)
             .OrderBy(p => EF.Property<object>(p, validFilter.SortString))
             .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
             .Take(validFilter.PageSize)
             .ToListAsync();
-
-            var totalRecords = await _context.allPlayers.CountAsync();
-            var pagesCount = (decimal)totalRecords / (decimal)filter.PageSize;
-
             if ((pagesCount % 1) != 0)
             {
                 pagesCount = Decimal.ToInt32(pagesCount);
                 pagesCount += 1;
+            }
+            if (filter.SortOrder == "ASC")
+            {
+                return Ok(new Response<List<Player>>(pagedData, Decimal.ToInt32(pagesCount)));
+
+            }
+            else if(filter.SortOrder=="DESC")
+            {
+                var pagedData1 = await _context.allPlayers
+           // .OrderByDescending(p =>"p."+validFilter.SortString)
+           .OrderByDescending(p => EF.Property<object>(p, validFilter.SortString))
+           .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+           .Take(validFilter.PageSize)
+           .ToListAsync();
+                return Ok(new Response<List<Player>>(pagedData1, Decimal.ToInt32(pagesCount)));
             }
 
             return Ok(new Response<List<Player>>(pagedData, Decimal.ToInt32(pagesCount)));
