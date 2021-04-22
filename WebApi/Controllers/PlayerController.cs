@@ -76,9 +76,6 @@ namespace WebApi.Controllers
                 .FromSqlRaw("getPlayersFromTeam @p0,@p1,@p2", userInput,usortcol,uSortType)
          
             .ToListAsync();
-
-           
-
             return Ok(new Response<List<Player>>(pagedData));
         }
 

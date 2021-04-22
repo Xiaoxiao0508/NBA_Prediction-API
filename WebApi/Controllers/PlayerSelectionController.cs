@@ -31,15 +31,15 @@ namespace WebApi.Controllers
 
         // GET: api/PlayerSelection/5
         // display players from searching team name
-        [HttpGet("ViewPlayers")]
-        public async Task<ActionResult<PlayerSelection>> GetPlayerSelection([FromQuery] string searchstring)
-        {
-            var DisplayData = await _context.PlayerSelection.Where(p => EF.Functions.Like(p.TeamName, $"{searchstring}%"))
-                   .OrderBy(p => p.TeamName)
-                   .ToListAsync();
+        // [HttpGet("ViewPlayers")]
+        // public async Task<ActionResult<PlayerSelection>> GetPlayerSelection([FromQuery] string searchstring)
+        // {
+        //     var DisplayData = await _context.PlayerSelection.Where(p => EF.Functions.Like(p.TeamName, $"{searchstring}%"))
+        //            .OrderBy(p => p.TeamName)
+        //            .ToListAsync();
 
-            return Ok(new Response<List<PlayerSelection>>(DisplayData)); ;
-        }
+        //     return Ok(new Response<List<PlayerSelection>>(DisplayData)); ;
+        // }
 
          [HttpPost]
         public async Task<bool> PostPlayer([FromBody] PlayerSelections selections)
