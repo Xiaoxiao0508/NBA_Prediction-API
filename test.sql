@@ -14,5 +14,5 @@ from allPlayers
 
 select *
 from PlayerSelection
-
+EXEC getPlayersFromTeam @teamName='Miami Heat',@SortingCol='FIRSTNAME',@SortType='DESC'
 

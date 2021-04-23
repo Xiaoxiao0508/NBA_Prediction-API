@@ -13,7 +13,7 @@ namespace WebApi.Models
         {
             TeamName = teamName;
             SortString = "FIRSTNAME";
-            SortType = "ASC";
+            SortType = "DESC";
         }
 
         public string TeamName { get; set; }
