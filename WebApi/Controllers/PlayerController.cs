@@ -197,38 +197,38 @@ namespace WebApi.Controllers
             return player;
         }
         
-         [HttpPost]
-        public async Task<bool> PostPlayer([FromBody] PlayerSelections selections)
+        //  [HttpPost]
+        // public async Task<bool> PostPlayer([FromBody] PlayerSelections selections)
 
-        {
-            var PlayerCount = _context.PlayerSelection.Where(p => p.TeamName == selections.TeamName).CountAsync().Result;
+        // {
+        //     var PlayerCount = _context.PlayerSelection.Where(p => p.TeamName == selections.TeamName).CountAsync().Result;
 
-            if (PlayerCount < 15)
-            {
-                try
-                {
-                    foreach (int i in selections.PlayerKeys)
-                    {
-                      var selection=new PlayerSelection(selections.TeamName,i);
-                        _context.PlayerSelection.Add(selection);
+        //     if (PlayerCount < 15)
+        //     {
+        //         try
+        //         {
+        //             foreach (int i in selections.PlayerKeys)
+        //             {
+        //               var selection=new PlayerSelection(selections.TeamName,i);
+        //                 _context.PlayerSelection.Add(selection);
 
-                        await _context.SaveChangesAsync();
-                    }
+        //                 await _context.SaveChangesAsync();
+        //             }
 
-                }
-                catch (DbUpdateException)
-                {
+        //         }
+        //         catch (DbUpdateException)
+        //         {
 
-                    return false;
-                }
-            }
-            else
-            {
-                return false;
-            }
+        //             return false;
+        //         }
+        //     }
+        //     else
+        //     {
+        //         return false;
+        //     }
 
-            return true;
-        }
+        //     return true;
+        // }
 
 
         // PUT: api/Player/5
