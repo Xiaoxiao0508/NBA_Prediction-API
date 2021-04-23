@@ -64,20 +64,7 @@ namespace WebApi.Controllers
         }
 
         // GET: api/Player
-        [Route("getPlayersFromTeam")]
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Player>>> getPlayersFromTeam([FromBody] FullTeamRosterRequest teamReq)
-        {
-            // var validFilter = new FullTeamRosterRequest(teamReq.PageNumber, teamReq.PageSize, teamReq.SortString, teamReq.TeamName);
-            var userInput = teamReq.TeamName;
-            var usortcol=teamReq.SortString;
-            var uSortType=teamReq.SortType;
-            var pagedData = await _context.allPlayers
-                .FromSqlRaw("getPlayersFromTeam @p0,@p1,@p2", userInput,usortcol,uSortType)
-         
-            .ToListAsync();
-            return Ok(new Response<List<Player>>(pagedData));
-        }
+  
 
 
         [HttpGet("SearchPlayer")]
@@ -196,7 +183,6 @@ namespace WebApi.Controllers
 
             return player;
         }
-
 
         // PUT: api/Player/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
