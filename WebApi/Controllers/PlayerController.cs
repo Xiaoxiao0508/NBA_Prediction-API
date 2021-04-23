@@ -96,14 +96,14 @@ namespace WebApi.Controllers
             if (splitString?.Length == 2)
             {
                 //filters the player view data based on the searchstring and adds pagination based on the url.
-                var pageData = await _context.allPlayers.Where(p => EF.Functions.Like(p.FIRSTNAME, $"{splitString[0]}%") && EF.Functions.Like(p.Lastname, $"{splitString[1]}%"))
+                var pageData = await _context.allPlayers.Where(p => EF.Functions.Like(p.FIRSTNAME, $"{splitString[0]}%") && EF.Functions.Like(p.LASTNAME, $"{splitString[1]}%"))
                     .OrderBy(p => EF.Property<object>(p, validFilter.SortString))
                     .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                     .Take(validFilter.PageSize)
                     .ToListAsync();
 
                 //total pages in current search
-                var totalRecords = await _context.allPlayers.Where(p => EF.Functions.Like(p.FIRSTNAME, $"{splitString[0]}%") && EF.Functions.Like(p.Lastname, $"{splitString[1]}%"))
+                var totalRecords = await _context.allPlayers.Where(p => EF.Functions.Like(p.FIRSTNAME, $"{splitString[0]}%") && EF.Functions.Like(p.LASTNAME, $"{splitString[1]}%"))
                     .OrderBy(p => p.FIRSTNAME).CountAsync();
 
                 var pagesCount = (decimal)totalRecords / (decimal)filter.PageSize;
@@ -120,7 +120,7 @@ namespace WebApi.Controllers
                 }
                 else if (filter.SortOrder == "DESC")
                 {
-                    pageData = await _context.allPlayers.Where(p => EF.Functions.Like(p.FIRSTNAME, $"{splitString[0]}%") && EF.Functions.Like(p.Lastname, $"{splitString[1]}%"))
+                    pageData = await _context.allPlayers.Where(p => EF.Functions.Like(p.FIRSTNAME, $"{splitString[0]}%") && EF.Functions.Like(p.LASTNAME, $"{splitString[1]}%"))
                        .OrderByDescending(p => EF.Property<object>(p, validFilter.SortString))
                        .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                        .Take(validFilter.PageSize)
@@ -133,14 +133,14 @@ namespace WebApi.Controllers
             {
                 //Partial firstname + lastname search this code runs if the splitString array has more then 2 items
                 var pageData = await _context.allPlayers
-                    .Where(p => EF.Functions.Like(p.FIRSTNAME, $"{filter.searchstring}%") || EF.Functions.Like(p.Lastname, $"{filter.searchstring}%") || EF.Functions.Like(p.FIRSTNAME + " " + p.Lastname, $"{filter.searchstring}%"))
+                    .Where(p => EF.Functions.Like(p.FIRSTNAME, $"{filter.searchstring}%") || EF.Functions.Like(p.LASTNAME, $"{filter.searchstring}%") || EF.Functions.Like(p.FIRSTNAME + " " + p.LASTNAME, $"{filter.searchstring}%"))
                       .OrderBy(p => EF.Property<object>(p, validFilter.SortString))
                     .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                     .Take(validFilter.PageSize)
                     .ToListAsync();
 
                 //total pages in current search
-                var totalRecords = await _context.allPlayers.Where(p => EF.Functions.Like(p.FIRSTNAME, $"{filter.searchstring}%") || EF.Functions.Like(p.Lastname, $"{filter.searchstring}%") || EF.Functions.Like(p.FIRSTNAME + " " + p.Lastname, $"{filter.searchstring}%")).CountAsync();
+                var totalRecords = await _context.allPlayers.Where(p => EF.Functions.Like(p.FIRSTNAME, $"{filter.searchstring}%") || EF.Functions.Like(p.LASTNAME, $"{filter.searchstring}%") || EF.Functions.Like(p.FIRSTNAME + " " + p.LASTNAME, $"{filter.searchstring}%")).CountAsync();
 
                 var pagesCount = (decimal)totalRecords / (decimal)filter.PageSize;
 
@@ -160,7 +160,7 @@ namespace WebApi.Controllers
                 else if (filter.SortOrder == "DESC")
                 {
                     pageData = await _context.allPlayers
-                    .Where(p => EF.Functions.Like(p.FIRSTNAME, $"{filter.searchstring}%") || EF.Functions.Like(p.Lastname, $"{filter.searchstring}%") || EF.Functions.Like(p.FIRSTNAME + " " + p.Lastname, $"{filter.searchstring}%"))
+                    .Where(p => EF.Functions.Like(p.FIRSTNAME, $"{filter.searchstring}%") || EF.Functions.Like(p.LASTNAME, $"{filter.searchstring}%") || EF.Functions.Like(p.FIRSTNAME + " " + p.LASTNAME, $"{filter.searchstring}%"))
                       .OrderByDescending(p => EF.Property<object>(p, validFilter.SortString))
                     .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                     .Take(validFilter.PageSize)

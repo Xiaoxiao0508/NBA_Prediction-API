@@ -11,8 +11,8 @@ namespace WebApi.Models
         [JsonProperty("FIRSTNAME")]
         public string FIRSTNAME { get; set; }
 
-        [JsonProperty("Lastname")]
-        public string Lastname { get; set; }
+        [JsonProperty("LASTNAME")]
+        public string LASTNAME{ get; set; }
 
         [JsonProperty("AGE")]
         public int AGE { get; set; }
@@ -126,7 +126,7 @@ namespace WebApi.Models
         public Player(string fIRSTNAME, string lastname, int aGE, int gP, decimal mINS, decimal pLUS_MINUS, decimal aST, decimal bLK, decimal bLKA, decimal oREB, decimal dREB, decimal fG_PCT, decimal fG3_PCT, decimal fG3A, decimal fG3M, decimal fGA, decimal fGM, decimal fT_PCT, decimal fTA, decimal fTM, int w, int l, decimal w_PCT, decimal pF, decimal pFD, decimal rEB, decimal tOV, decimal sTL, decimal pTS)
         {
             this.FIRSTNAME = fIRSTNAME;
-            this.Lastname = lastname;
+            this.LASTNAME = lastname;
             this.AGE = aGE;
             this.GP = gP;
             this.MINS = mINS;
