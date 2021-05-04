@@ -17,6 +17,7 @@ namespace DotNetAuthentication.DB
         public DbSet<Team> Team { get; set; }
 
         public DbSet<PlayerSelection> PlayerSelection { get; set; }
+        
 
         public NBAContext(DbContextOptions<NBAContext> options): base(options)
         {
@@ -35,7 +36,7 @@ namespace DotNetAuthentication.DB
             });
             modelBuilder.Entity<Team>().HasKey(t => new
             {
-                t.TeamName
+                t.TeamName, t.UserId
             });
 
             modelBuilder.Entity<PlayerSelection>().HasKey(p => new

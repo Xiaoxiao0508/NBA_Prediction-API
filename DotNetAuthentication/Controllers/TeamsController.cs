@@ -3,16 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DotNetAuthentication.DB;
 using DotNetAuthentication.Models;
-using JWT;
-using JWT.Serializers;
-using JWT.Algorithms;
-using Newtonsoft.Json.Linq;
 using JWT.Exceptions;
 using System.Diagnostics;
+using System.Data;
 
 namespace DotNetAuthentication.Controllers
 {
@@ -70,7 +66,7 @@ namespace DotNetAuthentication.Controllers
 
         //delete team 
         [HttpPost("deleteteam")]
-        public async Task<string> DeleteTeam([FromHeader] string Token, [FromBody] string TeamName)
+        public async Task<string> DeleteTeam([FromHeader] string Token, [FromBody] string teamName)
         {//add pagination
 
             //Delete Team
@@ -83,19 +79,28 @@ namespace DotNetAuthentication.Controllers
 
                 var team = new Team();
                 team.UserId = userId;
-                team.TeamName = TeamName;
+                team.TeamName = teamName;
 
                 //check if Team exists 
-                var isTeam =  _context.Team.FirstOrDefault(t => t.TeamName == team.TeamName).TeamName == team.TeamName;
+                var isTeam = _context.Team
+                    .Where(t => t.UserId == team.UserId)
+                    .Where(t => t.TeamName == team.TeamName)
+                    .FirstOrDefault().TeamName == team.TeamName;
+                                    
 
                 if(isTeam)
-                {
-                    //Delete Team 
-                    _context.Team.Remove(team);
+                {                    
+                    //delete team
+                    _context.RemoveRange(
+                        _context.Team
+                        .Where(t => t.UserId == team.UserId)
+                        .Where(t => t.TeamName == team.TeamName)
+                        .FirstOrDefault());
                     await _context.SaveChangesAsync();
 
+                    //return which team has been deleted
                     return $"{team.TeamName} Deleted";
-                }
+                }                
                 return $"{team.TeamName} was not found";
             }
 
@@ -111,7 +116,6 @@ namespace DotNetAuthentication.Controllers
             {
                 Debug.WriteLine(e.Message);
                 throw;
-
             }
         }
 

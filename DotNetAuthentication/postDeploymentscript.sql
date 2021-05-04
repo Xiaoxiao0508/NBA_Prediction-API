@@ -105,7 +105,7 @@ CREATE TABLE PlayerSelection
     [Player_key]        INT            NOT NULL  CHECK (DATALENGTH(Player_key) > 0),
 	  
 	PRIMARY KEY (TeamName, UserId, Player_key),	
-    Foreign key (TeamName, UserId) references Team,
+    Foreign key (TeamName, UserId) references Team ON DELETE CASCADE,
     Foreign key (Player_key) references Player
 );
 

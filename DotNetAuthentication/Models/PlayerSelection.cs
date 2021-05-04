@@ -6,17 +6,17 @@
         {
         }
 
-        public PlayerSelection(string teamName, int player_Key, int id)
+        public PlayerSelection(string teamName, int player_Key, int userId)
         {
             TeamName = teamName;
             Player_key = player_Key;
-            Id = id;
+            UserId = userId;
         }
 
         public string TeamName { get; set; }
         public int Player_key { get; set; }
 
-        public int Id { get; set; }
+        public int UserId { get; set; }
 
     }
 }

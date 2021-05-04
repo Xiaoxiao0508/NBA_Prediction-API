@@ -63,7 +63,7 @@ namespace DotNetAuthentication.Controllers
             return Ok(new Response<List<Player>>(pagedData, Decimal.ToInt32(pagesCount)));
         }
 
-        // GET: api/Player
+        // Get players from team for a user
         [Route("getPlayersFromTeam")]
         [HttpPost]
         public async Task<ActionResult<IEnumerable<Player>>> getPlayersFromTeam([FromHeader] string Token, [FromBody] FullTeamRosterRequest teamReq)
