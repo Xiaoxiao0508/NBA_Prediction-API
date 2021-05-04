@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ZSx6AGw1K7moQVUruPPcSVP14wXAp42lxgXbVobsP/1XB2RbRwRblSd5TTff0bwKxJCygsqyuyCPO3cGsyWiJQ==",
+  "dgSpecHash": "gcTDWB1K3ypBlfzP6hbQHC0bWnpAvs3Z6rbd5/RnK5RkN8dJvZIUjCqX5PdPgjGqanNW0Cj1+KeBnPkA70Bgzg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\dnadi\\Desktop\\NBA Porject\\Authentication Research\\Dotnet Authentication\\DotNetAuthentication\\DotNetAuthentication\\DotNetAuthentication.csproj",
+  "projectFilePath": "C:\\Users\\dnadi\\Desktop\\NBA_API\\DotNetAuthentication\\DotNetAuthentication.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\dnadi\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\dnadi\\.nuget\\packages\\jwt\\8.2.0\\jwt.8.2.0.nupkg.sha512",

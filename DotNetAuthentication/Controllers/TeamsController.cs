@@ -68,6 +68,53 @@ namespace DotNetAuthentication.Controllers
             return true;
         }
 
+        //delete team 
+        [HttpPost("deleteteam")]
+        public async Task<string> DeleteTeam([FromHeader] string Token, [FromBody] string TeamName)
+        {//add pagination
+
+            //Delete Team
+            try
+            {                
+                //Validate Token
+                var authorise = new Authorise();
+                var userId = authorise.Validate(Token);
+               
+
+                var team = new Team();
+                team.UserId = userId;
+                team.TeamName = TeamName;
+
+                //check if Team exists 
+                var isTeam =  _context.Team.FirstOrDefault(t => t.TeamName == team.TeamName).TeamName == team.TeamName;
+
+                if(isTeam)
+                {
+                    //Delete Team 
+                    _context.Team.Remove(team);
+                    await _context.SaveChangesAsync();
+
+                    return $"{team.TeamName} Deleted";
+                }
+                return $"{team.TeamName} was not found";
+            }
+
+            catch (TokenExpiredException)
+            {
+                throw new ArgumentException("Token has expired");
+            }
+            catch (SignatureVerificationException)
+            {
+                throw new ArgumentException("Token has invalid signature");
+            }
+            catch (DbUpdateException e)
+            {
+                Debug.WriteLine(e.Message);
+                throw;
+
+            }
+        }
+
         [HttpPost("getteams")]
         public async Task<ActionResult<IEnumerable<Team>>> GetTeams([FromHeader] string Token)
         {//add pagination
