@@ -28,18 +28,17 @@ namespace DotNetAuthentication.Controllers
         [HttpPost("addteam")]//lower case paramater
 
         //return TasK<IActionResult>
-        public async Task<bool> PostTeam([FromHeader] string Token, [FromBody] string TeamName)
-        {//add pagination
-
+        public async Task<bool> PostTeam([FromHeader] string token, [FromBody] string teamName)
+        {            
             //See all teams the current user has.
             try
             {   
                 //Validate Token
                  var authorise = new Authorise();
-                var userId = authorise.Validate(Token);
+                var userId = authorise.Validate(token);
 
                 var team = new Team();
-                team.TeamName = TeamName;
+                team.TeamName = teamName;
                 team.UserId = userId;
 
                 //insert into database
@@ -69,7 +68,7 @@ namespace DotNetAuthentication.Controllers
 
         //delete team 
         [HttpPost("deleteteam")]
-        public async Task<string> DeleteTeam([FromHeader] string Token, [FromBody] string teamName)
+        public async Task<string> DeleteTeam([FromHeader] string token, [FromBody] string teamName)
         {//add pagination
 
             //Delete Team
@@ -78,7 +77,7 @@ namespace DotNetAuthentication.Controllers
                 //don't validate tokens inside endpoint
                 //Validate Token
                 var authorise = new Authorise();
-                var userId = authorise.Validate(Token);
+                var userId = authorise.Validate(token);
                
 
                 var team = new Team();
@@ -124,7 +123,7 @@ namespace DotNetAuthentication.Controllers
         }
 
         [HttpPost("getteams")]
-        public async Task<ActionResult<IEnumerable<Team>>> GetTeams([FromHeader] string Token)
+        public async Task<ActionResult<IEnumerable<Team>>> GetTeams([FromHeader] string token)
         {//add pagination
 
             //See all teams the current user has.
@@ -133,7 +132,7 @@ namespace DotNetAuthentication.Controllers
                 
                 // Validate Token
                  var authorise = new Authorise();
-                var userId = authorise.Validate(Token);
+                var userId = authorise.Validate(token);
 
                 var team = await _context.Team.Where(t => t.UserId == userId).ToListAsync();
 

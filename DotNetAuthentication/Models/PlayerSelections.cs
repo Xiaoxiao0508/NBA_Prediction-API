@@ -9,16 +9,17 @@ namespace DotNetAuthentication.Models
     {
 
         public string TeamName { get; set; }
-        public int Id { get; set; }
+        public int UserId { get; set; }
         public int[] PlayerKeys { get; set; }
         public PlayerSelections()
         {
         }
 
-        public PlayerSelections(string teamName,int id, int[] playerKeys)
+        //int userId,
+        //UserId = userId;
+        public PlayerSelections(string teamName, int[] playerKeys)
         {
-            TeamName = teamName;
-            Id = id;
+            TeamName = teamName;            
             PlayerKeys = playerKeys;
         }
 

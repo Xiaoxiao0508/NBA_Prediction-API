@@ -17,7 +17,9 @@ namespace DotNetAuthentication.DB
         public DbSet<Team> Team { get; set; }
 
         public DbSet<PlayerSelection> PlayerSelection { get; set; }
-        
+
+        public DbSet<ColumnHeaders> columnHeaders { get; set; }
+
 
         public NBAContext(DbContextOptions<NBAContext> options): base(options)
         {
@@ -42,8 +44,11 @@ namespace DotNetAuthentication.DB
             modelBuilder.Entity<PlayerSelection>().HasKey(p => new
             {
                 p.TeamName,
-                p.Player_key
+                p.Player_key,
+                p.UserId
             });
+
+            modelBuilder.Entity<ColumnHeaders>().HasNoKey();
         }
     }
 }

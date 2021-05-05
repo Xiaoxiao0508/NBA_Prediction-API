@@ -63,17 +63,135 @@ namespace DotNetAuthentication.Controllers
             return Ok(new Response<List<Player>>(pagedData, Decimal.ToInt32(pagesCount)));
         }
 
+        [HttpGet("SearchPlayer")]
+
+        public async Task<ActionResult<IEnumerable<Player>>> GetPlayer([FromQuery] SearchPaginationFilter filter)
+        {
+
+            // partial first name and partial lastname search or player initials with pagination
+            var validFilter = new SearchPaginationFilter(filter.searchstring, filter.PageNumber, filter.PageSize, filter.SortString, filter.SortOrder);
+
+            string[]? splitString = filter.searchstring?.Split(' ');
+            var pagedData = new List<Player>();
+            decimal pagescount = 0;
+
+
+            if (splitString?.Length == 2)
+            {
+                //filters the player view data based on the searchstring and adds pagination based on the url.
+                var pageData = await _context.allPlayers.Where(p => EF.Functions.Like(p.FIRSTNAME, $"{splitString[0]}%") && EF.Functions.Like(p.LASTNAME, $"{splitString[1]}%"))
+                    .OrderBy(p => EF.Property<object>(p, validFilter.SortString))
+                    .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+                    .Take(validFilter.PageSize)
+                    .ToListAsync();
+
+                //total pages in current search
+                var totalRecords = await _context.allPlayers.Where(p => EF.Functions.Like(p.FIRSTNAME, $"{splitString[0]}%") && EF.Functions.Like(p.LASTNAME, $"{splitString[1]}%"))
+                    .OrderBy(p => p.FIRSTNAME).CountAsync();
+
+                var pagesCount = (decimal)totalRecords / (decimal)filter.PageSize;
+
+                if ((pagesCount % 1) != 0)
+                {
+                    pagesCount = Decimal.ToInt32(pagesCount);
+                    pagesCount += 1;
+                }
+                if (filter.SortOrder == "ASC")
+                {
+                    return Ok(new Response<List<Player>>(pageData, Decimal.ToInt32(pagesCount)));
+
+                }
+                else if (filter.SortOrder == "DESC")
+                {
+                    pageData = await _context.allPlayers.Where(p => EF.Functions.Like(p.FIRSTNAME, $"{splitString[0]}%") && EF.Functions.Like(p.LASTNAME, $"{splitString[1]}%"))
+                       .OrderByDescending(p => EF.Property<object>(p, validFilter.SortString))
+                       .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+                       .Take(validFilter.PageSize)
+                       .ToListAsync();
+
+                    return Ok(new Response<List<Player>>(pageData, Decimal.ToInt32(pagesCount)));
+                }
+            }
+            else
+            {
+                //Partial firstname + lastname search this code runs if the splitString array has more then 2 items
+                var pageData = await _context.allPlayers
+                    .Where(p => EF.Functions.Like(p.FIRSTNAME, $"{filter.searchstring}%") || EF.Functions.Like(p.LASTNAME, $"{filter.searchstring}%") || EF.Functions.Like(p.FIRSTNAME + " " + p.LASTNAME, $"{filter.searchstring}%"))
+                      .OrderBy(p => EF.Property<object>(p, validFilter.SortString))
+                    .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+                    .Take(validFilter.PageSize)
+                    .ToListAsync();
+
+                //total pages in current search
+                var totalRecords = await _context.allPlayers.Where(p => EF.Functions.Like(p.FIRSTNAME, $"{filter.searchstring}%") || EF.Functions.Like(p.LASTNAME, $"{filter.searchstring}%") || EF.Functions.Like(p.FIRSTNAME + " " + p.LASTNAME, $"{filter.searchstring}%")).CountAsync();
+
+                var pagesCount = (decimal)totalRecords / (decimal)filter.PageSize;
+
+                if ((pagesCount % 1) != 0)
+                {
+                    pagesCount = Decimal.ToInt32(pagesCount);
+                    pagesCount += 1;
+                }
+                if (filter.SortOrder == "ASC")
+
+                {
+                    pagedData = pageData;
+                    pagescount = pagesCount;
+                    return Ok(new Response<List<Player>>(pageData, Decimal.ToInt32(pagesCount)));
+
+                }
+                else if (filter.SortOrder == "DESC")
+                {
+                    pageData = await _context.allPlayers
+                    .Where(p => EF.Functions.Like(p.FIRSTNAME, $"{filter.searchstring}%") || EF.Functions.Like(p.LASTNAME, $"{filter.searchstring}%") || EF.Functions.Like(p.FIRSTNAME + " " + p.LASTNAME, $"{filter.searchstring}%"))
+                      .OrderByDescending(p => EF.Property<object>(p, validFilter.SortString))
+                    .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+                    .Take(validFilter.PageSize)
+                    .ToListAsync();
+                    return Ok(new Response<List<Player>>(pageData, Decimal.ToInt32(pagesCount)));
+                }
+
+            }
+            return Ok(new Response<List<Player>>(pagedData, Decimal.ToInt32(pagescount)));
+        }
+
+        //Get Column Headers
+        [HttpGet("headers")]
+
+        public async Task<ActionResult<IEnumerable<ColumnHeaders>>> GetHeaders()
+        {
+            var Data = await _context.columnHeaders
+                .ToListAsync();
+
+            return Ok(new Response<List<ColumnHeaders>>(Data));
+        }
+
+        // GET: api/Player/5
+        // search player by player_key
+        [HttpGet("{Player_key}")]
+        public async Task<ActionResult<Player>> GetPlayer(int Player_key)
+        {
+            var player = await _context.allPlayers.FindAsync(Player_key);
+
+            if (player == null)
+            {
+                return NotFound();
+            }
+
+            return player;
+        }
+
         // Get players from team for a user
         [Route("getPlayersFromTeam")]
         [HttpPost]
-        public async Task<ActionResult<IEnumerable<Player>>> getPlayersFromTeam([FromHeader] string Token, [FromBody] FullTeamRosterRequest teamReq)
+        public async Task<ActionResult<IEnumerable<Player>>> getPlayersFromTeam([FromHeader] string token, [FromBody] FullTeamRosterRequest teamReq)
         {
             //See all teams the current user has.
             try
             { 
                 //Validate Token
                 var authorise = new Authorise();
-                var userId = authorise.Validate(Token);
+                var userId = authorise.Validate(token);
 
                 //If valid send requested data
                 var userInput = teamReq.TeamName;

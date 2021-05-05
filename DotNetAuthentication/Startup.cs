@@ -18,6 +18,9 @@ namespace DotNetAuthentication
 {
     public class Startup
     {
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+        
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -40,15 +43,10 @@ namespace DotNetAuthentication
 
             services.AddCors(options =>
             {
-                options.AddDefaultPolicy(options =>
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                    builder =>
                 {
-
-                    //allow only specific origins
-                    //store front end origins inside appsettings.json
-                    options
-                        .AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader();
+                    builder.WithOrigins("http://localhost:5000","https://localhost:5001", "http://localhost:52391");       
                 });
             });
         }
@@ -66,6 +64,7 @@ namespace DotNetAuthentication
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseCors(MyAllowSpecificOrigins);
             app.UseAuthentication();
             app.UseAuthorization();
 
