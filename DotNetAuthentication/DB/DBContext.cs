@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DotNetAuthentication.DB
 {
-    public class NBAContext : DbContext
+    public class NBAContext : DbContext //:identity db context 
     {
 
         //entities
@@ -44,11 +44,6 @@ namespace DotNetAuthentication.DB
                 p.TeamName,
                 p.Player_key
             });
-
-
         }
-
-       
-
     }
 }

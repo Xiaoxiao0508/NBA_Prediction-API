@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace DotNetAuthentication.Controllers
 {
-
+    //have authorize here 
     [ApiController]
     [Route("[controller]")]
     public class UserController : ControllerBase
@@ -83,7 +83,7 @@ namespace DotNetAuthentication.Controllers
 
         [HttpGet("/refreshtoken")]
         public string RefreshToken([FromHeader] string Token)
-        {
+        {//lower case paramaters
             //See all teams the current user has.
             try
             {   
@@ -104,13 +104,8 @@ namespace DotNetAuthentication.Controllers
             catch (SignatureVerificationException)
             {
                 throw new ArgumentException("Token has invalid signature");
-            }
-
-            
-            
+            }  
         }
-
-
     }
 }
 

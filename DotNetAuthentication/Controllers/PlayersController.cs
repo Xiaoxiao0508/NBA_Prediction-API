@@ -94,5 +94,8 @@ namespace DotNetAuthentication.Controllers
             }
 
         }
+
+        //todo search players
+        //todo add players to users team 
     }
 }

@@ -42,6 +42,9 @@ namespace DotNetAuthentication
             {
                 options.AddDefaultPolicy(options =>
                 {
+
+                    //allow only specific origins
+                    //store front end origins inside appsettings.json
                     options
                         .AllowAnyOrigin()
                         .AllowAnyMethod()
@@ -63,7 +66,7 @@ namespace DotNetAuthentication
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

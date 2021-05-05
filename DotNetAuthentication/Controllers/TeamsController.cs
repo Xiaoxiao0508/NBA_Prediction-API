@@ -12,6 +12,7 @@ using System.Data;
 
 namespace DotNetAuthentication.Controllers
 {
+    //add authorize [authorize]
     [ApiController]
     [Route("[controller]")]
 
@@ -24,7 +25,9 @@ namespace DotNetAuthentication.Controllers
             _context = context;
         }
 
-        [HttpPost("addteam")]
+        [HttpPost("addteam")]//lower case paramater
+
+        //return TasK<IActionResult>
         public async Task<bool> PostTeam([FromHeader] string Token, [FromBody] string TeamName)
         {//add pagination
 
@@ -61,7 +64,7 @@ namespace DotNetAuthentication.Controllers
 
             }
 
-            return true;
+            return true;//return ok Return OK(true)
         }
 
         //delete team 
@@ -71,7 +74,8 @@ namespace DotNetAuthentication.Controllers
 
             //Delete Team
             try
-            {                
+            {    
+                //don't validate tokens inside endpoint
                 //Validate Token
                 var authorise = new Authorise();
                 var userId = authorise.Validate(Token);
