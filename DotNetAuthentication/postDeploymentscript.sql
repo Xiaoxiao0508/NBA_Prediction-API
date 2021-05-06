@@ -66,9 +66,7 @@ go
 
 CREATE TABLE Users
 (
-	 UserId           INT IDENTITY(1,1) NOT NULL,
-	 FirstName    VARCHAR(30) NOT NULL ,
-	 LastName     VARCHAR(30) NOT NULL,
+	 UserId           INT IDENTITY(1,1) NOT NULL,	 
 	 UserName     VARCHAR(30) NOT NULL,
 	 PasswordHash varchar(64) NOT NULL,
 	 primary key (UserId)

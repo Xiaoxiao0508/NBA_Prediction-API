@@ -18,7 +18,7 @@ namespace DotNetAuthentication.Models
             var token = JwtBuilder.Create()
                   .WithAlgorithm(new HMACSHA256Algorithm()) // symmetric
                   .WithSecret(secret)
-                  .AddClaim("exp", DateTimeOffset.UtcNow.AddMinutes(15).ToUnixTimeSeconds())
+                  .AddClaim("exp", DateTimeOffset.UtcNow.AddHours(1).ToUnixTimeSeconds())
                   .AddClaim("User", $"{UserId}")
                   .MustVerifySignature()
                   .Encode();

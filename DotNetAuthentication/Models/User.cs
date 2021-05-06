@@ -23,10 +23,7 @@ namespace DotNetAuthentication.Models
 
         [JsonIgnore]
         public int UserId { get; }
-
-        public string FirstName { get; set; }
-
-        public string LastName { get; set; }
+       
         public string UserName { get; set; }
 
         public string PasswordHash { get; set; }
