@@ -31,7 +31,7 @@ namespace DotNetAuthentication.Controllers
             _context = context;
 
         }
-       
+       //Should be POST return should be Ok(...) use taskaction result
         [HttpPut("/register")]
         public async Task<bool> RegisterUser([FromBody] User user)
         {
@@ -48,13 +48,13 @@ namespace DotNetAuthentication.Controllers
         }
 
         [HttpPost("/Login")]
-        public string Login([FromBody] Login user)
+        public ActionResult Login([FromBody] Login user)
         {//TODO create a login model
             //move check pass function to that model
 
             var isUser = _context.Users.FirstOrDefault(x => x.UserName == user.UserName);
 
-            if (isUser == null) { return "Incorrect credentials"; }
+            if (isUser == null) { return Ok("Incorrect credentials"); }
 
             var SavedPasswordHash = _context.Users.FirstOrDefault(x => x.UserName == user.UserName).PasswordHash;
 
@@ -73,10 +73,10 @@ namespace DotNetAuthentication.Controllers
                 //token needs to be stored in a http cookie client side
                 //UserId needs to be extracted from token and database needs to filter based on the user            
                 
-                return Token;
+                return Ok(Token);
             }
 
-            return "Invalid User name or password.";
+            return Ok("Invalid User name or password.");
 
                        
         }

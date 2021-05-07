@@ -13,7 +13,9 @@ namespace DotNetAuthentication.Models
         const string secret = "266A96DB-AE6D-40CD-87Fh1-F845FB4C44EC5E89B0AE-8C36-487F-AB74-147F701C6588A5258ABA-25E2-40AD-B5A2-26F0C1D99883";
 
         public string Generate(int UserId)
-        {            
+        {   
+            
+            //should return as JASON
             //issue Token            
             var token = JwtBuilder.Create()
                   .WithAlgorithm(new HMACSHA256Algorithm()) // symmetric
