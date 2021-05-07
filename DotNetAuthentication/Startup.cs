@@ -43,10 +43,12 @@ namespace DotNetAuthentication
 
             services.AddCors(options =>
             {
-                options.AddPolicy(name: MyAllowSpecificOrigins,
-                    builder =>
+                options.AddDefaultPolicy(options =>
                 {
-                    builder.WithOrigins("http://localhost:5000","https://localhost:5001", "http://localhost:52391");       
+                    options
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
                 });
             });
         }

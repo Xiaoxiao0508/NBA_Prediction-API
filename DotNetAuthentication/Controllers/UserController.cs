@@ -32,7 +32,7 @@ namespace DotNetAuthentication.Controllers
 
         }
        //Should be POST return should be Ok(...) use taskaction result
-        [HttpPut("/register")]
+        [HttpPost("/register")]
         public async Task<bool> RegisterUser([FromBody] User user)
         {
             var userCheck = await _context.Users.FirstOrDefaultAsync(u => u.UserName == user.UserName);
@@ -67,13 +67,14 @@ namespace DotNetAuthentication.Controllers
             {
                 var UserId = _context.Users.FirstOrDefault(x => x.UserName == user.UserName).UserId;
                 //Generate Token
-                var token = new Authorise();
-                var Token = token.Generate(UserId);
+                var authoriser = new Authorise();
+                var token = authoriser.Generate(UserId);
+
 
                 //token needs to be stored in a http cookie client side
                 //UserId needs to be extracted from token and database needs to filter based on the user            
                 
-                return Ok(Token);
+                return Ok(token);
             }
 
             return Ok("Invalid User name or password.");
@@ -82,7 +83,7 @@ namespace DotNetAuthentication.Controllers
         }
 
         [HttpGet("/refreshtoken")]
-        public string RefreshToken([FromHeader] string Token)
+        public Token RefreshToken([FromHeader] string Token)
         {//lower case paramaters
             //See all teams the current user has.
             try
