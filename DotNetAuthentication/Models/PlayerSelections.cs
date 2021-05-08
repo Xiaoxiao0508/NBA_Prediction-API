@@ -7,7 +7,7 @@ namespace DotNetAuthentication.Models
 {
     public class PlayerSelections
     {
-
+        public string Token { get; set; }
         public string TeamName { get; set; }
         public int UserId { get; set; }
         public int[] PlayerKeys { get; set; }
@@ -17,13 +17,11 @@ namespace DotNetAuthentication.Models
 
         //int userId,
         //UserId = userId;
-        public PlayerSelections(string teamName, int[] playerKeys)
+        public PlayerSelections(string token, string teamName, int[] playerKeys)
         {
+            Token = token;
             TeamName = teamName;            
             PlayerKeys = playerKeys;
         }
-
-
-
     }
 }

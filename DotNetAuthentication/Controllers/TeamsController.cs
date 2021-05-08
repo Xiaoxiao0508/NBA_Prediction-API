@@ -27,18 +27,29 @@ namespace DotNetAuthentication.Controllers
 
         [HttpPost("addteam")]//lower case paramater
 
-        //return TasK<IActionResult>
-        public async Task<bool> PostTeam([FromHeader] string token, [FromBody] string teamName)
+        
+        public async Task<ActionResult<bool>> PostTeam([FromBody] TeamUpdate input)
         {            
             //See all teams the current user has.
             try
             {   
+               
+
                 //Validate Token
                  var authorise = new Authorise();
-                var userId = authorise.Validate(token);
+                var userId = authorise.Validate(input.Token);
 
+                var isTeam = _context.Team
+                    .Where(t => t.TeamName == input.TeamName)
+                    .Where(u => u.UserId == userId)
+                    .FirstOrDefault();
+                
+                //if Team already exists
+                if(isTeam != null) { return Ok(false); }
+
+                //Create team object
                 var team = new Team();
-                team.TeamName = teamName;
+                team.TeamName = input.TeamName;
                 team.UserId = userId;
 
                 //insert into database
@@ -63,26 +74,25 @@ namespace DotNetAuthentication.Controllers
 
             }
 
-            return true;//return ok Return OK(true)
+            return Ok(true);//return ok Return OK(true)
         }
 
         //delete team 
         [HttpPost("deleteteam")]
-        public async Task<string> DeleteTeam([FromHeader] string token, [FromBody] string teamName)
-        {//add pagination
-
+        public async Task<ActionResult<string>> DeleteTeam([FromBody] TeamUpdate input)
+        {
             //Delete Team
             try
             {    
                 //don't validate tokens inside endpoint
                 //Validate Token
                 var authorise = new Authorise();
-                var userId = authorise.Validate(token);
+                var userId = authorise.Validate(input.Token);
                
 
                 var team = new Team();
                 team.UserId = userId;
-                team.TeamName = teamName;
+                team.TeamName = input.TeamName;
 
                 //check if Team exists 
                 var isTeam = _context.Team
@@ -102,9 +112,9 @@ namespace DotNetAuthentication.Controllers
                     await _context.SaveChangesAsync();
 
                     //return which team has been deleted
-                    return $"{team.TeamName} Deleted";
+                    return Ok($"{team.TeamName} Deleted");
                 }                
-                return $"{team.TeamName} was not found";
+                return Ok($"{team.TeamName} was not found");
             }
 
             catch (TokenExpiredException)
@@ -123,7 +133,7 @@ namespace DotNetAuthentication.Controllers
         }
 
         [HttpPost("getteams")]
-        public async Task<ActionResult<IEnumerable<Team>>> GetTeams([FromHeader] string token)
+        public async Task<ActionResult<IEnumerable<Team>>> GetTeams([FromBody] string token)
         {//add pagination
 
             //See all teams the current user has.

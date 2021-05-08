@@ -9,6 +9,7 @@ namespace DotNetAuthentication.Models
     {
         public string token { get; set; }
         //public int uerId { get; set; }
+        //other information that front end might need
 
         public Token(string input/*, int userId*/)
         {

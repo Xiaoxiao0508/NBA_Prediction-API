@@ -11,13 +11,15 @@ namespace DotNetAuthentication.Models
         {
         }
 
-        public FullTeamRosterRequest(string teamName, string sortString, string sortType)
+        public FullTeamRosterRequest(string token, string teamName, string sortString, string sortType)
         {
+            Token = token;
             TeamName = teamName;
             SortString = "FIRSTNAME";
             SortType = "DESC";
         }
 
+        public string Token { get; set; }
         public string TeamName { get; set; }
         public string SortString { get; set; }
         public string SortType { get; set; }

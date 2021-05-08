@@ -22,9 +22,7 @@ namespace DotNetAuthentication.Controllers
     [Route("[controller]")]
     public class UserController : ControllerBase
     {
-        private readonly NBAContext _context;
-        // NBA_DBContext context = new NBA_DBContext();
-
+        private readonly NBAContext _context;        
 
         public UserController(NBAContext context)
         {
@@ -33,7 +31,7 @@ namespace DotNetAuthentication.Controllers
         }
        //Should be POST return should be Ok(...) use taskaction result
         [HttpPost("/register")]
-        public async Task<bool> RegisterUser([FromBody] User user)
+        public async Task<ActionResult<bool>> RegisterUser([FromBody] User user)
         {
             var userCheck = await _context.Users.FirstOrDefaultAsync(u => u.UserName == user.UserName);
 
@@ -42,9 +40,9 @@ namespace DotNetAuthentication.Controllers
                 user.PasswordHash = user.Hash(user.PasswordHash);
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
-                return true;
+                return Ok(true);
             }
-            return false;
+            return Ok(false);
         }
 
         [HttpPost("/Login")]
@@ -82,8 +80,8 @@ namespace DotNetAuthentication.Controllers
                        
         }
 
-        [HttpGet("/refreshtoken")]
-        public Token RefreshToken([FromHeader] string Token)
+        [HttpPost("/refreshtoken")]
+        public ActionResult RefreshToken([FromBody] string Token)
         {//lower case paramaters
             //See all teams the current user has.
             try
@@ -95,7 +93,7 @@ namespace DotNetAuthentication.Controllers
                 var token = authorise.Generate(userId);
 
                 //new token is sent to client            
-                return token;
+                return Ok(token);
 
             }
             catch (TokenExpiredException)

@@ -64,6 +64,7 @@ namespace DotNetAuthentication.Controllers
         }
 
         [HttpGet("SearchPlayer")]
+        //this code could be better
 
         public async Task<ActionResult<IEnumerable<Player>>> GetPlayer([FromQuery] SearchPaginationFilter filter)
         {
@@ -184,14 +185,14 @@ namespace DotNetAuthentication.Controllers
         // Get players from team for a user
         [Route("getPlayersFromTeam")]
         [HttpPost]
-        public async Task<ActionResult<IEnumerable<Player>>> getPlayersFromTeam([FromHeader] string token, [FromBody] FullTeamRosterRequest teamReq)
+        public async Task<ActionResult<IEnumerable<Player>>> getPlayersFromTeam([FromBody] FullTeamRosterRequest teamReq)
         {
             //See all teams the current user has.
             try
             { 
                 //Validate Token
                 var authorise = new Authorise();
-                var userId = authorise.Validate(token);
+                var userId = authorise.Validate(teamReq.Token);
 
                 //If valid send requested data
                 var userInput = teamReq.TeamName;
@@ -211,9 +212,6 @@ namespace DotNetAuthentication.Controllers
                 throw new ArgumentException("Token has invalid signature");
             }
 
-        }
-
-        //todo search players
-        //todo add players to users team 
+        }     
     }
 }

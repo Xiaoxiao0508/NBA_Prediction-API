@@ -23,8 +23,8 @@ namespace DotNetAuthentication.Controllers
 
         // GET: api/PlayerSelection
         // display all Players and teams
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<PlayerSelection>>> GetPlayerSelection([FromHeader] string token)
+        [HttpPost]
+        public async Task<ActionResult<IEnumerable<PlayerSelection>>> GetPlayerSelection([FromBody] string token)
         {
             try
             {
@@ -59,16 +59,14 @@ namespace DotNetAuthentication.Controllers
         //     return Ok(new Response<List<PlayerSelection>>(DisplayData)); ;
         // }
 
-        [HttpPost]
-        public async Task<bool> PostPlayer([FromHeader] string token,[FromBody] PlayerSelections selections)
-
+        [HttpPost("postplayer")]
+        public async Task<bool> PostPlayer([FromBody] PlayerSelections selections)
         {
-
             try
             {
                 //Validate Token
                 var authorise = new Authorise();
-                var userId = authorise.Validate(token);
+                var userId = authorise.Validate(selections.Token);
 
                 selections.UserId = userId;
 
