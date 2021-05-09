@@ -67,15 +67,20 @@ namespace DotNetAuthentication.Controllers
                 //Generate Token
                 var authoriser = new Authorise();
                 var token = authoriser.Generate(UserId);
-
+               
 
                 //token needs to be stored in a http cookie client side
                 //UserId needs to be extracted from token and database needs to filter based on the user            
                 
                 return Ok(token);
             }
+            else
+            {
+                var token = new Token("false");
+                return Ok(token);
+            }
 
-            return Ok("Invalid User name or password.");
+            
 
                        
         }
