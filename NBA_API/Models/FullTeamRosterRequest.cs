@@ -11,15 +11,15 @@ namespace NBA_API.Models
 
         public FullTeamRosterRequest()
         {
-
         }
 
-        public FullTeamRosterRequest(string teamName, string sortString, string sortType)
+        public FullTeamRosterRequest( string teamName, string sortString, string sortType)
         {
             TeamName = teamName;
-            SortString = "FIRSTNAME";
-            SortType = "DESC";
+            SortString = sortString;
+            SortType = sortType;
         }
+
 
     }
 }

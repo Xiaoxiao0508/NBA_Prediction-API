@@ -31,7 +31,13 @@ namespace NBA_API.Controllers
             this.roleManager = roleManager;
             _configuration = configuration;
         }
-
+        [HttpGet]
+        // public async Task<ActionResult<IEnumerable<Team>>> GetTeams(string username)
+        // {await _context.AspNetUsers.Where(p=>p.Id==id).ToListAsync()
+        //     var id=
+        //     // return await _context.Team.Where(p=>p.Id==id).ToListAsync();
+        //      return await _context.
+        // }
         [HttpPost]
         [Route("Register")]
         //checked the user exit or not,create the user if not exist,create the roles if not exist in the database,add user as user or admin
@@ -100,7 +106,7 @@ namespace NBA_API.Controllers
                 //var userRoles = await userManager.GetRolesAsync(user);
                 var authClaims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.Name,user.UserName),
+                    new Claim(ClaimTypes.Name,user.Id),
                     new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
                 };
                 //foreach (var userRole in userRoles)

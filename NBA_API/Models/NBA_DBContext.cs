@@ -1,11 +1,12 @@
 ﻿using System;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 
 namespace NBA_API.Models
 {
 
-    public class NBA_DBContext : DbContext
+    public class NBA_DBContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<Player> allPlayers { get; set; }
         public DbSet<Team> Team { get; set; }
@@ -16,22 +17,29 @@ namespace NBA_API.Models
         {
 
         }
-
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<Player>().HasKey(p => new {
+            // we have to call the base first  becauee we are inheriting from IdentityDbContext<ApplicationUser> not DbContext
+            base.OnModelCreating(builder);
+            builder.Entity<Player>().HasKey(p => new
+            {
                 p.Player_key
             });
             builder.Entity<Team>().HasKey(t => new
             {
-                t.TeamName
+                t.TeamName,
+                t.Id
             });
 
             builder.Entity<ColumnHeaders>().HasNoKey();
             builder.Entity<PlayerSelection>().HasKey(p => new
             {
                 p.TeamName,
-                p.Player_key
+                p.Player_key,
+                p.Id
+            });
+            builder.Entity<AspNetUsers>().HasKey(p=>new{
+                p.Id
             });
         }
 

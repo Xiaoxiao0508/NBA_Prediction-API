@@ -1,27 +1,27 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NBA_API.Models;
 
 namespace NBA_API.Controllers
 {
+    // /Add [Authorize] at the top of your controllers so you can restrict the endpoints to only users that have logged in
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class PlayerController : ControllerBase
     {
         private readonly NBA_DBContext _context;
-        // NBA_DBContext context = new NBA_DBContext();
-
-
+    
         public PlayerController(NBA_DBContext context)
         {
             _context = context;
-
-
+          
         }
 
         // GET: api/Player
@@ -32,7 +32,6 @@ namespace NBA_API.Controllers
             var totalRecords = await _context.allPlayers.CountAsync();
             var pagesCount = (decimal)totalRecords / (decimal)filter.PageSize;
             var pagedData = await _context.allPlayers
-            // .OrderByDescending(p =>"p."+validFilter.SortString)
             .OrderBy(p => EF.Property<object>(p, validFilter.SortString))
             .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
             .Take(validFilter.PageSize)
@@ -66,18 +65,15 @@ namespace NBA_API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Player>>> getPlayersFromTeam([FromQuery] FullTeamRosterRequest teamReq)
         {
-            // var validFilter = new FullTeamRosterRequest(teamReq.PageNumber, teamReq.PageSize, teamReq.SortString, teamReq.TeamName);
-            var userInput = teamReq.TeamName;
-            var usortcol = teamReq.SortString;
-            var uSortType = teamReq.SortType;
+            var claimsIdentity = this.User.Identity as ClaimsIdentity;
+            var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
             var pagedData = await _context.allPlayers
-                .FromSqlRaw("getPlayersFromTeam @p0,@p1,@p2", userInput, usortcol, uSortType)
+                .FromSqlRaw("getPlayersFromTeam @p0,@p1,@p2,@p3", UserId,teamReq.TeamName,teamReq.SortString,teamReq.SortType)
 
             .ToListAsync();
             return Ok(new Response<List<Player>>(pagedData));
         }
-
-
+        
         [HttpGet("SearchPlayer")]
 
         public async Task<ActionResult<IEnumerable<Player>>> GetPlayer([FromQuery] SearchPaginationFilter filter)

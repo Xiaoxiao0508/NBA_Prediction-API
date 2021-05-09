@@ -1,49 +1,60 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NBA_API.Models;
 
 namespace NBA_API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TeamController : ControllerBase
     {
         private readonly NBA_DBContext _context;
-
         public TeamController(NBA_DBContext context)
         {
             _context = context;
+
         }
 
         // GET: api/Team
+        // list all the team for a user
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Team>>> GetTeams()
         {
-            return await _context.Team.ToListAsync();
+            var UserId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            return await _context.Team.Where(p => p.Id == UserId).ToListAsync(); ;
         }
 
         // GET: api/Team/5
-        [HttpGet("{TeamName}")]
-        public async Task<ActionResult<Team>> GetTeam(string teamname)
-        {
-            var team = await _context.Team.FindAsync(teamname);
+        // [HttpGet("{TeamName}")]
+        // public async Task<ActionResult<Team>> GetTeam(string teamname)
+        // {
+        //     var team = await _context.Team.FindAsync(teamname);
 
-            if (team == null)
-            {
-                return NotFound();
-            }
+        //     if (team == null)
+        //     {
+        //         return NotFound();
+        //     }
 
-            return team;
-        }
+        //     return team;
+        // }
 
         [HttpPost]
-        public async Task<bool> PostTeam([FromBody] Team team)
+        // Add new team to user's account
+        public async Task<ActionResult<bool>> PostTeam([FromQuery] string teamname)
         {
+            var claimsIdentity = this.User.Identity as ClaimsIdentity;
+            var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
+            // UserId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            Team team = new Team(teamname, UserId);
             try
             {
                 _context.Team.Add(team);
@@ -51,23 +62,13 @@ namespace NBA_API.Controllers
             }
             catch (DbUpdateException e)
             {
-                return false;
+                return BadRequest("Unsuccessful"); ;
 
             }
 
-            return true;
+            return Ok("Add Team Successfully");
         }
 
-        // POST: api/Team
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        // [HttpPost]
-        // public async Task<ActionResult<Team>> PostTeam(Team team)
-        // {
-        //     _context.Teams.Add(team);
-        //     await _context.SaveChangesAsync();
-
-        //     return CreatedAtAction("GetTeam", new { id = team.Id }, team);
-        // }
 
         // PUT: api/Team/5
 
@@ -100,21 +101,23 @@ namespace NBA_API.Controllers
         //     return NoContent();
         // }
 
-        // // DELETE: api/Team/5
-        // [HttpDelete("{id}")]
-        // public async Task<IActionResult> DeleteTeam(int id)
-        // {
-        //     var team = await _context.Teams.FindAsync(id);
-        //     if (team == null)
-        //     {
-        //         return NotFound();
-        //     }
+        // DELETE: api/Team/5
+        [HttpDelete]
+        public async Task<IActionResult> DeleteTeam(string teamname)
+        {
+           var claimsIdentity = this.User.Identity as ClaimsIdentity;
+            var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
+            var team = _context.Team.FirstOrDefault(p => p.Id == UserId && p.TeamName == teamname);
+            if (team == null)
+            {
+                return NotFound();
+            }
 
-        //     _context.Teams.Remove(team);
-        //     await _context.SaveChangesAsync();
+            _context.Team.Remove(team);
+            await _context.SaveChangesAsync();
 
-        //     return NoContent();
-        // }
+            return Ok("Delete Team Successfullly");
+        }
 
         // private bool TeamExists(int id)
         // {

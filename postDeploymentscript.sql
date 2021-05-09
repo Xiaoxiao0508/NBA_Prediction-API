@@ -9,11 +9,11 @@ Post-Deployment Script Template
                SELECT * FROM [$(TableName)]					
 --------------------------------------------------------------------------------------
 */
-use [nba-db-main]
+use [NBA_Version2]
 drop table if exists PlayerSelection;
 drop table if exists Team;
 drop table if exists Player;
-drop table if exists Users;
+-- drop table if exists Users;
 
 drop view if exists columnHeaders;
 drop view if exists allPlayers;
@@ -64,13 +64,13 @@ CREATE TABLE Player(
 
 go
 
-CREATE TABLE Users
-(
-	 UserId           INT IDENTITY(1,1) NOT NULL,	 
-	 UserName     VARCHAR(30) NOT NULL,
-	 PasswordHash varchar(64) NOT NULL,
-	 primary key (UserId)
-);
+-- CREATE TABLE Users
+-- (
+-- 	 UserId           INT IDENTITY(1,1) NOT NULL,	 
+-- 	 UserName     VARCHAR(30) NOT NULL,
+-- 	 PasswordHash varchar(64) NOT NULL,
+-- 	 primary key (UserId)
+-- );
 
 go
 
@@ -78,32 +78,24 @@ go
  CREATE TABLE Team
 (
 	[TeamName] NVARCHAR(50) NOT NULL CHECK (DATALENGTH(TeamName) > 0), 
-	[UserId] INT  NOT NULL,
-	primary key (TeamName, UserId),
-	Foreign key (UserId) references Users
+	[Id] NVARCHAR(450)  NOT NULL,
+	primary key (TeamName, Id),
+	Foreign key (Id) references AspNetUsers
 );
 
 go
 
---CREATE TABLE PlayerSelection
---	(
---		[selectionId] INT IDENTITY(1,1),
---		[TeamName]	  NVARCHAR(50)        NOT NULL CHECK (DATALENGTH(TeamName) > 0),
---		[Id]          INTEGER		      NOT NULL,
---		FOREIGN KEY (TeamName) REFERENCES Team,
---		FOREIGN KEY (Id)       REFERENCES Users,
-		
---	);
+
 
 
 CREATE TABLE PlayerSelection
 (
 	[TeamName]          NVARCHAR(50)   Not Null  CHECK (DATALENGTH(TeamName) > 0), 
-	[UserId]            INT	   NOT NULL  ,
+	[Id]            NVARCHAR(450)  NOT NULL,
     [Player_key]        INT            NOT NULL  CHECK (DATALENGTH(Player_key) > 0),
 	  
-	PRIMARY KEY (TeamName, UserId, Player_key),	
-    Foreign key (TeamName, UserId) references Team ON DELETE CASCADE,
+	PRIMARY KEY (TeamName, Id, Player_key),	
+    Foreign key (TeamName, Id) references Team ON DELETE CASCADE,
     Foreign key (Player_key) references Player
 );
 
@@ -2804,7 +2796,7 @@ where a.season = a.max_year
 go
 
 CREATE PROCEDURE [dbo].[getPlayersFromTeam]
-	@userId INT, @teamName nvarchar(50),@SortingCol nvarchar(50), @SortType as nvarchar(5) = 'ASC'
+	@Id nvarchar(50), @teamName nvarchar(50),@SortingCol nvarchar(50), @SortType as nvarchar(5) = 'ASC'
 
 AS
 
@@ -2815,7 +2807,7 @@ BEGIN
 				 SELECT p.Player_key,FIRSTNAME,LASTNAME,AGE,GP,MINS,PLUS_MINUS,AST,BLK,BLKA,OREB,DREB,FG_PCT,FG3_PCT,FG3A,FG3M,FGA,FGM,FT_PCT,FTA,FTM,W,L,W_PCT,PF,PFD,REB,TOV,STL,PTS
 				FROM allPlayers as a
 				INNER JOIN PlayerSelection as p  on p.Player_key = a.Player_key
-				WHERE p.UserId = @userId AND TeamName = @teamName
+				WHERE p.Id = @Id AND TeamName = @teamName
 				 ORDER BY 
 					CASE WHEN @SortingCol = 'FIRSTNAME' AND @SortType ='ASC' THEN FIRSTNAME END ,
 					CASE WHEN @SortingCol = 'FIRSTNAME' AND @SortType ='DESC' THEN FIRSTNAME END DESC,
