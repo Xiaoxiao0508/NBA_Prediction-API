@@ -2967,6 +2967,7 @@ SELECT * FROM allPlayers
 
 	GO
 
+	
 	CREATE PROCEDURE [dbo].[DtrScore]
 @userID INT, @teamName nvarchar(50)
 
@@ -2975,11 +2976,11 @@ AS
 BEGIN
     BEGIN TRY
             BEGIN
-				 SELECT 
-                    SUM(A.PLUS_MINUS * A.PTS / (A.MINS/A.GP) ) AS ALGO1
+				 RETURN (SELECT 
+                    SUM(A.PLUS_MINUS * A.PTS / (A.MINS/A.GP) )
                  FROM allPlayers as A
                  WHERE A.Player_key in
-                    (SELECT p.Player_key FROM PlayerSelection p WHERE P.TeamName = @teamName AND p.UserId = @userID)
+                    (SELECT p.Player_key FROM PlayerSelection p WHERE P.TeamName = @teamName AND p.UserId = @userID))
             END
     END TRY
      BEGIN CATCH

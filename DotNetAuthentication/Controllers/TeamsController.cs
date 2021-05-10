@@ -128,6 +128,7 @@ namespace DotNetAuthentication.Controllers
             }
         }
 
+        //Need to add DTR for each team
         [HttpPost("getteams")]
         public async Task<ActionResult<IEnumerable<Team>>> GetTeams([FromBody] string token)
         {//add pagination
