@@ -25,16 +25,12 @@ namespace DotNetAuthentication.Controllers
             _context = context;
         }
 
-        [HttpPost("addteam")]//lower case paramater
-
-        
+        //Add Team
+        [HttpPost("addteam")]        
         public async Task<ActionResult<bool>> PostTeam([FromBody] TeamUpdate input)
-        {            
-            //See all teams the current user has.
+        {                        
             try
-            {   
-               
-
+            {      
                 //Validate Token
                  var authorise = new Authorise();
                 var userId = authorise.Validate(input.Token);
@@ -84,7 +80,7 @@ namespace DotNetAuthentication.Controllers
             //Delete Team
             try
             {    
-                //don't validate tokens inside endpoint
+                //don't validate tokens inside endpoint this needs to be changed
                 //Validate Token
                 var authorise = new Authorise();
                 var userId = authorise.Validate(input.Token);

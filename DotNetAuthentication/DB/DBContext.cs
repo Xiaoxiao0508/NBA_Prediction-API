@@ -12,7 +12,7 @@ namespace DotNetAuthentication.DB
 
         //entities
         public DbSet<User> Users { get; set; }
-        public DbSet<Player> allPlayers { get; set; }
+        public DbSet<Player> allPlayers { get; set; }        
 
         public DbSet<Team> Team { get; set; }
 

@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
+using Microsoft.Data.SqlClient;
 
 namespace DotNetAuthentication.Controllers
 {
@@ -65,7 +66,6 @@ namespace DotNetAuthentication.Controllers
 
         [HttpGet("SearchPlayer")]
         //this code could be better
-
         public async Task<ActionResult<IEnumerable<Player>>> GetPlayer([FromQuery] SearchPaginationFilter filter)
         {
 
@@ -198,9 +198,29 @@ namespace DotNetAuthentication.Controllers
                 var userInput = teamReq.TeamName;
                 var usortcol = teamReq.SortString;
                 var uSortType = teamReq.SortType;
-                var pagedData = await _context.allPlayers
-                    .FromSqlRaw("getPlayersFromTeam @p0,@p1,@p2,@p3", userId, userInput, usortcol, uSortType).ToListAsync();
-                return Ok(new Response<List<Player>>(pagedData));
+
+                var pagedData = await _context.allPlayers.FromSqlRaw
+                    ("getPlayersFromTeam @p0,@p1,@p2,@p3", userId, userInput, usortcol, uSortType).ToListAsync();
+
+                //SqlCommand cmd = new SqlCommand("DtrScore");
+                //cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                //cmd.Parameters.AddWithValue("@teamName", userInput);
+                //cmd.Parameters.AddWithValue("@userId", userId);
+
+                var parameterReturn = new SqlParameter
+                {
+                    ParameterName = "dtr",
+                    SqlDbType = System.Data.SqlDbType.Int,
+                    Direction = System.Data.ParameterDirection.Output,
+                };
+
+                var dtrScore = _context.Database.ExecuteSqlRaw("EXEC @dtr = [dbo].[DtrScore] @p0, @p1", userId, userInput, parameterReturn);
+
+                int dtr = (int)parameterReturn.Value;             
+
+                var result = new { pagedData, dtr };
+
+                return Ok(result);
             }
 
             catch (TokenExpiredException)
