@@ -29,7 +29,8 @@ namespace NBA_API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Team>>> GetTeams()
         {
-            var UserId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+          var claimsIdentity = this.User.Identity as ClaimsIdentity;
+            var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
             return await _context.Team.Where(p => p.Id == UserId).ToListAsync(); ;
         }
 
