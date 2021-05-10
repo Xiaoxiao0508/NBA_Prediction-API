@@ -1,6 +1,6 @@
 ﻿/*
-Post-Deployment Script Template		
--------------------------------------------------------------------------------------
+Post-Deployment Script Template							
+--------------------------------------------------------------------------------------
  This file contains SQL statements that will be appended to the build script.		
  Use SQLCMD syntax to include a file in the post-deployment script.			
  Example:      :r .\myfile.sql								
@@ -22,6 +22,7 @@ drop view if exists altAllPlayers;
 drop procedure if exists addPlayerToTeam;
 drop procedure if exists getPlayersFromTeam;
 drop procedure if exists ViewAllPlayers;
+drop procedure if exists DtrScore;
 
 CREATE TABLE Player(
    Player_key        INT IDENTITY(1,1)	
@@ -2962,5 +2963,38 @@ SELECT * FROM allPlayers
 	CASE WHEN @SortingCol = 'PTS' AND @SortType ='ASC' THEN PTS END ,
 	CASE WHEN @SortingCol = 'PTS' AND @SortType ='DESC' THEN PTS END DESC
 
-	
-	END
+	END;
+
+	GO
+
+	CREATE PROCEDURE [dbo].[DtrScore]
+@userID INT, @teamName nvarchar(50)
+
+AS
+
+BEGIN
+    BEGIN TRY
+            BEGIN
+				 SELECT 
+                    SUM(A.PLUS_MINUS * A.PTS / (A.MINS/A.GP) ) AS ALGO1
+                 FROM allPlayers as A
+                 WHERE A.Player_key in
+                    (SELECT p.Player_key FROM PlayerSelection p WHERE P.TeamName = @teamName AND p.UserId = @userID)
+            END
+    END TRY
+     BEGIN CATCH
+        DECLARE @ErrorMessage NVARCHAR(4000);  
+        DECLARE @ErrorSeverity INT;  
+        DECLARE @ErrorState INT;  
+  
+        SELECT   
+            @ErrorMessage = ERROR_MESSAGE(),  
+            @ErrorSeverity = ERROR_SEVERITY(),  
+            @ErrorState = ERROR_STATE();  
+
+            RAISERROR  (@ErrorMessage, -- Message text.  
+                        @ErrorSeverity, -- Severity.  
+                        @ErrorState -- State.  
+                       );  
+    END CATCH;
+END;
