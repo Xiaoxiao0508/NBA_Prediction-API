@@ -3004,6 +3004,7 @@ END;
 GO
 
 
+
 CREATE PROCEDURE [dbo].[DtrScores]
 @userId INT
 
@@ -3014,11 +3015,11 @@ BEGIN
             BEGIN
 
 SELECT T.TeamName AS TeamName, ISNULL(SUM(A.PLUS_MINUS * A.PTS / (A.MINS/A.GP)),0) AS DTRScores
-FROM allPlayers AS A
-FULL JOIN PlayerSelection AS P ON A.Player_key = P.Player_key
-FULL JOIN Team AS T ON T.UserId = P.UserId
+FROM Team AS T
+FULL JOIN PlayerSelection AS P ON P.TeamName = T.TeamName
+LEFT JOIN allPlayers AS A ON A.Player_key = P.Player_key
 WHERE T.UserId = @userId
-GROUP BY T.TeamName;
+GROUP BY T.TeamName
 
  END
     END TRY
