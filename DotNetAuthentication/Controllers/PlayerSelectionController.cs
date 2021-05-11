@@ -59,7 +59,8 @@ namespace DotNetAuthentication.Controllers
         //     return Ok(new Response<List<PlayerSelection>>(DisplayData)); ;
         // }
 
-        [HttpPost("postplayer")]
+        //Add Players to team
+        [HttpPost("addplayer")]
         public async Task<bool> PostPlayer([FromBody] PlayerSelections selections)
         {
             try
@@ -75,7 +76,7 @@ namespace DotNetAuthentication.Controllers
                     .Where(u => u.UserId == userId)
                     .CountAsync()
                     .Result;
-
+                //Limit players on a team to 15
                 if (PlayerCount < 15)
                 {
                     try

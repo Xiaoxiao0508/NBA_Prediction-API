@@ -20,6 +20,8 @@ namespace DotNetAuthentication.DB
 
         public DbSet<ColumnHeaders> columnHeaders { get; set; }
 
+        public DbSet<DtrScores> DtrScores { get; set; }
+
 
         public NBAContext(DbContextOptions<NBAContext> options): base(options)
         {
@@ -49,6 +51,8 @@ namespace DotNetAuthentication.DB
             });
 
             modelBuilder.Entity<ColumnHeaders>().HasNoKey();
+
+            modelBuilder.Entity<DtrScores>().HasNoKey();
         }
     }
 }

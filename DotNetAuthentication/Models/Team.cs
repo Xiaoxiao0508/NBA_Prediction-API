@@ -1,8 +1,7 @@
 ﻿namespace DotNetAuthentication.Models
 {
     public class Team
-    {
-        
+    {        
         public string TeamName { get; set; }
         public int UserId { get; set; }
         

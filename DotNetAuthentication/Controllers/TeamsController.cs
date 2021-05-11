@@ -96,7 +96,7 @@ namespace DotNetAuthentication.Controllers
                     .Where(t => t.TeamName == team.TeamName)
                     .FirstOrDefault().TeamName == team.TeamName;
                                     
-
+                //If Team Exists
                 if(isTeam)
                 {                    
                     //delete team
@@ -128,22 +128,19 @@ namespace DotNetAuthentication.Controllers
             }
         }
 
-        //Need to add DTR for each team
+        
         [HttpPost("getteams")]
         public async Task<ActionResult<IEnumerable<Team>>> GetTeams([FromBody] string token)
-        {//add pagination
-
-            //See all teams the current user has.
+        {         
             try
-            {   
-                
+            {                   
                 // Validate Token
                  var authorise = new Authorise();
                 var userId = authorise.Validate(token);
 
-                var team = await _context.Team.Where(t => t.UserId == userId).ToListAsync();
-
-                return team;
+                //Show Users teams
+                var team = await _context.DtrScores.FromSqlRaw("DtrScores @p0", userId).ToListAsync();                                
+                return Ok(team);
 
             }
             catch (TokenExpiredException)

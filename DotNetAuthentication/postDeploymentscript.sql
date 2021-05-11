@@ -23,6 +23,7 @@ drop procedure if exists addPlayerToTeam;
 drop procedure if exists getPlayersFromTeam;
 drop procedure if exists ViewAllPlayers;
 drop procedure if exists DtrScore;
+drop procedure if EXISTS DtrScores;
 
 CREATE TABLE Player(
    Player_key        INT IDENTITY(1,1)	
@@ -2982,6 +2983,44 @@ BEGIN
                  WHERE A.Player_key in
                     (SELECT p.Player_key FROM PlayerSelection p WHERE p.TeamName = @teamName AND p.UserId = @userID))
             END
+    END TRY
+     BEGIN CATCH
+        DECLARE @ErrorMessage NVARCHAR(4000);  
+        DECLARE @ErrorSeverity INT;  
+        DECLARE @ErrorState INT;  
+  
+        SELECT   
+            @ErrorMessage = ERROR_MESSAGE(),  
+            @ErrorSeverity = ERROR_SEVERITY(),  
+            @ErrorState = ERROR_STATE();  
+
+            RAISERROR  (@ErrorMessage, -- Message text.  
+                        @ErrorSeverity, -- Severity.  
+                        @ErrorState -- State.  
+                       );  
+    END CATCH;
+END;
+
+GO
+
+
+CREATE PROCEDURE [dbo].[DtrScores]
+@userId INT
+
+AS
+
+BEGIN
+    BEGIN TRY
+            BEGIN
+
+SELECT T.TeamName AS TeamName, ISNULL(SUM(A.PLUS_MINUS * A.PTS / (A.MINS/A.GP)),0) AS DTRScores
+FROM allPlayers AS A
+FULL JOIN PlayerSelection AS P ON A.Player_key = P.Player_key
+FULL JOIN Team AS T ON T.UserId = P.UserId
+WHERE T.UserId = @userId
+GROUP BY T.TeamName;
+
+ END
     END TRY
      BEGIN CATCH
         DECLARE @ErrorMessage NVARCHAR(4000);  
