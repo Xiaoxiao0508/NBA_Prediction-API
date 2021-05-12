@@ -66,31 +66,31 @@ namespace WebApi
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApi", Version = "v1" });
             });
 
-            // services.AddCors(options =>
-            // {
-            //     options.AddDefaultPolicy(options =>
-            //     {
-            //         options
-            //             .AllowAnyOrigin()
-            //             .AllowAnyMethod()
-            //             .AllowAnyHeader();
-            //     });
-            // });
             services.AddCors(options =>
-
             {
-
-                options.AddPolicy("corsGlobalPolicy",
-
-                builder => builder.WithOrigins("[localhost:4200](https://localhost:4200/)")
-
-                .AllowAnyMethod()
-
-                .AllowAnyHeader()
-
-                .AllowCredentials());
-
+                options.AddDefaultPolicy(options =>
+                {
+                    options
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                });
             });
+            // services.AddCors(options =>
+
+            // {
+
+            //     options.AddPolicy("corsGlobalPolicy",
+
+            //     builder => builder.WithOrigins("[localhost:4200](https://localhost:4200/)")
+
+            //     .AllowAnyMethod()
+
+            //     .AllowAnyHeader()
+
+            //     .AllowCredentials());
+
+            // });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
