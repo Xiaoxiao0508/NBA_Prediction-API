@@ -24,6 +24,7 @@ drop procedure if exists getPlayersFromTeam;
 drop procedure if exists ViewAllPlayers;
 drop procedure if exists DtrScore;
 drop procedure if EXISTS DtrScores;
+drop procedure if EXISTS DtrScoresSearch;
 
 CREATE TABLE Player(
    Player_key        INT IDENTITY(1,1)	
@@ -3019,6 +3020,47 @@ FROM Team AS T
 FULL JOIN PlayerSelection AS P ON P.TeamName = T.TeamName
 LEFT JOIN allPlayers AS A ON A.Player_key = P.Player_key
 WHERE T.UserId = @userId
+GROUP BY T.TeamName
+
+ END
+    END TRY
+     BEGIN CATCH
+        DECLARE @ErrorMessage NVARCHAR(4000);  
+        DECLARE @ErrorSeverity INT;  
+        DECLARE @ErrorState INT;  
+  
+        SELECT   
+            @ErrorMessage = ERROR_MESSAGE(),  
+            @ErrorSeverity = ERROR_SEVERITY(),  
+            @ErrorState = ERROR_STATE();  
+
+            RAISERROR  (@ErrorMessage, -- Message text.  
+                        @ErrorSeverity, -- Severity.  
+                        @ErrorState -- State.  
+                       );  
+    END CATCH;
+END;
+
+GO
+
+
+
+
+CREATE PROCEDURE [dbo].[DtrScoresSearch]
+@userId INT, @filter NVARCHAR(50)
+
+AS
+
+BEGIN
+    BEGIN TRY
+            BEGIN
+
+SELECT T.TeamName AS TeamName, ISNULL(SUM(A.PLUS_MINUS * A.PTS / (A.MINS/A.GP)),0) AS DTRScores
+FROM Team AS T
+FULL JOIN PlayerSelection AS P ON P.TeamName = T.TeamName
+LEFT JOIN allPlayers AS A ON A.Player_key = P.Player_key
+WHERE (T.UserId = @userId AND T.TeamName Like @filter + '%')  
+OR (T.UserId = @userId AND @filter Is Null)
 GROUP BY T.TeamName
 
  END

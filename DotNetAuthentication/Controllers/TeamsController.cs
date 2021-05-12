@@ -26,22 +26,22 @@ namespace DotNetAuthentication.Controllers
         }
 
         //Add Team
-        [HttpPost("addteam")]        
+        [HttpPost("addteam")]
         public async Task<ActionResult<bool>> PostTeam([FromBody] TeamUpdate input)
-        {                        
+        {
             try
-            {      
+            {
                 //Validate Token
-                 var authorise = new Authorise();
+                var authorise = new Authorise();
                 var userId = authorise.Validate(input.Token);
 
                 var isTeam = _context.Team
                     .Where(t => t.TeamName == input.TeamName)
                     .Where(u => u.UserId == userId)
                     .FirstOrDefault();
-                
+
                 //if Team already exists
-                if(isTeam != null) { return Ok(false); }
+                if (isTeam != null) { return Ok(false); }
 
                 //Create team object
                 var team = new Team();
@@ -73,18 +73,18 @@ namespace DotNetAuthentication.Controllers
             return Ok(true);//return ok Return OK(true)
         }
 
-        //delete team 
+        //Delete team 
         [HttpPost("deleteteam")]
         public async Task<ActionResult<string>> DeleteTeam([FromBody] TeamUpdate input)
         {
             //Delete Team
             try
-            {    
+            {
                 //don't validate tokens inside endpoint this needs to be changed
                 //Validate Token
                 var authorise = new Authorise();
                 var userId = authorise.Validate(input.Token);
-               
+
 
                 var team = new Team();
                 team.UserId = userId;
@@ -95,10 +95,10 @@ namespace DotNetAuthentication.Controllers
                     .Where(t => t.UserId == team.UserId)
                     .Where(t => t.TeamName == team.TeamName)
                     .FirstOrDefault().TeamName == team.TeamName;
-                                    
+
                 //If Team Exists
-                if(isTeam)
-                {                    
+                if (isTeam)
+                {
                     //delete team
                     _context.RemoveRange(
                         _context.Team
@@ -109,7 +109,7 @@ namespace DotNetAuthentication.Controllers
 
                     //return which team has been deleted
                     return Ok($"{team.TeamName} Deleted");
-                }                
+                }
                 return Ok($"{team.TeamName} was not found");
             }
 
@@ -128,18 +128,18 @@ namespace DotNetAuthentication.Controllers
             }
         }
 
-        
+
         [HttpPost("getteams")]
         public async Task<ActionResult<IEnumerable<Team>>> GetTeams([FromBody] string token)
-        {         
+        {
             try
-            {                   
+            {
                 // Validate Token
-                 var authorise = new Authorise();
+                var authorise = new Authorise();
                 var userId = authorise.Validate(token);
 
                 //Show Users teams
-                var team = await _context.DtrScores.FromSqlRaw("DtrScores @p0", userId).ToListAsync();                                
+                var team = await _context.DtrScores.FromSqlRaw("DtrScores @p0", userId).ToListAsync();
                 return Ok(team);
 
             }
@@ -151,8 +151,37 @@ namespace DotNetAuthentication.Controllers
             {
                 throw new ArgumentException("Token has invalid signature");
             }
-                        
+
         }
+
+        [HttpPost("searchteams")]
+        public async Task<ActionResult<IEnumerable<Team>>> SearchTeams([FromQuery] string filter, [FromBody] string token)
+        {
+            try
+            {
+                // Validate Token
+                var authorise = new Authorise();
+                var userId = authorise.Validate(token);
+
+                //Show Users teams
+                var team = await _context.DtrScores
+                    .FromSqlRaw("DtrScoresSearch @p0, @p1", userId, filter)           
+                    .ToListAsync();
+                
+                return Ok(team);
+
+            }
+            catch (TokenExpiredException)
+            {
+                throw new ArgumentException("Token has expired");
+            }
+            catch (SignatureVerificationException)
+            {
+                throw new ArgumentException("Token has invalid signature");
+            }
+
+        }
+
 
     }
 }
