@@ -65,7 +65,7 @@ namespace WebApi
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApi", Version = "v1" });
             });
-
+// if development()
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(options =>
@@ -83,7 +83,7 @@ namespace WebApi
             //     options.AddPolicy("corsGlobalPolicy",
 
             //     builder => builder.WithOrigins("[localhost:4200](https://localhost:4200/)")
-
+// reference fronturl
             //     .AllowAnyMethod()
 
             //     .AllowAnyHeader()
@@ -104,7 +104,6 @@ namespace WebApi
             }
 
             app.UseCors();
-
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthentication();

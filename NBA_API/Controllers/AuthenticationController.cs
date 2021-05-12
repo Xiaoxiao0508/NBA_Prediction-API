@@ -31,7 +31,7 @@ namespace NBA_API.Controllers
             this.roleManager = roleManager;
             _configuration = configuration;
         }
-        [HttpGet]
+        // [HttpGet]
         // public async Task<ActionResult<IEnumerable<Team>>> GetTeams(string username)
         // {await _context.AspNetUsers.Where(p=>p.Id==id).ToListAsync()
         //     var id=
