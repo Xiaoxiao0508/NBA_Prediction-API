@@ -8,6 +8,11 @@ namespace DotNetAuthentication.Models
     public class DtrScores
     {
         public string TeamName { get; set; }
+
+        public bool Fav { get; set; }
+
+        public int PlayerCount { get; set; }
+
         public decimal DTRScores { get; set; }        
     }
 }

@@ -25,6 +25,7 @@ drop procedure if exists ViewAllPlayers;
 drop procedure if exists DtrScore;
 drop procedure if EXISTS DtrScores;
 drop procedure if EXISTS DtrScoresSearch;
+drop procedure if EXISTS DtrScoresFav;
 
 CREATE TABLE Player(
    Player_key        INT IDENTITY(1,1)	
@@ -78,26 +79,17 @@ CREATE TABLE Users
 go
 
 
- CREATE TABLE Team
-(
-	[TeamName] NVARCHAR(50) NOT NULL CHECK (DATALENGTH(TeamName) > 0), 
-	[UserId] INT  NOT NULL,
-	primary key (TeamName, UserId),
-	Foreign key (UserId) references Users
+ CREATE TABLE [dbo].[Team] (
+    [TeamName]    NVARCHAR (50) NOT NULL,
+    [UserId]      INT           NOT NULL,
+    [Fav]         BIT           NOT NULL,
+    [PlayerCount] INT           NOT NULL,
+    PRIMARY KEY CLUSTERED ([TeamName] ASC, [UserId] ASC),
+    FOREIGN KEY ([UserId]) REFERENCES [dbo].[Users] ([UserId]),
+    CHECK (datalength([TeamName])>(0))
 );
 
-go
-
---CREATE TABLE PlayerSelection
---	(
---		[selectionId] INT IDENTITY(1,1),
---		[TeamName]	  NVARCHAR(50)        NOT NULL CHECK (DATALENGTH(TeamName) > 0),
---		[Id]          INTEGER		      NOT NULL,
---		FOREIGN KEY (TeamName) REFERENCES Team,
---		FOREIGN KEY (Id)       REFERENCES Users,
-		
---	);
-
+GO
 
 CREATE TABLE PlayerSelection
 (
@@ -3015,12 +3007,50 @@ BEGIN
     BEGIN TRY
             BEGIN
 
-SELECT T.TeamName AS TeamName, ISNULL(SUM(A.PLUS_MINUS * A.PTS / (A.MINS/A.GP)),0) AS DTRScores
+SELECT T.TeamName AS TeamName, T.Fav AS Fav, T.PlayerCount AS PlayerCount, ISNULL(SUM(A.PLUS_MINUS * A.PTS / (A.MINS/A.GP)),0) AS DTRScores
 FROM Team AS T
 FULL JOIN PlayerSelection AS P ON P.TeamName = T.TeamName
 LEFT JOIN allPlayers AS A ON A.Player_key = P.Player_key
 WHERE T.UserId = @userId
-GROUP BY T.TeamName
+GROUP BY T.TeamName, T.Fav, T.PlayerCount
+
+ END
+    END TRY
+     BEGIN CATCH
+        DECLARE @ErrorMessage NVARCHAR(4000);  
+        DECLARE @ErrorSeverity INT;  
+        DECLARE @ErrorState INT;  
+  
+        SELECT   
+            @ErrorMessage = ERROR_MESSAGE(),  
+            @ErrorSeverity = ERROR_SEVERITY(),  
+            @ErrorState = ERROR_STATE();  
+
+            RAISERROR  (@ErrorMessage, -- Message text.  
+                        @ErrorSeverity, -- Severity.  
+                        @ErrorState -- State.  
+                       );  
+    END CATCH;
+END;
+
+GO
+
+CREATE PROCEDURE [dbo].[DtrScoresSearch]
+@userId INT, @filter NVARCHAR(50)
+
+AS
+
+BEGIN
+    BEGIN TRY
+            BEGIN
+
+SELECT T.TeamName AS TeamName, T.Fav AS Fav, T.PlayerCount AS PlayerCount, ISNULL(SUM(A.PLUS_MINUS * A.PTS / (A.MINS/A.GP)),0) AS DTRScores
+FROM Team AS T
+FULL JOIN PlayerSelection AS P ON P.TeamName = T.TeamName
+LEFT JOIN allPlayers AS A ON A.Player_key = P.Player_key
+WHERE (T.UserId = @userId AND T.TeamName Like @filter + '%')  
+OR (T.UserId = @userId AND @filter Is Null)
+GROUP BY T.TeamName, T.Fav, T.PlayerCount
 
  END
     END TRY
@@ -3044,10 +3074,8 @@ END;
 GO
 
 
-
-
-CREATE PROCEDURE [dbo].[DtrScoresSearch]
-@userId INT, @filter NVARCHAR(50)
+CREATE PROCEDURE [dbo].[DtrScoresFav]
+@userId INT
 
 AS
 
@@ -3055,13 +3083,12 @@ BEGIN
     BEGIN TRY
             BEGIN
 
-SELECT T.TeamName AS TeamName, ISNULL(SUM(A.PLUS_MINUS * A.PTS / (A.MINS/A.GP)),0) AS DTRScores
+SELECT T.TeamName AS TeamName, T.Fav AS Fav, T.PlayerCount AS PlayerCount, ISNULL(SUM(A.PLUS_MINUS * A.PTS / (A.MINS/A.GP)),0) AS DTRScores
 FROM Team AS T
 FULL JOIN PlayerSelection AS P ON P.TeamName = T.TeamName
 LEFT JOIN allPlayers AS A ON A.Player_key = P.Player_key
-WHERE (T.UserId = @userId AND T.TeamName Like @filter + '%')  
-OR (T.UserId = @userId AND @filter Is Null)
-GROUP BY T.TeamName
+WHERE (T.UserId = @userId AND T.Fav = 1)
+GROUP BY T.TeamName, T.Fav, T.PlayerCount
 
  END
     END TRY

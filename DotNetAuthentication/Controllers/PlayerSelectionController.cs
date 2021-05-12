@@ -65,6 +65,9 @@ namespace DotNetAuthentication.Controllers
         {
             try
             {
+
+                //check if team exists
+
                 //Validate Token
                 var authorise = new Authorise();
                 var userId = authorise.Validate(selections.Token);
@@ -76,11 +79,14 @@ namespace DotNetAuthentication.Controllers
                     .Where(u => u.UserId == userId)
                     .CountAsync()
                     .Result;
+
+                var totalPlayers = PlayerCount + selections.PlayerKeys.Length;
+
                 //Limit players on a team to 15
-                if (PlayerCount < 15)
+                if (totalPlayers <= 15)
                 {
                     try
-                    {
+                    {   //add players to player selection table
                         foreach (int i in selections.PlayerKeys)
                         {
                             var selection = new PlayerSelection(selections.TeamName, i, userId);
@@ -89,6 +95,16 @@ namespace DotNetAuthentication.Controllers
                             await _context.SaveChangesAsync();
                         }
 
+                        // select current team                   
+                        var team = await _context.Team
+                            .Where(t => t.TeamName == selections.TeamName)
+                            .Where(t => t.UserId == userId)
+                            .FirstAsync();
+
+                        //update team player count
+                        team.PlayerCount = totalPlayers;
+                        await _context.SaveChangesAsync();
+                     
                     }
                     catch (DbUpdateException)
                     {

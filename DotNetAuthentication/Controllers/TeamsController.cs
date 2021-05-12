@@ -47,6 +47,8 @@ namespace DotNetAuthentication.Controllers
                 var team = new Team();
                 team.TeamName = input.TeamName;
                 team.UserId = userId;
+                team.Fav = false;
+                team.PlayerCount = 0;
 
                 //insert into database
                 _context.Team.Add(team);
@@ -139,7 +141,8 @@ namespace DotNetAuthentication.Controllers
                 var userId = authorise.Validate(token);
 
                 //Show Users teams
-                var team = await _context.DtrScores.FromSqlRaw("DtrScores @p0", userId).ToListAsync();
+                var team = await _context.DtrScores.FromSqlRaw("DtrScores @p0", userId)
+                    .ToListAsync();
                 return Ok(team);
 
             }
@@ -165,9 +168,9 @@ namespace DotNetAuthentication.Controllers
 
                 //Show Users teams
                 var team = await _context.DtrScores
-                    .FromSqlRaw("DtrScoresSearch @p0, @p1", userId, filter)           
+                    .FromSqlRaw("DtrScoresSearch @p0, @p1", userId, filter)
                     .ToListAsync();
-                
+
                 return Ok(team);
 
             }
@@ -182,6 +185,71 @@ namespace DotNetAuthentication.Controllers
 
         }
 
+        //Update users current teams to favorite
+        [HttpPost("setfavorites")]
+        public async Task<ActionResult<bool>> SetFavorites([FromBody] FavoriteTeams fav)
+        {
+            try
+            {
+                // Validate Token
+                var authorise = new Authorise();
+                var userId = authorise.Validate(fav.Token);
 
+                //find the selected teams
+                foreach (var team in fav.TeamNames)
+                {
+                    var teamUpdate = await _context.Team
+                    .Where(t => t.TeamName == team)
+                    .Where(t => t.UserId == userId)
+                    .FirstOrDefaultAsync();
+
+                    //if no team exists with that name skip team
+                    if (teamUpdate == null) { continue; }
+
+                    teamUpdate.Fav = fav.IsFav;
+                    await _context.SaveChangesAsync();
+                }
+
+                return true;
+            }
+
+            catch (TokenExpiredException)
+            {
+                throw new ArgumentException("Token has expired");
+            }
+            catch (SignatureVerificationException)
+            {
+                throw new ArgumentException("Token has invalid signature");
+            }
+        }
+
+        //Get Favorite Teams 
+        [HttpPost("getfavorites")]
+        public async Task<ActionResult<IEnumerable<Team>>> GetFavorites([FromBody] string token)
+        {
+            try
+            {
+                // Validate Token
+                var authorise = new Authorise();
+                var userId = authorise.Validate(token);
+
+                //Show Users teams
+                var output = await _context.DtrScores
+                    .FromSqlRaw("DtrScoresFav @p0", userId)
+                    .ToListAsync();
+
+                return Ok(output);
+            }
+
+            catch (TokenExpiredException)
+            {
+                throw new ArgumentException("Token has expired");
+            }
+            catch (SignatureVerificationException)
+            {
+                throw new ArgumentException("Token has invalid signature");
+            }
+
+        }
     }
 }
