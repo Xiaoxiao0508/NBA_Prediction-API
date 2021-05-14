@@ -100,6 +100,7 @@ namespace NBA_API.Controllers
         [Route("Login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
+        
             var user = await userManager.FindByNameAsync(model.Username);
             if (user != null && await userManager.CheckPasswordAsync(user, model.Password))
             {
@@ -124,12 +125,12 @@ namespace NBA_API.Controllers
                 return Ok(new
                 {
                     token = new JwtSecurityTokenHandler().WriteToken(token),
-                    expiration = token.ValidTo,
-                    User = user.UserName
+                    
                 });
             }
             return Unauthorized();
-
+             
+           
         }
     }
 }
