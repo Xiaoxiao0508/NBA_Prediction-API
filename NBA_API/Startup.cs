@@ -100,20 +100,20 @@ namespace WebApi
                         .AllowAnyHeader();
                 });
             });
-            services.AddCors(options =>
+            // services.AddCors(options =>
 
-            {
+            // {
 
-                options.AddPolicy("corsGlobalPolicy",
+            //     options.AddPolicy("corsGlobalPolicy",
 
-                builder => builder.WithOrigins(Configuration["FrontendDomain"])
-                .AllowAnyMethod()
+            //     builder => builder.WithOrigins(Configuration["FrontendDomain"])
+            //     .AllowAnyMethod()
 
-                .AllowAnyHeader()
+            //     .AllowAnyHeader()
 
-                .AllowCredentials());
+            //     .AllowCredentials());
 
-            });
+            // });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
