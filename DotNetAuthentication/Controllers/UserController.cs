@@ -52,7 +52,7 @@ namespace DotNetAuthentication.Controllers
 
             var isUser = _context.Users.FirstOrDefault(x => x.UserName == user.UserName);
 
-            if (isUser == null) { return Ok("Incorrect credentials"); }
+            if (isUser == null) { return Ok(false); }
 
             var SavedPasswordHash = _context.Users.FirstOrDefault(x => x.UserName == user.UserName).PasswordHash;
 
