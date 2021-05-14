@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace DotNetAuthentication.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class PlayerSelectionController : ControllerBase
     {

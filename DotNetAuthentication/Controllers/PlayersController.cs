@@ -16,7 +16,7 @@ using Microsoft.Data.SqlClient;
 
 namespace DotNetAuthentication.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class PlayersController : Controller
     {
@@ -169,7 +169,7 @@ namespace DotNetAuthentication.Controllers
 
         // GET: api/Player/5
         // search player by player_key
-        [HttpGet("{Player_key}")]
+        [HttpGet("Player_key")]
         public async Task<ActionResult<Player>> GetPlayer(int Player_key)
         {
             var player = await _context.allPlayers.FindAsync(Player_key);
