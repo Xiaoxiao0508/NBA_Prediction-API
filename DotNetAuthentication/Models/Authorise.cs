@@ -26,8 +26,8 @@ namespace DotNetAuthentication.Models
                   .MustVerifySignature()
                   .Encode();
 
-            Token thisToken = new Token(token);
-            
+            Token thisToken = new Token();
+            thisToken.token = token;            
 
             return thisToken;
         }

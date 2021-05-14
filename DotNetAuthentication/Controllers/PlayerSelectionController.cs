@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -23,7 +24,7 @@ namespace DotNetAuthentication.Controllers
 
         // GET: api/PlayerSelection
         // display all Players and teams
-        [HttpPost]
+        [HttpPut]
         public async Task<ActionResult<IEnumerable<PlayerSelection>>> GetPlayerSelection([FromBody] string token)
         {
             try
@@ -65,15 +66,14 @@ namespace DotNetAuthentication.Controllers
         {
             try
             {
-
                 //check if team exists
-
                 //Validate Token
                 var authorise = new Authorise();
                 var userId = authorise.Validate(selections.Token);
 
                 selections.UserId = userId;
 
+                //count players currently in team
                 var PlayerCount = _context.PlayerSelection
                     .Where(p => p.TeamName == selections.TeamName)
                     .Where(u => u.UserId == userId)
@@ -85,40 +85,35 @@ namespace DotNetAuthentication.Controllers
                 //Limit players on a team to 15
                 if (totalPlayers <= 15)
                 {
-                    try
-                    {   //add players to player selection table
-                        foreach (int i in selections.PlayerKeys)
-                        {
-                            var selection = new PlayerSelection(selections.TeamName, i, userId);
-                            _context.PlayerSelection.Add(selection);
 
-                            await _context.SaveChangesAsync();
-                        }
-
-                        // select current team                   
-                        var team = await _context.Team
-                            .Where(t => t.TeamName == selections.TeamName)
-                            .Where(t => t.UserId == userId)
-                            .FirstAsync();
-
-                        //update team player count
-                        team.PlayerCount = totalPlayers;
-                        await _context.SaveChangesAsync();
-                     
-                    }
-                    catch (DbUpdateException)
+                    //add players to player selection table
+                    foreach (int i in selections.PlayerKeys)
                     {
+                        var selection = new PlayerSelection(selections.TeamName, i, userId);
+                        _context.PlayerSelection.Add(selection);
 
-                        return false;
+                        await _context.SaveChangesAsync();
                     }
-                }
-                else
-                {
-                    return false;
+
+                    // select current team                   
+                    var team = await _context.Team
+                        .Where(t => t.TeamName == selections.TeamName)
+                        .Where(t => t.UserId == userId)
+                        .FirstAsync();
+
+                    //update team player count
+                    team.PlayerCount = totalPlayers;
+                    await _context.SaveChangesAsync();
+
+                    return true;
                 }
 
-                return true;
+                return false;
+            }
 
+            catch (DbUpdateException)
+            {
+                throw new ArgumentException("Unique player list must be selected");
             }
 
             catch (TokenExpiredException)

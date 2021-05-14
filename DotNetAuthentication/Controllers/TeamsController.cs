@@ -76,8 +76,8 @@ namespace DotNetAuthentication.Controllers
         }
 
         //Delete team 
-        [HttpPost("deleteteam")]
-        public async Task<ActionResult<string>> DeleteTeam([FromBody] TeamUpdate input)
+        [HttpPut("deleteteam")]
+        public  void  DeleteTeam([FromBody] TeamUpdate input)
         {
             //Delete Team
             try
@@ -107,12 +107,8 @@ namespace DotNetAuthentication.Controllers
                         .Where(t => t.UserId == team.UserId)
                         .Where(t => t.TeamName == team.TeamName)
                         .FirstOrDefault());
-                    await _context.SaveChangesAsync();
-
-                    //return which team has been deleted
-                    return Ok($"{team.TeamName} Deleted");
-                }
-                return Ok($"{team.TeamName} was not found");
+                     _context.SaveChangesAsync();                                        
+                }                
             }
 
             catch (TokenExpiredException)
@@ -130,15 +126,14 @@ namespace DotNetAuthentication.Controllers
             }
         }
 
-
         [HttpPost("getteams")]
-        public async Task<ActionResult<IEnumerable<Team>>> GetTeams([FromBody] string token)
+        public async Task<ActionResult<IEnumerable<Team>>> GetTeams([FromBody] Token token)
         {
             try
             {
                 // Validate Token
                 var authorise = new Authorise();
-                var userId = authorise.Validate(token);
+                var userId = authorise.Validate(token.token);
 
                 //Show Users teams
                 var team = await _context.DtrScores.FromSqlRaw("DtrScores @p0", userId)
@@ -186,8 +181,8 @@ namespace DotNetAuthentication.Controllers
         }
 
         //Update users current teams to favorite
-        [HttpPost("setfavorites")]
-        public async Task<ActionResult<bool>> SetFavorites([FromBody] FavoriteTeams fav)
+        [HttpPut("setfavorites")]
+        public void SetFavorites([FromBody] FavoriteTeams fav)
         {
             try
             {
@@ -198,19 +193,17 @@ namespace DotNetAuthentication.Controllers
                 //find the selected teams
                 foreach (var team in fav.TeamNames)
                 {
-                    var teamUpdate = await _context.Team
+                    var teamUpdate =  _context.Team
                     .Where(t => t.TeamName == team)
                     .Where(t => t.UserId == userId)
-                    .FirstOrDefaultAsync();
+                    .FirstOrDefault();
 
                     //if no team exists with that name skip team
                     if (teamUpdate == null) { continue; }
 
                     teamUpdate.isFav = fav.IsFav;
-                    await _context.SaveChangesAsync();
-                }
-
-                return true;
+                     _context.SaveChangesAsync();
+                }                 
             }
 
             catch (TokenExpiredException)
@@ -223,33 +216,33 @@ namespace DotNetAuthentication.Controllers
             }
         }
 
-        //Get Favorite Teams 
-        [HttpPost("getfavorites")]
-        public async Task<ActionResult<IEnumerable<Team>>> GetFavorites([FromBody] string token)
-        {
-            try
-            {
-                // Validate Token
-                var authorise = new Authorise();
-                var userId = authorise.Validate(token);
+        ////Get Favorite Teams 
+        //[HttpPost("getfavorites")]
+        //public async Task<ActionResult<IEnumerable<Team>>> GetFavorites([FromBody] string token)
+        //{
+        //    try
+        //    {
+        //        // Validate Token
+        //        var authorise = new Authorise();
+        //        var userId = authorise.Validate(token);
 
-                //Show Users teams
-                var output = await _context.DtrScores
-                    .FromSqlRaw("DtrScoresFav @p0", userId)
-                    .ToListAsync();
+        //        //Show Users teams
+        //        var output = await _context.DtrScores
+        //            .FromSqlRaw("DtrScoresFav @p0", userId)
+        //            .ToListAsync();
 
-                return Ok(output);
-            }
+        //        return Ok(output);
+        //    }
 
-            catch (TokenExpiredException)
-            {
-                throw new ArgumentException("Token has expired");
-            }
-            catch (SignatureVerificationException)
-            {
-                throw new ArgumentException("Token has invalid signature");
-            }
+        //    catch (TokenExpiredException)
+        //    {
+        //        throw new ArgumentException("Token has expired");
+        //    }
+        //    catch (SignatureVerificationException)
+        //    {
+        //        throw new ArgumentException("Token has invalid signature");
+        //    }
 
-        }
+        //}
     }
 }

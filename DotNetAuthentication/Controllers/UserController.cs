@@ -76,7 +76,8 @@ namespace DotNetAuthentication.Controllers
             }
             else
             {
-                var token = new Token("false");
+                var token = new Token();
+                token.token = "false";
                 return Ok(token);
             }
 
