@@ -153,13 +153,13 @@ namespace DotNetAuthentication.Controllers
         }
 
         [HttpPost("searchteams")]
-        public async Task<ActionResult<IEnumerable<Team>>> SearchTeams([FromQuery] string filter, [FromBody] string token)
+        public async Task<ActionResult<IEnumerable<Team>>> SearchTeams([FromQuery] string filter, [FromBody] Token token)
         {
             try
             {
                 // Validate Token
                 var authorise = new Authorise();
-                var userId = authorise.Validate(token);
+                var userId = authorise.Validate(token.token);
 
                 //Show Users teams
                 var team = await _context.DtrScores

@@ -25,13 +25,13 @@ namespace DotNetAuthentication.Controllers
         // GET: api/PlayerSelection
         // display all Players and teams
         [HttpPut]
-        public async Task<ActionResult<IEnumerable<PlayerSelection>>> GetPlayerSelection([FromBody] string token)
+        public async Task<ActionResult<IEnumerable<PlayerSelection>>> GetPlayerSelection([FromBody] Token token)
         {
             try
             {
                 //Validate Token
                 var authorise = new Authorise();
-                var userId = authorise.Validate(token);
+                var userId = authorise.Validate(token.token);
 
                 return await _context.PlayerSelection
                 .Where(p => p.UserId == userId)
