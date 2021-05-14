@@ -90,16 +90,16 @@ namespace WebApi
                     }  
                 });  
             });
-            // services.AddCors(options =>
-            // {
-            //     options.AddDefaultPolicy(options =>
-            //     {
-            //         options
-            //             .AllowAnyOrigin()
-            //             .AllowAnyMethod()
-            //             .AllowAnyHeader();
-            //     });
-            // });
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(options =>
+                {
+                    options
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                });
+            });
             services.AddCors(options =>
 
             {
