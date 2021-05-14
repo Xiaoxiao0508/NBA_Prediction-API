@@ -82,7 +82,7 @@ go
  CREATE TABLE [dbo].[Team] (
     [TeamName]    NVARCHAR (50) NOT NULL,
     [UserId]      INT           NOT NULL,
-    [Fav]         BIT           NOT NULL,
+    [isFav]         BIT           NOT NULL,
     [PlayerCount] INT           NOT NULL,
     PRIMARY KEY CLUSTERED ([TeamName] ASC, [UserId] ASC),
     FOREIGN KEY ([UserId]) REFERENCES [dbo].[Users] ([UserId]),
@@ -3007,12 +3007,12 @@ BEGIN
     BEGIN TRY
             BEGIN
 
-SELECT T.TeamName AS TeamName, T.Fav AS Fav, T.PlayerCount AS PlayerCount, ISNULL(SUM(A.PLUS_MINUS * A.PTS / (A.MINS/A.GP)),0) AS DTRScores
+SELECT T.TeamName AS TeamName, T.isFav AS isFav, T.PlayerCount AS PlayerCount, ISNULL(SUM(A.PLUS_MINUS * A.PTS / (A.MINS/A.GP)),0) AS DTRScores
 FROM Team AS T
 FULL JOIN PlayerSelection AS P ON P.TeamName = T.TeamName
 LEFT JOIN allPlayers AS A ON A.Player_key = P.Player_key
 WHERE T.UserId = @userId
-GROUP BY T.TeamName, T.Fav, T.PlayerCount
+GROUP BY T.TeamName, T.isFav, T.PlayerCount
 
  END
     END TRY
@@ -3044,13 +3044,13 @@ BEGIN
     BEGIN TRY
             BEGIN
 
-SELECT T.TeamName AS TeamName, T.Fav AS Fav, T.PlayerCount AS PlayerCount, ISNULL(SUM(A.PLUS_MINUS * A.PTS / (A.MINS/A.GP)),0) AS DTRScores
+SELECT T.TeamName AS TeamName, T.isFav AS isFav, T.PlayerCount AS PlayerCount, ISNULL(SUM(A.PLUS_MINUS * A.PTS / (A.MINS/A.GP)),0) AS DTRScores
 FROM Team AS T
 FULL JOIN PlayerSelection AS P ON P.TeamName = T.TeamName
 LEFT JOIN allPlayers AS A ON A.Player_key = P.Player_key
 WHERE (T.UserId = @userId AND T.TeamName Like @filter + '%')  
 OR (T.UserId = @userId AND @filter Is Null)
-GROUP BY T.TeamName, T.Fav, T.PlayerCount
+GROUP BY T.TeamName, T.isFav, T.PlayerCount
 
  END
     END TRY
@@ -3083,12 +3083,12 @@ BEGIN
     BEGIN TRY
             BEGIN
 
-SELECT T.TeamName AS TeamName, T.Fav AS Fav, T.PlayerCount AS PlayerCount, ISNULL(SUM(A.PLUS_MINUS * A.PTS / (A.MINS/A.GP)),0) AS DTRScores
+SELECT T.TeamName AS TeamName, T.isFav AS isFav, T.PlayerCount AS PlayerCount, ISNULL(SUM(A.PLUS_MINUS * A.PTS / (A.MINS/A.GP)),0) AS DTRScores
 FROM Team AS T
 FULL JOIN PlayerSelection AS P ON P.TeamName = T.TeamName
 LEFT JOIN allPlayers AS A ON A.Player_key = P.Player_key
-WHERE (T.UserId = @userId AND T.Fav = 1)
-GROUP BY T.TeamName, T.Fav, T.PlayerCount
+WHERE (T.UserId = @userId AND T.isFav = 1)
+GROUP BY T.TeamName, T.isFav, T.PlayerCount
 
  END
     END TRY

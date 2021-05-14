@@ -9,7 +9,7 @@ namespace DotNetAuthentication.Models
     {
         public string TeamName { get; set; }
 
-        public bool Fav { get; set; }
+        public bool isFav { get; set; }
 
         public int PlayerCount { get; set; }
 

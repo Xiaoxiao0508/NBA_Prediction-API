@@ -5,7 +5,7 @@
         public string TeamName { get; set; }
         public int UserId { get; set; }
 
-        public bool Fav { get; set; }
+        public bool isFav { get; set; }
 
         public int PlayerCount { get; set; }
 

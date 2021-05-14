@@ -47,7 +47,7 @@ namespace DotNetAuthentication.Controllers
                 var team = new Team();
                 team.TeamName = input.TeamName;
                 team.UserId = userId;
-                team.Fav = false;
+                team.isFav = false;
                 team.PlayerCount = 0;
 
                 //insert into database
@@ -206,7 +206,7 @@ namespace DotNetAuthentication.Controllers
                     //if no team exists with that name skip team
                     if (teamUpdate == null) { continue; }
 
-                    teamUpdate.Fav = fav.IsFav;
+                    teamUpdate.isFav = fav.IsFav;
                     await _context.SaveChangesAsync();
                 }
 
