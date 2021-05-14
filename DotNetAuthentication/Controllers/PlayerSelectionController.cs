@@ -48,30 +48,19 @@ namespace DotNetAuthentication.Controllers
             }
         }
 
-        // GET: api/PlayerSelection/5
-        // display players from searching team name
-        // [HttpGet("ViewPlayers")]
-        // public async Task<ActionResult<PlayerSelection>> GetPlayerSelection([FromQuery] string searchstring)
-        // {
-        //     var DisplayData = await _context.PlayerSelection.Where(p => EF.Functions.Like(p.TeamName, $"{searchstring}%"))
-        //            .OrderBy(p => p.TeamName)
-        //            .ToListAsync();
-
-        //     return Ok(new Response<List<PlayerSelection>>(DisplayData)); ;
-        // }
-
-        //Add Players to team
-        [HttpPost("addplayer")]
-        public async Task<bool> PostPlayer([FromBody] PlayerSelections selections)
+        //Update Player Selection
+        [HttpPost("UpdatePlayerSelection")]
+        public async Task<bool> UpdatePlayers([FromBody] PlayerSelections selections)
         {
             try
-            {
-                //check if team exists
+            {                
                 //Validate Token
                 var authorise = new Authorise();
                 var userId = authorise.Validate(selections.Token);
 
                 selections.UserId = userId;
+
+                //TODO check if team exists
 
                 //count players currently in team
                 var PlayerCount = _context.PlayerSelection
@@ -80,20 +69,43 @@ namespace DotNetAuthentication.Controllers
                     .CountAsync()
                     .Result;
 
-                var totalPlayers = PlayerCount + selections.PlayerKeys.Length;
+                var players = _context.PlayerSelection
+                    .Where(p => p.TeamName == selections.TeamName)
+                    .Where(p => p.UserId == userId)
+                    .ToList();
 
-                //Limit players on a team to 15
-                if (totalPlayers <= 15)
+                //remove players in current team
+                foreach(var player in players)
                 {
+                    _context.PlayerSelection.Remove(player);
+                    await _context.SaveChangesAsync();
+                }
+                                
+                //save changes to DB
+               await _context.SaveChangesAsync();
 
-                    //add players to player selection table
-                    foreach (int i in selections.PlayerKeys)
-                    {
+                //update playerCount
+                PlayerCount = 0;
+
+                
+                //add players to player selection table
+                foreach (int i in selections.PlayerKeys)
+                {
+                    //Limit Players on a team to 15
+                    if(PlayerCount < 15)
+                    { 
                         var selection = new PlayerSelection(selections.TeamName, i, userId);
                         _context.PlayerSelection.Add(selection);
 
                         await _context.SaveChangesAsync();
+
+                        PlayerCount += 1;
                     }
+                    else
+                    {
+                        break;
+                    }
+                }
 
                     // select current team                   
                     var team = await _context.Team
@@ -102,14 +114,11 @@ namespace DotNetAuthentication.Controllers
                         .FirstAsync();
 
                     //update team player count
-                    team.PlayerCount = totalPlayers;
+                    team.PlayerCount = PlayerCount;
                     await _context.SaveChangesAsync();
 
                     return true;
-                }
-
-                return false;
-            }
+                }                            
 
             catch (DbUpdateException)
             {
@@ -125,6 +134,84 @@ namespace DotNetAuthentication.Controllers
                 throw new ArgumentException("Token has invalid signature");
             }
         }
+
+        // GET: api/PlayerSelection/5
+        // display players from searching team name
+        // [HttpGet("ViewPlayers")]
+        // public async Task<ActionResult<PlayerSelection>> GetPlayerSelection([FromQuery] string searchstring)
+        // {
+        //     var DisplayData = await _context.PlayerSelection.Where(p => EF.Functions.Like(p.TeamName, $"{searchstring}%"))
+        //            .OrderBy(p => p.TeamName)
+        //            .ToListAsync();
+
+        //     return Ok(new Response<List<PlayerSelection>>(DisplayData)); ;
+        // }
+
+        ////Add Players to team
+        //[HttpPost("addplayer")]
+        //public async Task<bool> PostPlayer([FromBody] PlayerSelections selections)
+        //{
+        //    try
+        //    {
+        //        //check if team exists
+        //        //Validate Token
+        //        var authorise = new Authorise();
+        //        var userId = authorise.Validate(selections.Token);
+
+        //        selections.UserId = userId;
+
+        //        //count players currently in team
+        //        var PlayerCount = _context.PlayerSelection
+        //            .Where(p => p.TeamName == selections.TeamName)
+        //            .Where(u => u.UserId == userId)
+        //            .CountAsync()
+        //            .Result;
+
+        //        var totalPlayers = PlayerCount + selections.PlayerKeys.Length;
+
+        //        //Limit players on a team to 15
+        //        if (totalPlayers <= 15)
+        //        {
+
+        //            //add players to player selection table
+        //            foreach (int i in selections.PlayerKeys)
+        //            {
+        //                var selection = new PlayerSelection(selections.TeamName, i, userId);
+        //                _context.PlayerSelection.Add(selection);
+
+        //                await _context.SaveChangesAsync();
+        //            }
+
+        //            // select current team                   
+        //            var team = await _context.Team
+        //                .Where(t => t.TeamName == selections.TeamName)
+        //                .Where(t => t.UserId == userId)
+        //                .FirstAsync();
+
+        //            //update team player count
+        //            team.PlayerCount = totalPlayers;
+        //            await _context.SaveChangesAsync();
+
+        //            return true;
+        //        }
+
+        //        return false;
+        //    }
+
+        //    catch (DbUpdateException)
+        //    {
+        //        throw new ArgumentException("Unique player list must be selected");
+        //    }
+
+        //    catch (TokenExpiredException)
+        //    {
+        //        throw new ArgumentException("Token has expired");
+        //    }
+        //    catch (SignatureVerificationException)
+        //    {
+        //        throw new ArgumentException("Token has invalid signature");
+        //    }
+        //}
 
 
         // DELETE: api/PlayerSelection/DeletePlayer
@@ -145,5 +232,7 @@ namespace DotNetAuthentication.Controllers
 
         //     return true;
         // }
+
+
     }
 }
