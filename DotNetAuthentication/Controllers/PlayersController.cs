@@ -156,16 +156,17 @@ namespace DotNetAuthentication.Controllers
             return Ok(new Response<List<Player>>(pagedData, Decimal.ToInt32(pagescount)));
         }
 
-        ////Get Column Headers
-        //[HttpGet("headers")]
+        //Get Column Headers
+        [HttpGet("headers")]
 
-        //public async Task<ActionResult<IEnumerable<ColumnHeaders>>> GetHeaders()
-        //{
-        //    var Data = await _context.columnHeaders
-        //        .ToListAsync();
+        public async Task<ActionResult<IEnumerable<ColumnHeaders>>> GetHeaders()
+        {
+            var Data = await _context.columnHeaders
+                .ToListAsync();
 
-        //    return Ok(new Response<List<ColumnHeaders>>(Data));
-        //}
+            //return Ok(new Response<List<ColumnHeaders>>(Data));
+            return Ok(Data);
+        }
 
         // GET: api/Player/5
         // search player by player_key
