@@ -49,8 +49,6 @@ namespace NBA_API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new AuthResponse { Status = "Error", Message = "Unsuccessful" });
             ApplicationUser user = new ApplicationUser()
             {
-                //Email = model.Email,
-                //what is the stamp?
                 SecurityStamp = Guid.NewGuid().ToString(),
                 UserName = model.Username
             };
@@ -59,42 +57,10 @@ namespace NBA_API.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new AuthResponse { Status = "Error", Message = "Unsuccessful" });
             }
-            //if (!await roleManager.RoleExistsAsync(UserRoles.Admin))
-            //    await roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
-            //if (!await roleManager.RoleExistsAsync(UserRoles.User))
-            //    await roleManager.CreateAsync(new IdentityRole(UserRoles.User));
-            //if (await roleManager.RoleExistsAsync(UserRoles.Admin))
-            //    await userManager.AddToRoleAsync(user, UserRoles.User);
+            
             return Ok(new AuthResponse { Status = "Success", Message = "User created Successfully" });
         }
-        //[HttpPost]
-        //[Route("RegisterAdmin")]
-
-        //public async Task<IActionResult> RegisterAdmin([FromBody] RegisterModel model)
-        //{
-        //    var userExist = await userManager.FindByNameAsync(model.Username);
-        //    if (userExist != null)
-        //        return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "Unsuccessful" });
-        //    ApplicationUser user = new ApplicationUser()
-        //    {
-        //        Email = model.Email,
-        //        //what is the stamp?
-        //        SecurityStamp = Guid.NewGuid().ToString(),
-        //        UserName = model.Username
-        //    };
-        //    var result = await userManager.CreateAsync(user, model.Password);
-        //    if (!result.Succeeded)
-        //    {
-        //        return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "Unsuccessful" });
-        //    }
-        //    if (!await roleManager.RoleExistsAsync(UserRoles.Admin))
-        //        await roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
-        //    if (!await roleManager.RoleExistsAsync(UserRoles.User))
-        //        await roleManager.CreateAsync(new IdentityRole(UserRoles.User));
-        //    if (await roleManager.RoleExistsAsync(UserRoles.Admin))
-        //        await userManager.AddToRoleAsync(user, UserRoles.Admin);
-        //    return Ok(new Response { Status = "Success", Message = "User created Successfully" });
-        //}
+      
 
         [HttpPost]
         [Route("Login")]
@@ -104,16 +70,12 @@ namespace NBA_API.Controllers
             var user = await userManager.FindByNameAsync(model.Username);
             if (user != null && await userManager.CheckPasswordAsync(user, model.Password))
             {
-                //var userRoles = await userManager.GetRolesAsync(user);
                 var authClaims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name,user.Id),
                     new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
                 };
-                //foreach (var userRole in userRoles)
-                //{
-                //    authClaims.Add(new Claim(ClaimTypes.Role, userRole));
-                //}
+              
                 var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
                 var token = new JwtSecurityToken(
                     issuer: _configuration["JWT:ValidIssuer"],

@@ -75,37 +75,5 @@ namespace NBA_API.Controllers
 
             return Ok("Add players successfully");
         }
-
-            // GET: api/PlayerSelection/5
-            // display players from searching team name
-            // [HttpGet("ViewPlayers")]
-            // public async Task<ActionResult<PlayerSelection>> GetPlayerSelection([FromQuery] string searchstring)
-            // {
-            //     var DisplayData = await _context.PlayerSelection.Where(p => EF.Functions.Like(p.TeamName, $"{searchstring}%"))
-            //            .OrderBy(p => p.TeamName)
-            //            .ToListAsync();
-
-            //     return Ok(new Response<List<PlayerSelection>>(DisplayData)); ;
-            // }
-
-
-            // DELETE: api/PlayerSelection/DeletePlayer
-            // [HttpDelete("DeletePlayer")]
-            // public async Task<bool> DeletePlayerSelection([FromBody] PlayerSelection playerSelection)
-            // {
-            //     var PlayerDeleted = _context.PlayerSelection.Where(p => p.TeamName == playerSelection.TeamName);
-
-            //     try
-            //     {
-            //         _context.PlayerSelection.Remove(playerSelection);
-            //         await _context.SaveChangesAsync();
-            //     }
-            //     catch (DbUpdateException)
-            //     {
-            //         return false;
-            //     }
-
-            //     return true;
-            // }
-        }
     }
+}
