@@ -36,7 +36,7 @@ namespace NBA_API.Controllers
 
         [HttpPost]
         // Add new team to user's account
-        public async Task<ActionResult<bool>> PostTeam([FromQuery] string teamname)
+        public async Task<ActionResult<bool>> PostTeam(string teamname)
         {
             var claimsIdentity = this.User.Identity as ClaimsIdentity;
             var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
