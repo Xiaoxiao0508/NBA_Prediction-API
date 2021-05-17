@@ -29,24 +29,24 @@ namespace NBA_API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Team>>> GetTeams()
         {
-          var claimsIdentity = this.User.Identity as ClaimsIdentity;
+            var claimsIdentity = this.User.Identity as ClaimsIdentity;
             var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
-            return await _context.Team.Where(p => p.Id == UserId).ToListAsync(); ;
+            return await _context.Team.Where(p => p.Id == UserId).ToListAsync();
         }
-
-        // GET: api/Team/5
-        // [HttpGet("{TeamName}")]
-        // public async Task<ActionResult<Team>> GetTeam(string teamname)
-        // {
-        //     var team = await _context.Team.FindAsync(teamname);
-
-        //     if (team == null)
-        //     {
-        //         return NotFound();
-        //     }
-
-        //     return team;
-        // }
+        [HttpGet("DTRS")]
+        public async Task<ActionResult<IEnumerable<float>>> GetDTRS()
+        {
+            List<float> DTRList = new List<float>();
+            var claimsIdentity = this.User.Identity as ClaimsIdentity;
+            var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
+            var Teams = await _context.Team.Where(p => p.Id == UserId).ToListAsync();
+            foreach (var t in Teams)
+            {
+                var DTR = _context.Database.ExecuteSqlRaw("DtrScore @p0,@p1", parameters: new[] {UserId, t.TeamName});
+                DTRList.Add(DTR);
+            }
+            return DTRList;
+        }
 
         [HttpPost]
         // Add new team to user's account
@@ -106,7 +106,7 @@ namespace NBA_API.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteTeam(string teamname)
         {
-           var claimsIdentity = this.User.Identity as ClaimsIdentity;
+            var claimsIdentity = this.User.Identity as ClaimsIdentity;
             var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
             var team = _context.Team.FirstOrDefault(p => p.Id == UserId && p.TeamName == teamname);
             if (team == null)
@@ -120,9 +120,5 @@ namespace NBA_API.Controllers
             return Ok("Delete Team Successfullly");
         }
 
-        // private bool TeamExists(int id)
-        // {
-        //     return _context.Teams.Any(e => e.Id == id);
-        // }
     }
 }
