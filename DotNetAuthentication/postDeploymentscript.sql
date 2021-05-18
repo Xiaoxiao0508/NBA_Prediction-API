@@ -2998,6 +2998,9 @@ GO
 
 
 
+
+
+
 CREATE PROCEDURE [dbo].[DtrScores]
 @userId INT
 
@@ -3007,12 +3010,12 @@ BEGIN
     BEGIN TRY
             BEGIN
 
-SELECT T.TeamName AS TeamName, T.isFav AS isFav, T.PlayerCount AS PlayerCount, ISNULL(SUM(A.PLUS_MINUS * A.PTS / (A.MINS/A.GP)),0) AS DTRScores
+SELECT T.UserId, T.TeamName AS TeamName, T.isFav AS isFav, T.PlayerCount AS PlayerCount, ISNULL(SUM(A.PLUS_MINUS * A.PTS / (A.MINS/A.GP)),0) AS DTRScores
 FROM Team AS T
-FULL JOIN PlayerSelection AS P ON P.TeamName = T.TeamName
+LEFT JOIN PlayerSelection AS P ON P.TeamName = T.TeamName
 LEFT JOIN allPlayers AS A ON A.Player_key = P.Player_key
-WHERE T.UserId = @userId
-GROUP BY T.TeamName, T.isFav, T.PlayerCount
+WHERE ((T.UserId = @userId AND T.PlayerCount = 0) OR (T.UserId = @userId AND P.UserId = @userId))
+GROUP BY T.TeamName, T.isFav, T.PlayerCount, T.UserId;
 
  END
     END TRY
@@ -3032,8 +3035,8 @@ GROUP BY T.TeamName, T.isFav, T.PlayerCount
                        );  
     END CATCH;
 END;
-
 GO
+
 
 CREATE PROCEDURE [dbo].[DtrScoresSearch]
 @userId INT, @filter NVARCHAR(50)
@@ -3046,11 +3049,12 @@ BEGIN
 
 SELECT T.TeamName AS TeamName, T.isFav AS isFav, T.PlayerCount AS PlayerCount, ISNULL(SUM(A.PLUS_MINUS * A.PTS / (A.MINS/A.GP)),0) AS DTRScores
 FROM Team AS T
-FULL JOIN PlayerSelection AS P ON P.TeamName = T.TeamName
+LEFT JOIN PlayerSelection AS P ON P.TeamName = T.TeamName
 LEFT JOIN allPlayers AS A ON A.Player_key = P.Player_key
-WHERE (T.UserId = @userId AND T.TeamName Like @filter + '%')  
-OR (T.UserId = @userId AND @filter Is Null)
-GROUP BY T.TeamName, T.isFav, T.PlayerCount
+WHERE ((T.UserId = @userId AND P.UserId = @userId AND T.TeamName Like @filter + '%')  
+OR (T.UserId = @userId AND P.UserId = @userId AND @filter Is Null) OR (T.UserId = @userId AND T.PlayerCount = 0 AND T.TeamName LIKE @filter + '%')
+OR (T.UserId = @userId AND T.PlayerCount = 0 AND @filter IS NULL))
+GROUP BY T.TeamName, T.isFav, T.PlayerCount,T.UserId
 
  END
     END TRY
@@ -3073,7 +3077,6 @@ END;
 
 GO
 
-
 CREATE PROCEDURE [dbo].[DtrScoresFav]
 @userId INT
 
@@ -3085,10 +3088,10 @@ BEGIN
 
 SELECT T.TeamName AS TeamName, T.isFav AS isFav, T.PlayerCount AS PlayerCount, ISNULL(SUM(A.PLUS_MINUS * A.PTS / (A.MINS/A.GP)),0) AS DTRScores
 FROM Team AS T
-FULL JOIN PlayerSelection AS P ON P.TeamName = T.TeamName
+LEFT JOIN PlayerSelection AS P ON P.TeamName = T.TeamName
 LEFT JOIN allPlayers AS A ON A.Player_key = P.Player_key
-WHERE (T.UserId = @userId AND T.isFav = 1)
-GROUP BY T.TeamName, T.isFav, T.PlayerCount
+WHERE (T.UserId = @userId AND T.isFav = 1 AND P.UserId = @userId) OR (T.UserId = @userId AND T.isFav = 1 AND T.PlayerCount = 0) 
+GROUP BY T.TeamName, T.isFav, T.PlayerCount,T.UserId
 
  END
     END TRY
