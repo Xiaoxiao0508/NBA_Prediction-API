@@ -2,27 +2,28 @@ using System;
 
 namespace NBA_API.Models
 {
-    public class Team
+    public class DtrScores
     {
-
+        
 
         public string TeamName { get; set; }
-        public string Id { get; set; }
+
         public bool isFav { get; set; }
 
         public int PlayerCount { get; set; }
+        
+        public decimal DTRScores { get; set; }  
 
-        public Team()
+        public DtrScores()
         {
-           
         }
 
-        public Team(string teamName, string id, bool isfav, int playerCount)
+        public DtrScores(string teamName, bool isfav, int playerCount, decimal dTRScores)
         {
             TeamName = teamName;
-            Id = id;
             isFav = isfav;
             PlayerCount = playerCount;
+            DTRScores = dTRScores;
         }
     }
 }

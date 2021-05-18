@@ -33,6 +33,13 @@ namespace NBA_API.Controllers
             var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
             return await _context.Team.Where(p => p.Id == UserId).ToListAsync();
         }
+         [HttpGet("searchteams")]
+        public async Task<ActionResult<IEnumerable<Team>>> SearchTeams(string filter)
+        {
+            var claimsIdentity = this.User.Identity as ClaimsIdentity;
+            var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
+            return await _context.Team.Where(p =>EF.Functions.Like(p.TeamName, $"{filter}%")&&p.Id == UserId).ToListAsync();
+        }
         [HttpGet("DTRS")]
         public async Task<ActionResult<IEnumerable<float>>> GetDTRS()
         {
@@ -42,7 +49,7 @@ namespace NBA_API.Controllers
             var Teams = await _context.Team.Where(p => p.Id == UserId).ToListAsync();
             foreach (var t in Teams)
             {
-                var DTR = _context.Database.ExecuteSqlRaw("DtrScore @p0,@p1", parameters: new[] {UserId, t.TeamName});
+                var DTR = _context.Database.ExecuteSqlRaw("DtrScore @p0,@p1", parameters: new[] { UserId, t.TeamName });
                 DTRList.Add(DTR);
             }
             return DTRList;
@@ -55,7 +62,7 @@ namespace NBA_API.Controllers
             var claimsIdentity = this.User.Identity as ClaimsIdentity;
             var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
             // UserId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            Team team = new Team(teamname, UserId);
+            Team team = new Team(teamname, UserId, false, 0);
             try
             {
                 _context.Team.Add(team);
@@ -70,39 +77,6 @@ namespace NBA_API.Controllers
             return Ok("Add Team Successfully");
         }
 
-
-        // PUT: api/Team/5
-
-        // [HttpPut("{id}")]
-        // public async Task<IActionResult> PutTeam(int id, Team team)
-        // {
-        //     if (id != team.Id)
-        //     {
-        //         return BadRequest();
-        //     }
-
-        //     _context.Entry(team).State = EntityState.Modified;
-
-        //     try
-        //     {
-        //         await _context.SaveChangesAsync();
-        //     }
-        //     catch (DbUpdateConcurrencyException)
-        //     {
-        //         if (!TeamExists(id))
-        //         {
-        //             return NotFound();
-        //         }
-        //         else
-        //         {
-        //             throw;
-        //         }
-        //     }
-
-        //     return NoContent();
-        // }
-
-        // DELETE: api/Team/5
         [HttpDelete]
         public async Task<IActionResult> DeleteTeam(string teamname)
         {
@@ -120,5 +94,28 @@ namespace NBA_API.Controllers
             return Ok("Delete Team Successfullly");
         }
 
+        [HttpPut("setfavorites")]
+        public void SetFavorites([FromBody] FavoriteTeams fav)
+        {
+            var claimsIdentity = this.User.Identity as ClaimsIdentity;
+            var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
+               
+                foreach (var team in fav.TeamNames)
+                {
+                    var teamUpdate = _context.Team
+                    .Where(t => t.TeamName == team)
+                    .Where(t => t.Id == UserId)
+                    .FirstOrDefault();
+
+                    //if no team exists with that name skip team
+                    if (teamUpdate == null) { continue; }
+
+                    teamUpdate.isFav = fav.IsFav;
+                    _context.SaveChangesAsync();
+                }
+            }
+
+
+
     }
-}
+    }

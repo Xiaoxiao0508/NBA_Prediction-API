@@ -12,6 +12,7 @@ namespace NBA_API.Models
         public DbSet<Team> Team { get; set; }
         public DbSet<ColumnHeaders> columnHeaders { get; set; }
         public DbSet<PlayerSelection> PlayerSelection { get; set; }
+         public DbSet<DtrScores> DtrScores { get; set; }
 
         public NBA_DBContext(DbContextOptions<NBA_DBContext> options) : base(options)
         {
@@ -41,6 +42,7 @@ namespace NBA_API.Models
             builder.Entity<AspNetUsers>().HasKey(p=>new{
                 p.Id
             });
+                builder.Entity<DtrScores>().HasNoKey();
         }
 
     }
