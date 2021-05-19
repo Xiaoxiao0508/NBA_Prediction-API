@@ -40,9 +40,22 @@ namespace NBA_API.Controllers
             var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
             return await _context.Team.Where(p => EF.Functions.Like(p.TeamName, $"{filter}%") && p.Id == UserId).ToListAsync();
         }
-     
+        // [HttpGet("DTRS")]
+        // public async Task<ActionResult<IEnumerable<Team>>> GetDTRS()
+        // {
+        //     List<float> DTRList = new List<float>();
+        //     var claimsIdentity = this.User.Identity as ClaimsIdentity;
+        //     var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
+        //     var Teams = await _context.Team.Where(p => p.Id == UserId).ToListAsync();
+        //     foreach (var t in Teams)
+        //     {
+        //         var DTR = _context.Database.ExecuteSqlRaw("DtrScore @p0,@p1", parameters: new[] { UserId, t.TeamName });
+        //         DTRList.Add(DTR);
+        //     }
+        //     return DTRList;
+        // }
         [HttpPost("GetDTRS")]
-               public async Task<ActionResult<IEnumerable<Team>>> GetDTRS()
+        public async Task<ActionResult<IEnumerable<Team>>> GetDTRS()
         {
 
             var claimsIdentity = this.User.Identity as ClaimsIdentity;
@@ -52,6 +65,9 @@ namespace NBA_API.Controllers
             var team = await _context.DtrScores.FromSqlRaw("DtrScores @p0", UserId)
                 .ToListAsync();
             return Ok(team);
+
+
+
         }
         [HttpPost]
         // Add new team to user's account
