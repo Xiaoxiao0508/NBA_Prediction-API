@@ -31,6 +31,13 @@ namespace NBA_API.Controllers
         {
             var claimsIdentity = this.User.Identity as ClaimsIdentity;
             var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
+            return await _context.Team.Where(p => p.Id == UserId).ToListAsync();
+        }
+        [HttpGet("searchteams")]
+        public async Task<ActionResult<IEnumerable<Team>>> SearchTeams(string filter)
+        {
+            var claimsIdentity = this.User.Identity as ClaimsIdentity;
+            var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
             return await _context.Team.Where(p => EF.Functions.Like(p.TeamName, $"{filter}%") && p.Id == UserId).ToListAsync();
         }
         [HttpPost("GetDTRS")]
@@ -50,7 +57,7 @@ namespace NBA_API.Controllers
         }
         [HttpPost]
         // Add new team to user's account
-        public async Task<ActionResult<bool>> PostTeam(string teamname)
+        public async Task<ActionResult<bool>> PostTeam([FromQuery] string teamname)
         {
             var claimsIdentity = this.User.Identity as ClaimsIdentity;
             var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
