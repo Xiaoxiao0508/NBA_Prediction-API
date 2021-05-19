@@ -1,9 +1,10 @@
 using System;
+using System.Collections.Generic;
 
 namespace NBA_API.Models
 {
     public class FavoriteTeams
-    {        public List<string> TeamNames { get; set; }
+    {        public string[] TeamNames { get; set; }
 
         public bool IsFav { get; set; }
     }

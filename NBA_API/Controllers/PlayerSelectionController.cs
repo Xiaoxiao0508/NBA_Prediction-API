@@ -42,7 +42,7 @@ namespace NBA_API.Controllers
             var players = _context.PlayerSelection.Where(p => p.TeamName == selections.TeamName && p.Id == UserId).ToList();
             var team = await _context.Team
                         .Where(t => t.TeamName == selections.TeamName)
-                        .Where(t => t.UserId == userId)
+                        .Where(t => t.Id == UserId)
                         .FirstAsync();
 
             foreach (var player in players)
@@ -52,7 +52,7 @@ namespace NBA_API.Controllers
 
                 await _context.SaveChangesAsync();
             }
-              var PlayerCount = 0;
+            //   var PlayerCount = 0;
 
             if (PlayerCount < 15)
             {

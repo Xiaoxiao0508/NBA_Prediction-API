@@ -33,28 +33,26 @@ namespace NBA_API.Controllers
             var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
             return await _context.Team.Where(p => p.Id == UserId).ToListAsync();
         }
-         [HttpGet("searchteams")]
+        [HttpGet("searchteams")]
         public async Task<ActionResult<IEnumerable<Team>>> SearchTeams(string filter)
         {
             var claimsIdentity = this.User.Identity as ClaimsIdentity;
             var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
-            return await _context.Team.Where(p =>EF.Functions.Like(p.TeamName, $"{filter}%")&&p.Id == UserId).ToListAsync();
+            return await _context.Team.Where(p => EF.Functions.Like(p.TeamName, $"{filter}%") && p.Id == UserId).ToListAsync();
         }
-        [HttpGet("DTRS")]
-        public async Task<ActionResult<IEnumerable<float>>> GetDTRS()
+     
+        [HttpPost("GetDTRS")]
+               public async Task<ActionResult<IEnumerable<Team>>> GetDTRS()
         {
-            List<float> DTRList = new List<float>();
+
             var claimsIdentity = this.User.Identity as ClaimsIdentity;
             var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
-            var Teams = await _context.Team.Where(p => p.Id == UserId).ToListAsync();
-            foreach (var t in Teams)
-            {
-                var DTR = _context.Database.ExecuteSqlRaw("DtrScore @p0,@p1", parameters: new[] { UserId, t.TeamName });
-                DTRList.Add(DTR);
-            }
-            return DTRList;
-        }
 
+            //Show Users teams
+            var team = await _context.DtrScores.FromSqlRaw("DtrScores @p0", UserId)
+                .ToListAsync();
+            return Ok(team);
+        }
         [HttpPost]
         // Add new team to user's account
         public async Task<ActionResult<bool>> PostTeam([FromQuery] string teamname)
@@ -99,23 +97,23 @@ namespace NBA_API.Controllers
         {
             var claimsIdentity = this.User.Identity as ClaimsIdentity;
             var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
-               
-                foreach (var team in fav.TeamNames)
-                {
-                    var teamUpdate = _context.Team
-                    .Where(t => t.TeamName == team)
-                    .Where(t => t.Id == UserId)
-                    .FirstOrDefault();
 
-                    //if no team exists with that name skip team
-                    if (teamUpdate == null) { continue; }
+            foreach (var team in fav.TeamNames)
+            {
+                var teamUpdate = _context.Team
+                .Where(t => t.TeamName == team)
+                .Where(t => t.Id == UserId)
+                .FirstOrDefault();
 
-                    teamUpdate.isFav = fav.IsFav;
-                    _context.SaveChangesAsync();
-                }
+                //if no team exists with that name skip team
+                if (teamUpdate == null) { continue; }
+
+                teamUpdate.isFav = fav.IsFav;
+                _context.SaveChangesAsync();
             }
+        }
 
 
 
     }
-    }
+}
