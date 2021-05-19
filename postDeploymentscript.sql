@@ -23,6 +23,9 @@ drop procedure if exists addPlayerToTeam;
 drop procedure if exists getPlayersFromTeam;
 drop procedure if exists ViewAllPlayers;
 
+
+
+
 CREATE TABLE Player(
    Player_key        INT IDENTITY(1,1)	
   ,SEASON            INTEGER  NOT NULL 
@@ -79,6 +82,8 @@ go
 (
 	[TeamName] NVARCHAR(50) NOT NULL CHECK (DATALENGTH(TeamName) > 0), 
 	[Id] NVARCHAR(450)  NOT NULL,
+	 [isFav]    BIT   NOT NULL,
+    [PlayerCount] INT   NOT NULL,
 	primary key (TeamName, Id),
 	Foreign key (Id) references AspNetUsers
 );
@@ -2955,4 +2960,163 @@ SELECT * FROM allPlayers
 	CASE WHEN @SortingCol = 'PTS' AND @SortType ='DESC' THEN PTS END DESC
 
 	
-	END
+	END;
+GO
+
+
+drop procedure if exists DtrScore;
+drop procedure if EXISTS DtrScores;
+drop procedure if EXISTS DtrScoresSearch;
+drop procedure if EXISTS DtrScoresFav;
+GO
+CREATE PROCEDURE [dbo].[DtrScore]
+@UserID NVARCHAR(450), @TeamName nvarchar(50)
+
+AS
+
+BEGIN
+    BEGIN TRY
+            BEGIN
+				 SELECT 
+                    SUM(A.PLUS_MINUS * A.PTS / (A.MINS/A.GP) )
+                 FROM allPlayers as A
+                 WHERE A.Player_key in
+                    (SELECT p.Player_key FROM PlayerSelection p WHERE p.TeamName = @teamName AND p.Id = @UserID)
+            END
+    END TRY
+     BEGIN CATCH
+        DECLARE @ErrorMessage NVARCHAR(4000);  
+        DECLARE @ErrorSeverity INT;  
+        DECLARE @ErrorState INT;  
+  
+        SELECT   
+            @ErrorMessage = ERROR_MESSAGE(),  
+            @ErrorSeverity = ERROR_SEVERITY(),  
+            @ErrorState = ERROR_STATE();  
+
+            RAISERROR  (@ErrorMessage, -- Message text.  
+                        @ErrorSeverity, -- Severity.  
+                        @ErrorState -- State.  
+                       );  
+    END CATCH;
+END;
+
+GO
+EXEC DtrScore @UserID='aabe87eb-9e11-45b2-acbd-6ac8b7311ed6',@TeamName='team1';
+GO
+
+
+
+
+
+CREATE PROCEDURE [dbo].[DtrScores]
+@UserId NVARCHAR(450)
+
+AS
+
+BEGIN
+    BEGIN TRY
+            BEGIN
+
+SELECT T.Id, T.TeamName AS TeamName, T.isFav AS isFav, T.PlayerCount AS PlayerCount, ISNULL(SUM(A.PLUS_MINUS * A.PTS / (A.MINS/A.GP)),0) AS DTRScores
+FROM Team AS T
+LEFT JOIN PlayerSelection AS P ON P.TeamName = T.TeamName
+LEFT JOIN allPlayers AS A ON A.Player_key = P.Player_key
+WHERE ((T.Id = @UserId AND T.PlayerCount = 0) OR (T.Id = @userId AND P.Id = @UserId))
+GROUP BY T.TeamName, T.isFav, T.PlayerCount, T.Id;
+
+ END
+    END TRY
+     BEGIN CATCH
+        DECLARE @ErrorMessage NVARCHAR(4000);  
+        DECLARE @ErrorSeverity INT;  
+        DECLARE @ErrorState INT;  
+  
+        SELECT   
+            @ErrorMessage = ERROR_MESSAGE(),  
+            @ErrorSeverity = ERROR_SEVERITY(),  
+            @ErrorState = ERROR_STATE();  
+
+            RAISERROR  (@ErrorMessage, -- Message text.  
+                        @ErrorSeverity, -- Severity.  
+                        @ErrorState -- State.  
+                       );  
+    END CATCH;
+END;
+GO
+
+EXEC DtrScores @UserID='aabe87eb-9e11-45b2-acbd-6ac8b7311ed6';
+GO;
+CREATE PROCEDURE [dbo].[DtrScoresSearch]
+@UserId NVARCHAR(450), @filter NVARCHAR(50)
+
+AS
+
+BEGIN
+    BEGIN TRY
+            BEGIN
+
+SELECT T.TeamName AS TeamName, T.isFav AS isFav, T.PlayerCount AS PlayerCount, ISNULL(SUM(A.PLUS_MINUS * A.PTS / (A.MINS/A.GP)),0) AS DTRScores
+FROM Team AS T
+LEFT JOIN PlayerSelection AS P ON P.TeamName = T.TeamName
+LEFT JOIN allPlayers AS A ON A.Player_key = P.Player_key
+WHERE ((T.Id = @UserId AND P.Id = @UserId AND T.TeamName Like @filter + '%')  
+OR (T.Id = @UserId AND P.Id = @userId AND @filter Is Null) OR (T.Id = @UserId AND T.PlayerCount = 0 AND T.TeamName LIKE @filter + '%')
+OR (T.Id = @UserId AND T.PlayerCount = 0 AND @filter IS NULL))
+GROUP BY T.TeamName, T.isFav, T.PlayerCount,T.Id
+
+ END
+    END TRY
+     BEGIN CATCH
+        DECLARE @ErrorMessage NVARCHAR(4000);  
+        DECLARE @ErrorSeverity INT;  
+        DECLARE @ErrorState INT;  
+  
+        SELECT   
+            @ErrorMessage = ERROR_MESSAGE(),  
+            @ErrorSeverity = ERROR_SEVERITY(),  
+            @ErrorState = ERROR_STATE();  
+
+            RAISERROR  (@ErrorMessage, -- Message text.  
+                        @ErrorSeverity, -- Severity.  
+                        @ErrorState -- State.  
+                       );  
+    END CATCH;
+END;
+
+GO
+
+CREATE PROCEDURE [dbo].[DtrScoresFav]
+@UserId NVARCHAR(450)
+
+AS
+
+BEGIN
+    BEGIN TRY
+            BEGIN
+
+SELECT T.TeamName AS TeamName, T.isFav AS isFav, T.PlayerCount AS PlayerCount, ISNULL(SUM(A.PLUS_MINUS * A.PTS / (A.MINS/A.GP)),0) AS DTRScores
+FROM Team AS T
+LEFT JOIN PlayerSelection AS P ON P.TeamName = T.TeamName
+LEFT JOIN allPlayers AS A ON A.Player_key = P.Player_key
+WHERE (T.Id = @UserId AND T.isFav = 1 AND P.Id = @UserId) OR (T.Id = @UserId AND T.isFav = 1 AND T.PlayerCount = 0) 
+GROUP BY T.TeamName, T.isFav, T.PlayerCount,T.Id
+
+ END
+    END TRY
+     BEGIN CATCH
+        DECLARE @ErrorMessage NVARCHAR(4000);  
+        DECLARE @ErrorSeverity INT;  
+        DECLARE @ErrorState INT;  
+  
+        SELECT   
+            @ErrorMessage = ERROR_MESSAGE(),  
+            @ErrorSeverity = ERROR_SEVERITY(),  
+            @ErrorState = ERROR_STATE();  
+
+            RAISERROR  (@ErrorMessage, -- Message text.  
+                        @ErrorSeverity, -- Severity.  
+                        @ErrorState -- State.  
+                       );  
+    END CATCH;
+END;

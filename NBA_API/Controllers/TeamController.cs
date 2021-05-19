@@ -31,16 +31,31 @@ namespace NBA_API.Controllers
         {
             var claimsIdentity = this.User.Identity as ClaimsIdentity;
             var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
-            return await _context.Team.Where(p => p.Id == UserId).ToListAsync(); ;
+            return await _context.Team.Where(p => EF.Functions.Like(p.TeamName, $"{filter}%") && p.Id == UserId).ToListAsync();
         }
+        [HttpPost("GetDTRS")]
+        public async Task<ActionResult<IEnumerable<Team>>> GetDTRS()
+        {
 
+            var claimsIdentity = this.User.Identity as ClaimsIdentity;
+            var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
+
+            //Show Users teams
+            var team = await _context.DtrScores.FromSqlRaw("DtrScores @p0", UserId)
+                .ToListAsync();
+            return Ok(team);
+
+
+
+        }
         [HttpPost]
         // Add new team to user's account
         public async Task<ActionResult<bool>> PostTeam(string teamname)
         {
             var claimsIdentity = this.User.Identity as ClaimsIdentity;
             var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
-            Team team = new Team(teamname, UserId);
+            // UserId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            Team team = new Team(teamname, UserId, false, 0);
             try
             {
                 _context.Team.Add(team);
@@ -55,7 +70,6 @@ namespace NBA_API.Controllers
             return Ok("Add Team Successfully");
         }
 
-        // DELETE: api/Team/5
         [HttpDelete]
         public async Task<IActionResult> DeleteTeam(string teamname)
         {
@@ -72,6 +86,29 @@ namespace NBA_API.Controllers
 
             return Ok("Delete Team Successfullly");
         }
+
+        [HttpPut("setfavorites")]
+        public void SetFavorites([FromBody] FavoriteTeams fav)
+        {
+            var claimsIdentity = this.User.Identity as ClaimsIdentity;
+            var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
+
+            foreach (var team in fav.TeamNames)
+            {
+                var teamUpdate = _context.Team
+                .Where(t => t.TeamName == team)
+                .Where(t => t.Id == UserId)
+                .FirstOrDefault();
+
+                //if no team exists with that name skip team
+                if (teamUpdate == null) { continue; }
+
+                teamUpdate.isFav = fav.IsFav;
+                _context.SaveChangesAsync();
+            }
+        }
+
+
 
     }
 }

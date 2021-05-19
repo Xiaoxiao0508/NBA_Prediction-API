@@ -40,6 +40,10 @@ namespace NBA_API.Controllers
             var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
             var PlayerCount = _context.PlayerSelection.Where(p => p.TeamName == selections.TeamName).CountAsync().Result;
             var players = _context.PlayerSelection.Where(p => p.TeamName == selections.TeamName && p.Id == UserId).ToList();
+            var team = await _context.Team
+                        .Where(t => t.TeamName == selections.TeamName)
+                        .Where(t => t.Id == UserId)
+                        .FirstAsync();
 
             foreach (var player in players)
             {
@@ -48,6 +52,7 @@ namespace NBA_API.Controllers
 
                 await _context.SaveChangesAsync();
             }
+            //   var PlayerCount = 0;
 
             if (PlayerCount < 15)
             {
@@ -57,9 +62,13 @@ namespace NBA_API.Controllers
                     {
                         var selection = new PlayerSelection(selections.TeamName, UserId, i);
                         _context.PlayerSelection.Add(selection);
+                     
 
                         await _context.SaveChangesAsync();
+                           PlayerCount+=1;
                     }
+                    team.PlayerCount=PlayerCount;
+                    await _context.SaveChangesAsync();
 
                 }
                 catch (DbUpdateException)
