@@ -182,7 +182,7 @@ namespace DotNetAuthentication.Controllers
 
         //Update users current teams to favorite
         [HttpPut("setfavorites")]
-        public void SetFavorites([FromBody] FavoriteTeams fav)
+        public void SetFavorites([FromBody] FavoriteTeam fav)
         {
             try
             {
@@ -190,20 +190,15 @@ namespace DotNetAuthentication.Controllers
                 var authorise = new Authorise();
                 var userId = authorise.Validate(fav.Token);
 
-                //find the selected teams
-                foreach (var team in fav.TeamNames)
-                {
+                
                     var teamUpdate =  _context.Team
-                    .Where(t => t.TeamName == team)
+                    .Where(t => t.TeamName == fav.TeamNames)
                     .Where(t => t.UserId == userId)
                     .FirstOrDefault();
-
-                    //if no team exists with that name skip team
-                    if (teamUpdate == null) { continue; }
+                                        
 
                     teamUpdate.isFav = fav.IsFav;
-                     _context.SaveChangesAsync();
-                }                 
+                     _context.SaveChangesAsync();                                
             }
 
             catch (TokenExpiredException)

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\dnadi\\Desktop\\NBA_API\\DotNetAuthentication\\DotNetAuthentication.csproj": {}
+    "C:\\Users\\dnadi\\Desktop\\New folder\\NBA_API\\DotNetAuthentication\\DotNetAuthentication.csproj": {}
   },
   "projects": {
-    "C:\\Users\\dnadi\\Desktop\\NBA_API\\DotNetAuthentication\\DotNetAuthentication.csproj": {
+    "C:\\Users\\dnadi\\Desktop\\New folder\\NBA_API\\DotNetAuthentication\\DotNetAuthentication.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\dnadi\\Desktop\\NBA_API\\DotNetAuthentication\\DotNetAuthentication.csproj",
+        "projectUniqueName": "C:\\Users\\dnadi\\Desktop\\New folder\\NBA_API\\DotNetAuthentication\\DotNetAuthentication.csproj",
         "projectName": "DotNetAuthentication",
-        "projectPath": "C:\\Users\\dnadi\\Desktop\\NBA_API\\DotNetAuthentication\\DotNetAuthentication.csproj",
+        "projectPath": "C:\\Users\\dnadi\\Desktop\\New folder\\NBA_API\\DotNetAuthentication\\DotNetAuthentication.csproj",
         "packagesPath": "C:\\Users\\dnadi\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\dnadi\\Desktop\\NBA_API\\DotNetAuthentication\\obj\\",
+        "outputPath": "C:\\Users\\dnadi\\Desktop\\New folder\\NBA_API\\DotNetAuthentication\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\dnadi\\AppData\\Roaming\\NuGet\\NuGet.Config",

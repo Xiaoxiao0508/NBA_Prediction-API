@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "+0hvCokZWslV/XQDoTeGG4VE3f9yj+c9tFoDI9fJUFZob/3y3mZHlpvZqy3Tkl8yey9Y/pRVkqSoyk5CSzyBrA==",
+  "dgSpecHash": "IGxpPWlDb5532iUiMNQObLJfHVrG4X/5BchVG5sxSwNzkTqGUtxxfScCsMS8rGua9vZXHesnfTe0PHQiYrJX9g==",
   "success": true,
-  "projectFilePath": "C:\\Users\\dnadi\\Desktop\\NBA_API\\DotNetAuthentication\\DotNetAuthentication.csproj",
+  "projectFilePath": "C:\\Users\\dnadi\\Desktop\\New folder\\NBA_API\\DotNetAuthentication\\DotNetAuthentication.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\dnadi\\.nuget\\packages\\entityframework\\6.4.4\\entityframework.6.4.4.nupkg.sha512",
     "C:\\Users\\dnadi\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",

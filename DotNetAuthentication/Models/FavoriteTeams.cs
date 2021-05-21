@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace DotNetAuthentication.Models
 {
-    public class FavoriteTeams
+    public class FavoriteTeam
     {
         public string Token { get; set; }
 
-        public List<string> TeamNames { get; set; }
+        public string TeamNames { get; set; }
 
         public bool IsFav { get; set; }
     }

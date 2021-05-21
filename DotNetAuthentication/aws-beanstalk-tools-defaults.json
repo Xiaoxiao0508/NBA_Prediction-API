@@ -1,0 +1,20 @@
+
+{
+    "region" : "us-east-1",
+    "configuration" : "Debug",
+    "framework"     : "net5.0",
+    "self-contained" : false,
+    "application"    : "DotNetAuthentication",
+    "environment"    : "DotNetAuthentication-dev",
+    "enable-xray"    : false,
+    "enhanced-health-type" : "basic",
+    "additional-options"   : "\"aws:autoscaling:launchconfiguration,SecurityGroups\"=\"sg-022cc737,sg-010369ac7004ac995\";\"aws:ec2:vpc,Subnets\"=\"subnet-38d55467\"",
+    "solution-stack"       : "64bit Amazon Linux 2 v2.1.5 running .NET Core",
+    "environment-type"     : "SingleInstance",
+    "cname"                : "dotnetauthentication-dev",
+    "instance-type"        : "t2.micro",
+    "key-pair"             : "EB_key",
+    "instance-profile"     : "aws-elasticbeanstalk-DotNetAuthentication-dev-4",
+    "service-role"         : "aws-elasticbeanstalk-service-role",
+    "proxy-server"         : "nginx"
+}
