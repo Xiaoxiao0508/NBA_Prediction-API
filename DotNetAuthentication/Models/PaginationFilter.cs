@@ -28,6 +28,13 @@ namespace DotNetAuthentication.Models
             SortOrder = sortOrder;
         }
 
+        public int NumberOfPages(int totalRecords, int pageSize)
+        {
+            var pagesCount = Math.Ceiling((decimal)(totalRecords / pageSize));
+
+            return (int)pagesCount;
+        }
+
 
     }
 }

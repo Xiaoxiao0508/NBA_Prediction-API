@@ -27,41 +27,39 @@ namespace DotNetAuthentication.Controllers
             _context = context;
         }
 
+
         // Get all players
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Player>>> GetallPlayers([FromQuery] PaginationFilter filter)
-        {
+        {           
             var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize, filter.SortString, filter.SortOrder);
+
+            //total number of records in db
             var totalRecords = await _context.allPlayers.CountAsync();
-            var pagesCount = (decimal)totalRecords / (decimal)filter.PageSize;
-            var pagedData = await _context.allPlayers
-            // .OrderByDescending(p =>"p."+validFilter.SortString)
-            .OrderBy(p => EF.Property<object>(p, validFilter.SortString))
-            .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
-            .Take(validFilter.PageSize)
-            .ToListAsync();
-            if ((pagesCount % 1) != 0)
-            {
-                pagesCount = Decimal.ToInt32(pagesCount);
-                pagesCount += 1;
-            }
+
+            //get number of pages
+            var pagesCount = filter.NumberOfPages(totalRecords, filter.PageSize);
+
+            //OrderByDescending(p => EF.Property<object>(p, validFilter.SortString))
+            //List<Player> pagedData;
+            List<Player> pagedData;
             if (filter.SortOrder == "ASC")
             {
-                return Ok(new Response<List<Player>>(pagedData, Decimal.ToInt32(pagesCount)));
-
+                //returns selected page based on inputs 
+                 pagedData = await _context.allPlayers
+                .OrderBy(p => EF.Property<object>(p, validFilter.SortString))
+                .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+                .Take(validFilter.PageSize)
+                .ToListAsync();
+                return Ok(new Response<List<Player>>(pagedData, pagesCount));
             }
-            else if (filter.SortOrder == "DESC")
-            {
-                var pagedData1 = await _context.allPlayers
-           // .OrderByDescending(p =>"p."+validFilter.SortString)
-           .OrderByDescending(p => EF.Property<object>(p, validFilter.SortString))
-           .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
-           .Take(validFilter.PageSize)
-           .ToListAsync();
-                return Ok(new Response<List<Player>>(pagedData1, Decimal.ToInt32(pagesCount)));
-            }
-
-            return Ok(new Response<List<Player>>(pagedData, Decimal.ToInt32(pagesCount)));
+            
+                pagedData = await _context.allPlayers
+               .OrderByDescending(p => EF.Property<object>(p, validFilter.SortString))
+               .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+               .Take(validFilter.PageSize)
+               .ToListAsync();
+                return Ok(new Response<List<Player>>(pagedData, pagesCount));                              
         }
 
         [HttpGet("SearchPlayer")]
@@ -76,8 +74,7 @@ namespace DotNetAuthentication.Controllers
             var pagedData = new List<Player>();
             decimal pagescount = 0;
 
-
-            if (splitString?.Length == 2)
+            if (splitString.Length == 2)
             {
                 //filters the player view data based on the searchstring and adds pagination based on the url.
                 var pageData = await _context.allPlayers.Where(p => EF.Functions.Like(p.FIRSTNAME, $"{splitString[0]}%") && EF.Functions.Like(p.LASTNAME, $"{splitString[1]}%"))
@@ -90,13 +87,8 @@ namespace DotNetAuthentication.Controllers
                 var totalRecords = await _context.allPlayers.Where(p => EF.Functions.Like(p.FIRSTNAME, $"{splitString[0]}%") && EF.Functions.Like(p.LASTNAME, $"{splitString[1]}%"))
                     .OrderBy(p => p.FIRSTNAME).CountAsync();
 
-                var pagesCount = (decimal)totalRecords / (decimal)filter.PageSize;
-
-                if ((pagesCount % 1) != 0)
-                {
-                    pagesCount = Decimal.ToInt32(pagesCount);
-                    pagesCount += 1;
-                }
+                var pagesCount = validFilter.NumberOfPages(totalRecords, validFilter.PageSize);
+               
                 if (filter.SortOrder == "ASC")
                 {
                     return Ok(new Response<List<Player>>(pageData, Decimal.ToInt32(pagesCount)));
@@ -118,7 +110,7 @@ namespace DotNetAuthentication.Controllers
                 //Partial firstname + lastname search this code runs if the splitString array has more then 2 items
                 var pageData = await _context.allPlayers
                     .Where(p => EF.Functions.Like(p.FIRSTNAME, $"{filter.searchstring}%") || EF.Functions.Like(p.LASTNAME, $"{filter.searchstring}%") || EF.Functions.Like(p.FIRSTNAME + " " + p.LASTNAME, $"{filter.searchstring}%"))
-                      .OrderBy(p => EF.Property<object>(p, validFilter.SortString))
+                    .OrderBy(p => EF.Property<object>(p, validFilter.SortString))
                     .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                     .Take(validFilter.PageSize)
                     .ToListAsync();
@@ -126,20 +118,11 @@ namespace DotNetAuthentication.Controllers
                 //total pages in current search
                 var totalRecords = await _context.allPlayers.Where(p => EF.Functions.Like(p.FIRSTNAME, $"{filter.searchstring}%") || EF.Functions.Like(p.LASTNAME, $"{filter.searchstring}%") || EF.Functions.Like(p.FIRSTNAME + " " + p.LASTNAME, $"{filter.searchstring}%")).CountAsync();
 
-                var pagesCount = (decimal)totalRecords / (decimal)filter.PageSize;
-
-                if ((pagesCount % 1) != 0)
-                {
-                    pagesCount = Decimal.ToInt32(pagesCount);
-                    pagesCount += 1;
-                }
+                var pagesCount = validFilter.NumberOfPages(totalRecords, validFilter.PageSize);
+               
                 if (filter.SortOrder == "ASC")
-
-                {
-                    pagedData = pageData;
-                    pagescount = pagesCount;
-                    return Ok(new Response<List<Player>>(pageData, Decimal.ToInt32(pagesCount)));
-
+                {                                       
+                    return Ok(new Response<List<Player>>(pagedData, Decimal.ToInt32(pagesCount)));
                 }
                 else if (filter.SortOrder == "DESC")
                 {
