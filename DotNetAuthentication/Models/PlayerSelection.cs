@@ -15,7 +15,6 @@
 
         public string TeamName { get; set; }
         public int Player_key { get; set; }
-
         public int UserId { get; set; }
 
     }

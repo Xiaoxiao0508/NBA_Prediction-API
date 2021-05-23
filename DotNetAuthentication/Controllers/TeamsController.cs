@@ -76,7 +76,7 @@ namespace DotNetAuthentication.Controllers
         }
 
         //Delete team 
-        [HttpPut("deleteteam")]
+        [HttpDelete("deleteteam")]
         public  void  DeleteTeam([FromBody] TeamUpdate input)
         {
             //Delete Team
@@ -127,7 +127,7 @@ namespace DotNetAuthentication.Controllers
         }
 
         [HttpPost("getteams")]
-        public async Task<ActionResult<IEnumerable<Team>>> GetTeams([FromBody] Token token)
+        public async Task<ActionResult<IEnumerable<DtrScores>>> GetTeams([FromBody] Token token)
         {
             try
             {

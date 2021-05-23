@@ -23,7 +23,7 @@ namespace DotNetAuthentication.Controllers
         }
 
         // GET: api/PlayerSelection
-        // display all Players and teams
+        /// display all Players and teams
         [HttpPut]
         public async Task<ActionResult<IEnumerable<PlayerSelection>>> GetPlayerSelection([FromBody] Token token)
         {
@@ -48,9 +48,9 @@ namespace DotNetAuthentication.Controllers
             }
         }
 
-        //Update Player Selection
-        [HttpPost("UpdatePlayerSelection")]
-        public async Task<bool> UpdatePlayers([FromBody] PlayerSelections selections)
+        ///Update Player Selection
+        [HttpPut("UpdatePlayerSelection")]
+        public void UpdatePlayers([FromBody] PlayerSelections selections)
         {
             try
             {                
@@ -58,7 +58,7 @@ namespace DotNetAuthentication.Controllers
                 var authorise = new Authorise();
                 var userId = authorise.Validate(selections.Token);
 
-                selections.UserId = userId;
+
 
                 //TODO check if team exists
 
@@ -78,15 +78,14 @@ namespace DotNetAuthentication.Controllers
                 foreach(var player in players)
                 {
                     _context.PlayerSelection.Remove(player);
-                    await _context.SaveChangesAsync();
+                    _context.SaveChanges();
                 }
                                 
                 //save changes to DB
-               await _context.SaveChangesAsync();
+                _context.SaveChanges();
 
                 //update playerCount
                 PlayerCount = 0;
-
                 
                 //add players to player selection table
                 foreach (int i in selections.PlayerKeys)
@@ -97,7 +96,7 @@ namespace DotNetAuthentication.Controllers
                         var selection = new PlayerSelection(selections.TeamName, i, userId);
                         _context.PlayerSelection.Add(selection);
 
-                        await _context.SaveChangesAsync();
+                         _context.SaveChanges();
 
                         PlayerCount += 1;
                     }
@@ -107,17 +106,15 @@ namespace DotNetAuthentication.Controllers
                     }
                 }
 
-                    // select current team                   
-                    var team = await _context.Team
-                        .Where(t => t.TeamName == selections.TeamName)
-                        .Where(t => t.UserId == userId)
-                        .FirstAsync();
+                // select current team                   
+                var team =  _context.Team
+                    .Where(t => t.TeamName == selections.TeamName)
+                    .Where(t => t.UserId == userId)
+                    .First();
 
                     //update team player count
                     team.PlayerCount = PlayerCount;
-                    await _context.SaveChangesAsync();
-
-                    return true;
+                     _context.SaveChanges();                    
                 }                            
 
             catch (DbUpdateException)

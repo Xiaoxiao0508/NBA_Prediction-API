@@ -40,7 +40,7 @@ namespace DotNetAuthentication.DB
             });
             modelBuilder.Entity<Team>().HasKey(t => new
             {
-                t.TeamName, t.UserId
+                t.TeamName
             });
 
             modelBuilder.Entity<PlayerSelection>().HasKey(p => new

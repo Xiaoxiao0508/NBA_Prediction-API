@@ -9,7 +9,7 @@ namespace DotNetAuthentication.Models
     {
         public string Token { get; set; }
         public string TeamName { get; set; }
-        public int UserId { get; set; }
+        
         public int[] PlayerKeys { get; set; }
         public PlayerSelections()
         {
