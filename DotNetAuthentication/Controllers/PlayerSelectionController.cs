@@ -49,7 +49,7 @@ namespace DotNetAuthentication.Controllers
         }
 
         ///Update Player Selection
-        [HttpPut("UpdatePlayerSelection")]
+        [HttpPost("UpdatePlayerSelection")]
         public void UpdatePlayers([FromBody] PlayerSelections selections)
         {
             try
@@ -57,8 +57,6 @@ namespace DotNetAuthentication.Controllers
                 //Validate Token
                 var authorise = new Authorise();
                 var userId = authorise.Validate(selections.Token);
-
-
 
                 //TODO check if team exists
 
@@ -80,7 +78,7 @@ namespace DotNetAuthentication.Controllers
                     _context.PlayerSelection.Remove(player);
                     _context.SaveChanges();
                 }
-                                
+                
                 //save changes to DB
                 _context.SaveChanges();
 
@@ -107,14 +105,14 @@ namespace DotNetAuthentication.Controllers
                 }
 
                 // select current team                   
-                var team =  _context.Team
+                var team = _context.Team
                     .Where(t => t.TeamName == selections.TeamName)
                     .Where(t => t.UserId == userId)
                     .First();
 
                     //update team player count
                     team.PlayerCount = PlayerCount;
-                     _context.SaveChanges();                    
+                     _context.SaveChangesAsync();                    
                 }                            
 
             catch (DbUpdateException)

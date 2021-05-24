@@ -2996,11 +2996,6 @@ END;
 
 GO
 
-
-
-
-
-
 CREATE PROCEDURE [dbo].[DtrScores]
 @userId INT
 
@@ -3010,52 +3005,13 @@ BEGIN
     BEGIN TRY
             BEGIN
 
-SELECT T.UserId, T.TeamName AS TeamName, T.isFav AS isFav, T.PlayerCount AS PlayerCount, ISNULL(SUM(A.PLUS_MINUS * A.PTS / (A.MINS/A.GP)),0) AS DTRScores
+SELECT T.UserId, T.TeamName AS TeamName, T.isFav AS isFav, T.PlayerCount AS PlayerCount, 
+SUM(CASE WHEN T.UserId = @userId AND P.UserId = @userId THEN A.PLUS_MINUS * A.PTS / (A.MINS/A.GP) ELSE 0 END) AS DTRScores
 FROM Team AS T
 LEFT JOIN PlayerSelection AS P ON P.TeamName = T.TeamName
 LEFT JOIN allPlayers AS A ON A.Player_key = P.Player_key
-WHERE ((T.UserId = @userId AND T.PlayerCount = 0) OR (T.UserId = @userId AND P.UserId = @userId))
+WHERE ((T.UserId = @userId AND T.PlayerCount = 0) OR (T.UserId = @userId AND P.UserId =@userId))
 GROUP BY T.TeamName, T.isFav, T.PlayerCount, T.UserId;
-
- END
-    END TRY
-     BEGIN CATCH
-        DECLARE @ErrorMessage NVARCHAR(4000);  
-        DECLARE @ErrorSeverity INT;  
-        DECLARE @ErrorState INT;  
-  
-        SELECT   
-            @ErrorMessage = ERROR_MESSAGE(),  
-            @ErrorSeverity = ERROR_SEVERITY(),  
-            @ErrorState = ERROR_STATE();  
-
-            RAISERROR  (@ErrorMessage, -- Message text.  
-                        @ErrorSeverity, -- Severity.  
-                        @ErrorState -- State.  
-                       );  
-    END CATCH;
-END;
-GO
-
-
-CREATE PROCEDURE [dbo].[DtrScoresSearch]
-@userId INT, @filter NVARCHAR(50)
-
-AS
-
-BEGIN
-    BEGIN TRY
-            BEGIN
-
-SELECT T.TeamName AS TeamName, T.isFav AS isFav, T.PlayerCount AS PlayerCount, ISNULL(SUM(A.PLUS_MINUS * A.PTS / (A.MINS/A.GP)),0) AS DTRScores
-FROM Team AS T
-LEFT JOIN PlayerSelection AS P ON P.TeamName = T.TeamName
-LEFT JOIN allPlayers AS A ON A.Player_key = P.Player_key
-WHERE ((T.UserId = @userId AND P.UserId = @userId AND T.TeamName Like @filter + '%')  
-OR (T.UserId = @userId AND P.UserId = @userId AND @filter Is Null) OR (T.UserId = @userId AND T.PlayerCount = 0 AND T.TeamName LIKE @filter + '%')
-OR (T.UserId = @userId AND T.PlayerCount = 0 AND @filter IS NULL))
-GROUP BY T.TeamName, T.isFav, T.PlayerCount,T.UserId
-
  END
     END TRY
      BEGIN CATCH
@@ -3086,11 +3042,52 @@ BEGIN
     BEGIN TRY
             BEGIN
 
-SELECT T.TeamName AS TeamName, T.isFav AS isFav, T.PlayerCount AS PlayerCount, ISNULL(SUM(A.PLUS_MINUS * A.PTS / (A.MINS/A.GP)),0) AS DTRScores
+SELECT T.TeamName AS TeamName, T.isFav AS isFav, T.PlayerCount AS PlayerCount,
+SUM(CASE WHEN T.UserId = @userId AND P.UserId = @userId AND T.isFav = 1 THEN A.PLUS_MINUS * A.PTS / (A.MINS/A.GP) ELSE 0 END) AS DTRScores
 FROM Team AS T
 LEFT JOIN PlayerSelection AS P ON P.TeamName = T.TeamName
 LEFT JOIN allPlayers AS A ON A.Player_key = P.Player_key
 WHERE (T.UserId = @userId AND T.isFav = 1 AND P.UserId = @userId) OR (T.UserId = @userId AND T.isFav = 1 AND T.PlayerCount = 0) 
+GROUP BY T.TeamName, T.isFav, T.PlayerCount,T.UserId
+
+ END
+    END TRY
+     BEGIN CATCH
+        DECLARE @ErrorMessage NVARCHAR(4000);  
+        DECLARE @ErrorSeverity INT;  
+        DECLARE @ErrorState INT;  
+  
+        SELECT   
+            @ErrorMessage = ERROR_MESSAGE(),  
+            @ErrorSeverity = ERROR_SEVERITY(),  
+            @ErrorState = ERROR_STATE();  
+
+            RAISERROR  (@ErrorMessage, -- Message text.  
+                        @ErrorSeverity, -- Severity.  
+                        @ErrorState -- State.  
+                       );  
+    END CATCH;
+END;
+
+GO
+
+CREATE PROCEDURE [dbo].[DtrScoresSearch]
+@userId INT, @filter NVARCHAR(50)
+
+AS
+
+BEGIN
+    BEGIN TRY
+            BEGIN
+
+SELECT T.TeamName AS TeamName, T.isFav AS isFav, T.PlayerCount AS PlayerCount,
+SUM(CASE WHEN T.UserId = @userId AND P.UserId = @userId AND T.TeamName LIKE @filter + '%' THEN A.PLUS_MINUS * A.PTS / (A.MINS/A.GP) ELSE 0 END) AS DTRScores
+FROM Team AS T
+LEFT JOIN PlayerSelection AS P ON P.TeamName = T.TeamName
+LEFT JOIN allPlayers AS A ON A.Player_key = P.Player_key
+WHERE ((T.UserId = @userId AND P.UserId = @userId AND T.TeamName Like @filter + '%')  
+OR (T.UserId = @userId AND P.UserId = @userId AND @filter Is Null) OR (T.UserId = @userId AND T.PlayerCount = 0 AND T.TeamName LIKE @filter + '%')
+OR (T.UserId = @userId AND T.PlayerCount = 0 AND @filter IS NULL))
 GROUP BY T.TeamName, T.isFav, T.PlayerCount,T.UserId
 
  END

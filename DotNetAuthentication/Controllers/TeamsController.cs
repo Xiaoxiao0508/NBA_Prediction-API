@@ -81,8 +81,7 @@ namespace DotNetAuthentication.Controllers
         {
             //Delete Team
             try
-            {
-                //don't validate tokens inside endpoint this needs to be changed
+            {                
                 //Validate Token
                 var authorise = new Authorise();
                 var userId = authorise.Validate(input.Token);
@@ -107,7 +106,7 @@ namespace DotNetAuthentication.Controllers
                         .Where(t => t.UserId == team.UserId)
                         .Where(t => t.TeamName == team.TeamName)
                         .FirstOrDefault());
-                     _context.SaveChangesAsync();                                        
+                     _context.SaveChangesAsync();                                            
                 }                
             }
 
