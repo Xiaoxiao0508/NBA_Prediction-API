@@ -13,7 +13,7 @@ using NBA_API.Models;
 namespace NBA_API.Controllers
 {
     [Authorize]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class TeamController : ControllerBase
     {
@@ -26,36 +26,44 @@ namespace NBA_API.Controllers
 
         // GET: api/Team
         // list all the team for a user
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Team>>> GetTeams()
-        {
-            var claimsIdentity = this.User.Identity as ClaimsIdentity;
-            var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
-            return await _context.Team.Where(p => p.Id == UserId).ToListAsync();
-        }
-        [HttpGet("searchteams")]
-        public async Task<ActionResult<IEnumerable<Team>>> SearchTeams(string filter)
-        {
-            var claimsIdentity = this.User.Identity as ClaimsIdentity;
-            var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
-            return await _context.Team.Where(p => EF.Functions.Like(p.TeamName, $"{filter}%") && p.Id == UserId).ToListAsync();
-        }
-        [HttpPost("GetDTRS")]
-        public async Task<ActionResult<IEnumerable<Team>>> GetDTRS()
-        {
+        // [HttpGet("getTeams")]
+        // public async Task<ActionResult<IEnumerable<Team>>> GetTeams()
+        // {
+        //     var claimsIdentity = this.User.Identity as ClaimsIdentity;
+        //     var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
+        //     return await _context.Team.Where(p => p.Id == UserId).ToListAsync();
+        // }
 
+        [HttpPost("getteams")]
+        public async Task<ActionResult<IEnumerable<DtrScores>>> GetTeams()
+        {
             var claimsIdentity = this.User.Identity as ClaimsIdentity;
             var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
-
-            //Show Users teams
             var team = await _context.DtrScores.FromSqlRaw("DtrScores @p0", UserId)
                 .ToListAsync();
             return Ok(team);
 
-
-
         }
-        [HttpPost]
+        // [HttpGet("searchteams")]
+        // public async Task<ActionResult<IEnumerable<Team>>> SearchTeams(string filter)
+        // {
+        //     var claimsIdentity = this.User.Identity as ClaimsIdentity;
+        //     var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
+        //     return await _context.Team.Where(p => EF.Functions.Like(p.TeamName, $"{filter}%") && p.Id == UserId).ToListAsync();
+        // }
+        // [HttpPost("GetDTRS")]
+        // public async Task<ActionResult<IEnumerable<Team>>> GetDTRS()
+        // {
+
+        //     var claimsIdentity = this.User.Identity as ClaimsIdentity;
+        //     var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
+
+        //     //Show Users teams
+        //     var team = await _context.DtrScores.FromSqlRaw("DtrScores @p0", UserId)
+        //         .ToListAsync();
+        //     return Ok(team);
+        // }
+        [HttpPost("addteam")]
         // Add new team to user's account
         public async Task<ActionResult<bool>> PostTeam([FromQuery] string teamname)
         {
@@ -70,28 +78,38 @@ namespace NBA_API.Controllers
             }
             catch (DbUpdateException e)
             {
-                return BadRequest("Unsuccessful"); ;
+                Ok(false);
 
             }
 
-            return Ok("Add Team Successfully");
+            return Ok(true);
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> DeleteTeam(string teamname)
+        [HttpDelete("deleteteam")]
+        public void DeleteTeam(string teamname)
+        //  public void DeleteTeam(string teamname)
         {
             var claimsIdentity = this.User.Identity as ClaimsIdentity;
             var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
             var team = _context.Team.FirstOrDefault(p => p.Id == UserId && p.TeamName == teamname);
-            if (team == null)
+            //     if (team == null)
+            //     {
+            //         return NotFound("Team doesn't exist");
+            //     }
+
+            //     _context.Team.Remove(team);
+            //    await  _context.SaveChangesAsync();
+
+            //     return Ok("Delete Team Successfullly");
+            try
             {
-                return NotFound();
+                _context.Team.Remove(team);
+                _context.SaveChangesAsync();
             }
-
-            _context.Team.Remove(team);
-            await _context.SaveChangesAsync();
-
-            return Ok("Delete Team Successfullly");
+            catch (DbUpdateException)
+            {
+                throw new ArgumentException("team doesn't exist");
+            }
         }
 
         [HttpPut("setfavorites")]

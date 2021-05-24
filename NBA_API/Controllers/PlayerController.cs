@@ -12,7 +12,7 @@ namespace NBA_API.Controllers
 {
     // /Add [Authorize] at the top of your controllers so you can restrict the endpoints to only users that have logged in
     [Authorize]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class PlayerController : ControllerBase
     {

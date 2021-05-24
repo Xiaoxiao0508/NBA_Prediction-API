@@ -12,7 +12,7 @@ using NBA_API.Models;
 namespace NBA_API.Controllers
 {
     [Authorize]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class PlayerSelectionController : ControllerBase
     {
@@ -23,36 +23,27 @@ namespace NBA_API.Controllers
 
         }
 
-        // GET: api/PlayerSelection
-        // display all Players and teams
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<PlayerSelection>>> GetPlayerSelection()
-        {
-            return await _context.PlayerSelection.ToListAsync();
-        }
-
-
-        [HttpPut]
-        public async Task<ActionResult<IEnumerable<PlayerSelections>>> PostPlayer([FromBody] PlayerSelections selections)
+        [HttpPut("UpdatePlayerSelection")]
+        // public async Task<ActionResult<IEnumerable<PlayerSelections>>> UptatePlayerSelection([FromBody] PlayerSelections selections)
+        public void UptatePlayerSelection([FromBody] PlayerSelections selections)
 
         {
             var claimsIdentity = this.User.Identity as ClaimsIdentity;
             var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
             var PlayerCount = _context.PlayerSelection.Where(p => p.TeamName == selections.TeamName).CountAsync().Result;
             var players = _context.PlayerSelection.Where(p => p.TeamName == selections.TeamName && p.Id == UserId).ToList();
-            var team = await _context.Team
+            var team = _context.Team
                         .Where(t => t.TeamName == selections.TeamName)
                         .Where(t => t.Id == UserId)
-                        .FirstAsync();
+                        .First();
 
             foreach (var player in players)
             {
 
                 _context.PlayerSelection.Remove(player);
 
-                await _context.SaveChangesAsync();
+                _context.SaveChangesAsync();
             }
-            //   var PlayerCount = 0;
 
             if (PlayerCount < 15)
             {
@@ -62,27 +53,21 @@ namespace NBA_API.Controllers
                     {
                         var selection = new PlayerSelection(selections.TeamName, UserId, i);
                         _context.PlayerSelection.Add(selection);
-                     
 
-                        await _context.SaveChangesAsync();
-                           PlayerCount+=1;
+
+                        _context.SaveChangesAsync();
+                        PlayerCount += 1;
                     }
-                    team.PlayerCount=PlayerCount;
-                    await _context.SaveChangesAsync();
+                    team.PlayerCount = PlayerCount;
+                    _context.SaveChangesAsync();
 
                 }
                 catch (DbUpdateException)
                 {
-
-                    return BadRequest("Unsuccessful");
+                    throw new ArgumentException("Unique player list must be selected");
                 }
-            }
-            else
-            {
-                return BadRequest("Unsuccessful");
-            }
-
-            return Ok("Add players successfully");
+            };
+        
         }
     }
 }
