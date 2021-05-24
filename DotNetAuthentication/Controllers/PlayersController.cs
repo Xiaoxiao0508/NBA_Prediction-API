@@ -27,7 +27,6 @@ namespace DotNetAuthentication.Controllers
             _context = context;
         }
 
-
         // Get all players
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Player>>> GetallPlayers([FromQuery] PaginationFilter filter)
@@ -39,11 +38,10 @@ namespace DotNetAuthentication.Controllers
 
             //get number of pages
             var pagesCount = filter.NumberOfPages(totalRecords, filter.PageSize);
-
-            //OrderByDescending(p => EF.Property<object>(p, validFilter.SortString))
+           
             //List<Player> pagedData;
             List<Player> pagedData;
-            if (filter.SortOrder == "ASC")
+            if (validFilter.SortOrder == "ASC")
             {
                 //returns selected page based on inputs 
                  pagedData = await _context.allPlayers
