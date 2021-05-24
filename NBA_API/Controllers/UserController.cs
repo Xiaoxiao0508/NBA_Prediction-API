@@ -31,18 +31,12 @@ namespace NBA_API.Controllers
             this.roleManager = roleManager;
             _configuration = configuration;
         }
-        // [HttpGet]
-        // public async Task<ActionResult<IEnumerable<Team>>> GetTeams(string username)
-        // {await _context.AspNetUsers.Where(p=>p.Id==id).ToListAsync()
-        //     var id=
-        //     // return await _context.Team.Where(p=>p.Id==id).ToListAsync();
-        //      return await _context.
-        // }
+      
         [HttpPost]
         [Route("Register")]
-        //checked the user exit or not,create the user if not exist,create the roles if not exist in the database,add user as user or admin
+        //checked the user exit or not,create the user if not exist
 
-        public async Task<IActionResult> Register([FromBody] RegisterModel model)
+        public async Task<ActionResult<bool>> Register([FromBody] RegisterModel model)
         {
             var userExist = await userManager.FindByNameAsync(model.Username);
             if (userExist != null)
@@ -57,45 +51,11 @@ namespace NBA_API.Controllers
             var result = await userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new AuthResponse { Status = "Error", Message = "Unsuccessful" });
+                return Ok(true);
             }
-            //if (!await roleManager.RoleExistsAsync(UserRoles.Admin))
-            //    await roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
-            //if (!await roleManager.RoleExistsAsync(UserRoles.User))
-            //    await roleManager.CreateAsync(new IdentityRole(UserRoles.User));
-            //if (await roleManager.RoleExistsAsync(UserRoles.Admin))
-            //    await userManager.AddToRoleAsync(user, UserRoles.User);
-            return Ok(new AuthResponse { Status = "Success", Message = "User created Successfully" });
+            return Ok(false);
         }
-        //[HttpPost]
-        //[Route("RegisterAdmin")]
-
-        //public async Task<IActionResult> RegisterAdmin([FromBody] RegisterModel model)
-        //{
-        //    var userExist = await userManager.FindByNameAsync(model.Username);
-        //    if (userExist != null)
-        //        return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "Unsuccessful" });
-        //    ApplicationUser user = new ApplicationUser()
-        //    {
-        //        Email = model.Email,
-        //        //what is the stamp?
-        //        SecurityStamp = Guid.NewGuid().ToString(),
-        //        UserName = model.Username
-        //    };
-        //    var result = await userManager.CreateAsync(user, model.Password);
-        //    if (!result.Succeeded)
-        //    {
-        //        return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "Unsuccessful" });
-        //    }
-        //    if (!await roleManager.RoleExistsAsync(UserRoles.Admin))
-        //        await roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
-        //    if (!await roleManager.RoleExistsAsync(UserRoles.User))
-        //        await roleManager.CreateAsync(new IdentityRole(UserRoles.User));
-        //    if (await roleManager.RoleExistsAsync(UserRoles.Admin))
-        //        await userManager.AddToRoleAsync(user, UserRoles.Admin);
-        //    return Ok(new Response { Status = "Success", Message = "User created Successfully" });
-        //}
-
+        
         [HttpPost]
         [Route("Login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
@@ -124,8 +84,6 @@ namespace NBA_API.Controllers
                 return Ok(new
                 {
                     token = new JwtSecurityTokenHandler().WriteToken(token),
-                    expiration = token.ValidTo,
-                    User = user.UserName
                 });
             }
             return Unauthorized();
