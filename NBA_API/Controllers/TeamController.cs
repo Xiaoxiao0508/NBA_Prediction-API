@@ -26,36 +26,44 @@ namespace NBA_API.Controllers
 
         // GET: api/Team
         // list all the team for a user
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Team>>> GetTeams()
+        // [HttpGet("getTeams")]
+        // public async Task<ActionResult<IEnumerable<Team>>> GetTeams()
+        // {
+        //     var claimsIdentity = this.User.Identity as ClaimsIdentity;
+        //     var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
+        //     return await _context.Team.Where(p => p.Id == UserId).ToListAsync();
+        // }
+
+         [HttpPost("getteams")]
+        public async Task<ActionResult<IEnumerable<DtrScores>>> GetTeams()
         {
-            var claimsIdentity = this.User.Identity as ClaimsIdentity;
+             var claimsIdentity = this.User.Identity as ClaimsIdentity;
             var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
-            return await _context.Team.Where(p => p.Id == UserId).ToListAsync();
-        }
-        [HttpGet("searchteams")]
-        public async Task<ActionResult<IEnumerable<Team>>> SearchTeams(string filter)
-        {
-            var claimsIdentity = this.User.Identity as ClaimsIdentity;
-            var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
-            return await _context.Team.Where(p => EF.Functions.Like(p.TeamName, $"{filter}%") && p.Id == UserId).ToListAsync();
-        }
-        [HttpPost("GetDTRS")]
-        public async Task<ActionResult<IEnumerable<Team>>> GetDTRS()
-        {
+                var team = await _context.DtrScores.FromSqlRaw("DtrScores @p0", UserId)
+                    .ToListAsync();
+                return Ok(team);
 
-            var claimsIdentity = this.User.Identity as ClaimsIdentity;
-            var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
+            }
+        // [HttpGet("searchteams")]
+        // public async Task<ActionResult<IEnumerable<Team>>> SearchTeams(string filter)
+        // {
+        //     var claimsIdentity = this.User.Identity as ClaimsIdentity;
+        //     var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
+        //     return await _context.Team.Where(p => EF.Functions.Like(p.TeamName, $"{filter}%") && p.Id == UserId).ToListAsync();
+        // }
+        // [HttpPost("GetDTRS")]
+        // public async Task<ActionResult<IEnumerable<Team>>> GetDTRS()
+        // {
 
-            //Show Users teams
-            var team = await _context.DtrScores.FromSqlRaw("DtrScores @p0", UserId)
-                .ToListAsync();
-            return Ok(team);
+        //     var claimsIdentity = this.User.Identity as ClaimsIdentity;
+        //     var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
 
-
-
-        }
-        [HttpPost]
+        //     //Show Users teams
+        //     var team = await _context.DtrScores.FromSqlRaw("DtrScores @p0", UserId)
+        //         .ToListAsync();
+        //     return Ok(team);
+        // }
+        [HttpPost("addteam")]
         // Add new team to user's account
         public async Task<ActionResult<bool>> PostTeam([FromQuery] string teamname)
         {
@@ -70,26 +78,27 @@ namespace NBA_API.Controllers
             }
             catch (DbUpdateException e)
             {
-                return BadRequest("Unsuccessful"); ;
+            Ok(false);
 
             }
 
-            return Ok("Add Team Successfully");
+            return Ok(true);
         }
 
-        [HttpDelete]
+        [HttpDelete("deleteteam")]
         public async Task<IActionResult> DeleteTeam(string teamname)
+        //  public void DeleteTeam(string teamname)
         {
             var claimsIdentity = this.User.Identity as ClaimsIdentity;
             var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
             var team = _context.Team.FirstOrDefault(p => p.Id == UserId && p.TeamName == teamname);
             if (team == null)
             {
-                return NotFound();
+                return NotFound("Team doesn't exist");
             }
 
             _context.Team.Remove(team);
-            await _context.SaveChangesAsync();
+           await  _context.SaveChangesAsync();
 
             return Ok("Delete Team Successfullly");
         }

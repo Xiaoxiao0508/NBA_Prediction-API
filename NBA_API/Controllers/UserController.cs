@@ -36,7 +36,7 @@ namespace NBA_API.Controllers
         [Route("Register")]
         //checked the user exit or not,create the user if not exist
 
-        public async Task<ActionResult> Register([FromBody] RegisterModel model)
+        public async Task<ActionResult<bool>> Register([FromBody] RegisterModel model)
         {
             var userExist = await userManager.FindByNameAsync(model.Username);
             if (userExist != null)

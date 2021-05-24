@@ -23,17 +23,9 @@ namespace NBA_API.Controllers
 
         }
 
-        // GET: api/PlayerSelection
-        // display all Players and teams
-        // [HttpGet]
-        // public async Task<ActionResult<IEnumerable<PlayerSelection>>> GetPlayerSelection()
-        // {
-        //     return await _context.PlayerSelection.ToListAsync();
-        // }
-
-
-        [HttpPut]
-        public async Task<ActionResult<IEnumerable<PlayerSelections>>> UptatePlayerSelection([FromBody] PlayerSelections selections)
+        [HttpPut("UpdatePlayerSelection")]
+        // public async Task<ActionResult<IEnumerable<PlayerSelections>>> UptatePlayerSelection([FromBody] PlayerSelections selections)
+         public async Task<ActionResult<IEnumerable<PlayerSelections>>> UptatePlayerSelection([FromBody] PlayerSelections selections)
 
         {
             var claimsIdentity = this.User.Identity as ClaimsIdentity;
@@ -61,19 +53,19 @@ namespace NBA_API.Controllers
                     {
                         var selection = new PlayerSelection(selections.TeamName, UserId, i);
                         _context.PlayerSelection.Add(selection);
-                     
+
 
                         await _context.SaveChangesAsync();
-                           PlayerCount+=1;
+                        PlayerCount += 1;
                     }
-                    team.PlayerCount=PlayerCount;
+                    team.PlayerCount = PlayerCount;
                     await _context.SaveChangesAsync();
 
                 }
                 catch (DbUpdateException)
                 {
 
-                    return BadRequest("Unsuccessful");
+                    return BadRequest("Unsuccessful,team doesn't exist or player already in the team");
                 }
             }
             else
@@ -81,39 +73,7 @@ namespace NBA_API.Controllers
                 return BadRequest("Unsuccessful");
             }
 
-            return Ok("Add players successfully");
-        }
-
-            // GET: api/PlayerSelection/5
-            // display players from searching team name
-            // [HttpGet("ViewPlayers")]
-            // public async Task<ActionResult<PlayerSelection>> GetPlayerSelection([FromQuery] string searchstring)
-            // {
-            //     var DisplayData = await _context.PlayerSelection.Where(p => EF.Functions.Like(p.TeamName, $"{searchstring}%"))
-            //            .OrderBy(p => p.TeamName)
-            //            .ToListAsync();
-
-            //     return Ok(new Response<List<PlayerSelection>>(DisplayData)); ;
-            // }
-
-
-            // DELETE: api/PlayerSelection/DeletePlayer
-            // [HttpDelete("DeletePlayer")]
-            // public async Task<bool> DeletePlayerSelection([FromBody] PlayerSelection playerSelection)
-            // {
-            //     var PlayerDeleted = _context.PlayerSelection.Where(p => p.TeamName == playerSelection.TeamName);
-
-            //     try
-            //     {
-            //         _context.PlayerSelection.Remove(playerSelection);
-            //         await _context.SaveChangesAsync();
-            //     }
-            //     catch (DbUpdateException)
-            //     {
-            //         return false;
-            //     }
-
-            //     return true;
-            // }
+            return Ok("Add players to team successfully");
         }
     }
+}

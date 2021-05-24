@@ -3018,7 +3018,7 @@ BEGIN
     BEGIN TRY
             BEGIN
 
-SELECT T.Id, T.TeamName AS TeamName, T.isFav AS isFav, T.PlayerCount AS PlayerCount, ISNULL(SUM(A.PLUS_MINUS * A.PTS / (A.MINS/A.GP)),0) AS DTRScores
+SELECT T.Id, T.TeamName AS TeamName, T.isFav AS isFav, T.PlayerCount AS PlayerCount, SUM(CASE WHEN T.Id = @UserId AND P.Id = @UserId THEN A.PLUS_MINUS * A.PTS / (A.MINS/A.GP) ELSE 0 END) AS DTRScores
 FROM Team AS T
 LEFT JOIN PlayerSelection AS P ON P.TeamName = T.TeamName
 LEFT JOIN allPlayers AS A ON A.Player_key = P.Player_key
