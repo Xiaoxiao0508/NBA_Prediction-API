@@ -13,7 +13,7 @@ using NBA_API.Models;
 namespace NBA_API.Controllers
 {
     [Authorize]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class TeamController : ControllerBase
     {
