@@ -25,24 +25,24 @@ namespace NBA_API.Controllers
 
         [HttpPut("UpdatePlayerSelection")]
         // public async Task<ActionResult<IEnumerable<PlayerSelections>>> UptatePlayerSelection([FromBody] PlayerSelections selections)
-         public async Task<ActionResult<IEnumerable<PlayerSelections>>> UptatePlayerSelection([FromBody] PlayerSelections selections)
+        public void UptatePlayerSelection([FromBody] PlayerSelections selections)
 
         {
             var claimsIdentity = this.User.Identity as ClaimsIdentity;
             var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
             var PlayerCount = _context.PlayerSelection.Where(p => p.TeamName == selections.TeamName).CountAsync().Result;
             var players = _context.PlayerSelection.Where(p => p.TeamName == selections.TeamName && p.Id == UserId).ToList();
-            var team = await _context.Team
+            var team = _context.Team
                         .Where(t => t.TeamName == selections.TeamName)
                         .Where(t => t.Id == UserId)
-                        .FirstAsync();
+                        .First();
 
             foreach (var player in players)
             {
 
                 _context.PlayerSelection.Remove(player);
 
-                await _context.SaveChangesAsync();
+                _context.SaveChangesAsync();
             }
 
             if (PlayerCount < 15)
@@ -55,25 +55,19 @@ namespace NBA_API.Controllers
                         _context.PlayerSelection.Add(selection);
 
 
-                        await _context.SaveChangesAsync();
+                        _context.SaveChangesAsync();
                         PlayerCount += 1;
                     }
                     team.PlayerCount = PlayerCount;
-                    await _context.SaveChangesAsync();
+                    _context.SaveChangesAsync();
 
                 }
                 catch (DbUpdateException)
                 {
-
-                    return BadRequest("Unsuccessful,team doesn't exist or player already in the team");
+                    throw new ArgumentException("Unique player list must be selected");
                 }
-            }
-            else
-            {
-                return BadRequest("Unsuccessful");
-            }
-
-            return Ok("Add players to team successfully");
+            };
+        
         }
     }
 }
