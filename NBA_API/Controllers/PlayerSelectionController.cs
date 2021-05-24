@@ -25,15 +25,15 @@ namespace NBA_API.Controllers
 
         // GET: api/PlayerSelection
         // display all Players and teams
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<PlayerSelection>>> GetPlayerSelection()
-        {
-            return await _context.PlayerSelection.ToListAsync();
-        }
+        // [HttpGet]
+        // public async Task<ActionResult<IEnumerable<PlayerSelection>>> GetPlayerSelection()
+        // {
+        //     return await _context.PlayerSelection.ToListAsync();
+        // }
 
 
         [HttpPut]
-        public async Task<ActionResult<IEnumerable<PlayerSelections>>> PostPlayer([FromBody] PlayerSelections selections)
+        public async Task<ActionResult<IEnumerable<PlayerSelections>>> UptatePlayerSelection([FromBody] PlayerSelections selections)
 
         {
             var claimsIdentity = this.User.Identity as ClaimsIdentity;
@@ -52,7 +52,6 @@ namespace NBA_API.Controllers
 
                 await _context.SaveChangesAsync();
             }
-            //   var PlayerCount = 0;
 
             if (PlayerCount < 15)
             {

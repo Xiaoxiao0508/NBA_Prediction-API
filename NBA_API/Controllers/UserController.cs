@@ -36,24 +36,25 @@ namespace NBA_API.Controllers
         [Route("Register")]
         //checked the user exit or not,create the user if not exist
 
-        public async Task<ActionResult<bool>> Register([FromBody] RegisterModel model)
+        public async Task<ActionResult> Register([FromBody] RegisterModel model)
         {
             var userExist = await userManager.FindByNameAsync(model.Username);
             if (userExist != null)
-                return StatusCode(StatusCodes.Status500InternalServerError, new AuthResponse { Status = "Error", Message = "Unsuccessful" });
+                // return StatusCode(StatusCodes.Status500InternalServerError, new AuthResponse { Status = "Error", Message = "Unsuccessful,User already exist" });
+                return Ok(false);
             ApplicationUser user = new ApplicationUser()
             {
-                //Email = model.Email,
-                //what is the stamp?
                 SecurityStamp = Guid.NewGuid().ToString(),
                 UserName = model.Username
             };
             var result = await userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
             {
-                return Ok(true);
+                // return StatusCode(StatusCodes.Status500InternalServerError, new AuthResponse { Status = "Error", Message = "Unsuccessful,  Pasword must contain an uppercase character, lowercase character, a digit, and a non-alphanumeric character. Passwords must be at least six characters long." });
+                return Ok(false);
             }
-            return Ok(false);
+            // return Ok(new AuthResponse { Status = "Success", Message = "User created Successfully" });
+            return Ok(true);
         }
         
         [HttpPost]
@@ -63,16 +64,13 @@ namespace NBA_API.Controllers
             var user = await userManager.FindByNameAsync(model.Username);
             if (user != null && await userManager.CheckPasswordAsync(user, model.Password))
             {
-                //var userRoles = await userManager.GetRolesAsync(user);
+
                 var authClaims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name,user.Id),
                     new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
                 };
-                //foreach (var userRole in userRoles)
-                //{
-                //    authClaims.Add(new Claim(ClaimTypes.Role, userRole));
-                //}
+            
                 var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
                 var token = new JwtSecurityToken(
                     issuer: _configuration["JWT:ValidIssuer"],
