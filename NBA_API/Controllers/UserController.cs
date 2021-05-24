@@ -39,7 +39,7 @@ namespace NBA_API.Controllers
         {
             var userExist = await userManager.FindByNameAsync(model.Username);
             if (userExist != null)
-                return StatusCode(StatusCodes.Status500InternalServerError, new AuthResponse { Status = "Error", Message = "Unsuccessful" });
+                return StatusCode(StatusCodes.Status500InternalServerError, new AuthResponse { Status = "Error", Message = "Unsuccessful,User already exist" });
             ApplicationUser user = new ApplicationUser()
             {
                 SecurityStamp = Guid.NewGuid().ToString(),
@@ -48,7 +48,7 @@ namespace NBA_API.Controllers
             var result = await userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new AuthResponse { Status = "Error", Message = "Unsuccessful" });
+                return StatusCode(StatusCodes.Status500InternalServerError, new AuthResponse { Status = "Error", Message = "Unsuccessful,Passoword must  contain an uppercase character, lowercase character, a digit, and a non-alphanumeric character. Passwords must be at least six characters long. " });
             }
             
             return Ok(new AuthResponse { Status = "Success", Message = "User created Successfully" });
