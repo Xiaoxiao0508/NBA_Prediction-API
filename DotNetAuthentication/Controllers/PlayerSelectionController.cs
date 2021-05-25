@@ -22,34 +22,34 @@ namespace DotNetAuthentication.Controllers
             _context = context;
         }
 
-        // GET: api/PlayerSelection
-        /// display all Players and teams
-        [HttpPut]
-        public async Task<ActionResult<IEnumerable<PlayerSelection>>> GetPlayerSelection([FromBody] Token token)
-        {
-            try
-            {
-                //Validate Token
-                var authorise = new Authorise();
-                var userId = authorise.Validate(token.token);
+        //// GET: api/PlayerSelection
+        ///// display all Players and teams
+        //[HttpPut]
+        //public async Task<ActionResult<IEnumerable<PlayerSelection>>> GetPlayerSelection([FromBody] Token token)
+        //{
+        //    try
+        //    {
+        //        //Validate Token
+        //        var authorise = new Authorise();
+        //        var userId = authorise.Validate(token.token);
 
-                return await _context.PlayerSelection
-                .Where(p => p.UserId == userId)
-                .ToListAsync();
-            }
+        //        return await _context.PlayerSelection
+        //        .Where(p => p.UserId == userId)
+        //        .ToListAsync();
+        //    }
 
-            catch (TokenExpiredException)
-            {
-                throw new ArgumentException("Token has expired");
-            }
-            catch (SignatureVerificationException)
-            {
-                throw new ArgumentException("Token has invalid signature");
-            }
-        }
+        //    catch (TokenExpiredException)
+        //    {
+        //        throw new ArgumentException("Token has expired");
+        //    }
+        //    catch (SignatureVerificationException)
+        //    {
+        //        throw new ArgumentException("Token has invalid signature");
+        //    }
+        //}
 
         ///Update Player Selection
-        [HttpPost("UpdatePlayerSelection")]
+        [HttpPut("UpdatePlayerSelection")]
         public void UpdatePlayers([FromBody] PlayerSelections selections)
         {
             try
