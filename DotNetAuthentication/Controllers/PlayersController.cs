@@ -30,7 +30,8 @@ namespace DotNetAuthentication.Controllers
         // Get all players
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Player>>> GetallPlayers([FromQuery] PaginationFilter filter)
-        {           
+        {
+            //Create Pagination filter that takes arguments and sets to argument if valid if not sets to a default value
             var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize, filter.SortString, filter.SortOrder);
 
             //total number of records in db
@@ -39,8 +40,9 @@ namespace DotNetAuthentication.Controllers
             //get number of pages
             var pagesCount = filter.NumberOfPages(totalRecords, filter.PageSize);
            
-            //List<Player> pagedData;
+            //value to be used in if statements
             List<Player> pagedData;
+
             if (validFilter.SortOrder == "ASC")
             {
                 //returns selected page based on inputs 
@@ -51,7 +53,7 @@ namespace DotNetAuthentication.Controllers
                 .ToListAsync();
                 return Ok(new Response<List<Player>>(pagedData, pagesCount));
             }
-            
+                //Otherwise ordered by descending order
                 pagedData = await _context.allPlayers
                .OrderByDescending(p => EF.Property<object>(p, validFilter.SortString))
                .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
@@ -68,10 +70,16 @@ namespace DotNetAuthentication.Controllers
             // partial first name and partial lastname search or player initials with pagination
             var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize, filter.SortString, filter.SortOrder);
 
+            //splits users input based on spaces and converts to array
             string[]? splitString = search?.Split(' ');
+
+            //initializes pageData Variable
             var pagedData = new List<Player>();
+
+            //Initializes variable
             decimal pagescount = 0;
 
+            //If split string array is of length 2 then execute code
             if (splitString?.Length == 2)
             {
                 //filters the player view data based on the searchstring and adds pagination based on the url.
@@ -149,7 +157,7 @@ namespace DotNetAuthentication.Controllers
             return Ok(Data);
         }
 
-        // GET: api/Player/5
+        
         // search player by player_key
         [HttpGet("Player_key")]
         public async Task<ActionResult<Player>> GetPlayer(int Player_key)
@@ -181,14 +189,11 @@ namespace DotNetAuthentication.Controllers
                 var usortcol = teamReq.SortString;
                 var uSortType = teamReq.SortType;
 
+                //returns Players from stored procedure
                 var pagedData = await _context.allPlayers.FromSqlRaw
                     ("getPlayersFromTeam @p0,@p1,@p2,@p3", userId, userInput, usortcol, uSortType).ToListAsync();
-
-                //SqlCommand cmd = new SqlCommand("DtrScore");
-                //cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                //cmd.Parameters.AddWithValue("@teamName", userInput);
-                //cmd.Parameters.AddWithValue("@userId", userId);
-
+                
+                
                 var parameterReturn = new SqlParameter
                 {
                     ParameterName = "dtr",
@@ -198,8 +203,9 @@ namespace DotNetAuthentication.Controllers
 
                 var dtrScore = _context.Database.ExecuteSqlRaw("EXEC @dtr = [dbo].[DtrScore] @p0, @p1", userId, userInput, parameterReturn);
 
+                //stores return value in paramater
                 int dtr = (int)parameterReturn.Value;             
-
+                
                 var result = new { pagedData, dtr };
 
                 return Ok(result);

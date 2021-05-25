@@ -76,7 +76,7 @@ namespace DotNetAuthentication.Controllers
         }
 
         //Delete team 
-        [HttpDelete("deleteteam")]
+        [HttpPut("deleteteam")]
         public  void  DeleteTeam([FromBody] TeamUpdate input)
         {
             //Delete Team
