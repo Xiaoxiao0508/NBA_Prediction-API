@@ -34,7 +34,7 @@ namespace NBA_API.Controllers
         //     return await _context.Team.Where(p => p.Id == UserId).ToListAsync();
         // }
 
-        [HttpPost("getteams")]
+        [HttpGet("getteams")]
         public async Task<ActionResult<IEnumerable<DtrScores>>> GetTeams()
         {
             var claimsIdentity = this.User.Identity as ClaimsIdentity;

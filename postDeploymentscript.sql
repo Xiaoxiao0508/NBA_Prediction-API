@@ -3009,8 +3009,45 @@ GO
 
 
 
+-- CREATE PROCEDURE [dbo].[DtrScores]
+-- @UserId NVARCHAR(450)
+
+-- AS
+
+-- BEGIN
+--     BEGIN TRY
+--             BEGIN
+
+-- SELECT T.Id, T.TeamName AS TeamName, T.isFav AS isFav, T.PlayerCount AS PlayerCount, SUM(CASE WHEN T.Id = @UserId AND P.Id = @UserId THEN A.PLUS_MINUS * A.PTS / (A.MINS/A.GP) ELSE 0 END) AS DTRScores
+-- FROM Team AS T
+-- LEFT JOIN PlayerSelection AS P ON P.TeamName = T.TeamName
+-- LEFT JOIN allPlayers AS A ON A.Player_key = P.Player_key
+-- WHERE ((T.Id = @UserId AND T.PlayerCount = 0) OR (T.Id = @userId AND P.Id = @UserId))
+-- GROUP BY T.TeamName, T.isFav, T.PlayerCount, T.Id;
+
+--  END
+--     END TRY
+--      BEGIN CATCH
+--         DECLARE @ErrorMessage NVARCHAR(4000);  
+--         DECLARE @ErrorSeverity INT;  
+--         DECLARE @ErrorState INT;  
+  
+--         SELECT   
+--             @ErrorMessage = ERROR_MESSAGE(),  
+--             @ErrorSeverity = ERROR_SEVERITY(),  
+--             @ErrorState = ERROR_STATE();  
+
+--             RAISERROR  (@ErrorMessage, -- Message text.  
+--                         @ErrorSeverity, -- Severity.  
+--                         @ErrorState -- State.  
+--                        );  
+--     END CATCH;
+-- END;
+-- GO
+
+
 CREATE PROCEDURE [dbo].[DtrScores]
-@UserId NVARCHAR(450)
+@userId NVARCHAR(450)
 
 AS
 
@@ -3018,13 +3055,13 @@ BEGIN
     BEGIN TRY
             BEGIN
 
-SELECT T.Id, T.TeamName AS TeamName, T.isFav AS isFav, T.PlayerCount AS PlayerCount, SUM(CASE WHEN T.Id = @UserId AND P.Id = @UserId THEN A.PLUS_MINUS * A.PTS / (A.MINS/A.GP) ELSE 0 END) AS DTRScores
+SELECT T.Id, T.TeamName AS TeamName, T.isFav AS isFav, T.PlayerCount AS PlayerCount, 
+SUM(CASE WHEN T.Id= @userId AND P.Id = @userId THEN A.PLUS_MINUS * A.PTS / (A.MINS/A.GP) ELSE 0 END) AS DTRScores
 FROM Team AS T
 LEFT JOIN PlayerSelection AS P ON P.TeamName = T.TeamName
 LEFT JOIN allPlayers AS A ON A.Player_key = P.Player_key
-WHERE ((T.Id = @UserId AND T.PlayerCount = 0) OR (T.Id = @userId AND P.Id = @UserId))
+WHERE ((T.Id = @userId AND T.PlayerCount = 0) OR (T.Id = @userId AND P.Id =@userId))
 GROUP BY T.TeamName, T.isFav, T.PlayerCount, T.Id;
-
  END
     END TRY
      BEGIN CATCH
@@ -3043,9 +3080,11 @@ GROUP BY T.TeamName, T.isFav, T.PlayerCount, T.Id;
                        );  
     END CATCH;
 END;
+
 GO
 
-EXEC DtrScores @UserID='aabe87eb-9e11-45b2-acbd-6ac8b7311ed6';
+EXEC DtrScores @userId='aabe87eb-9e11-45b2-acbd-6ac8b7311ed6';
+EXEC DtrScores @userId='2c7a1552-5d0c-490a-8e25-9f040f5b9c27'
 GO;
 CREATE PROCEDURE [dbo].[DtrScoresSearch]
 @UserId NVARCHAR(450), @filter NVARCHAR(50)
