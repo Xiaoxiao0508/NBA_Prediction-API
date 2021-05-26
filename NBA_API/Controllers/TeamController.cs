@@ -85,12 +85,12 @@ namespace NBA_API.Controllers
         // }
         [HttpPost("addteam")]
         // Add new team to user's account
-        public async Task<ActionResult<bool>> PostTeam([FromQuery] string teamname)
+        public async Task<ActionResult<bool>> PostTeam([FromBody] TeamUpdate teamupdate)
         {
             var claimsIdentity = this.User.Identity as ClaimsIdentity;
             var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
             // UserId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            Team team = new Team(teamname, UserId, false, 0);
+            Team team = new Team(teamupdate.TeamName, UserId, false, 0);
             try
             {
                 _context.Team.Add(team);
@@ -107,12 +107,12 @@ namespace NBA_API.Controllers
 
         // [HttpDelete("deleteteam")]
         [HttpPut("deleteteam")]
-        public void DeleteTeam(string teamname)
+        public void DeleteTeam([FromBody] TeamUpdate teamupdate)
         //  public void DeleteTeam(string teamname)
         {
             var claimsIdentity = this.User.Identity as ClaimsIdentity;
             var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
-            var team = _context.Team.FirstOrDefault(p => p.Id == UserId && p.TeamName == teamname);
+            var team = _context.Team.FirstOrDefault(p => p.Id == UserId && p.TeamName == teamupdate.TeamName);
             //     if (team == null)
             //     {
             //         return NotFound("Team doesn't exist");
