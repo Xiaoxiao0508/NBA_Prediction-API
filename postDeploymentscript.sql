@@ -3083,8 +3083,11 @@ END;
 
 GO
 
-EXEC DtrScores @userId='aabe87eb-9e11-45b2-acbd-6ac8b7311ed6';
-EXEC DtrScores @userId='2c7a1552-5d0c-490a-8e25-9f040f5b9c27'
+
+
+GO;
+
+
 GO;
 CREATE PROCEDURE [dbo].[DtrScoresSearch]
 @UserId NVARCHAR(450), @filter NVARCHAR(50)
