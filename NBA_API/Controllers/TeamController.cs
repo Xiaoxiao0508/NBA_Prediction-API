@@ -44,6 +44,26 @@ namespace NBA_API.Controllers
             return Ok(team);
 
         }
+
+        // [HttpPost("getteams")]
+
+        // public async Task<ActionResult<IEnumerable<Team>>> GetTeams()
+
+        // {
+
+        //     var claimsIdentity = this.User.Identity as ClaimsIdentity;
+
+        //     var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
+
+        //     //Show Users teams
+
+        //     var team = await _context.DtrScores.FromSqlRaw("DtrScores @p0", UserId)
+
+        //     .ToListAsync();
+
+        //     return Ok(team);
+
+        // }
         // [HttpGet("searchteams")]
         // public async Task<ActionResult<IEnumerable<Team>>> SearchTeams(string filter)
         // {
