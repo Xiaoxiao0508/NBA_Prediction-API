@@ -7,7 +7,7 @@ namespace NBA_API.Models
 	public class ColumnHeaders
     {
         [JsonProperty("COLUMN_NAME")]
-        public string ColumnName { get; set; }
+        public string COLUMN_NAME { get; set; }
 
         public ColumnHeaders()
         {
@@ -16,7 +16,7 @@ namespace NBA_API.Models
 
         public ColumnHeaders(string columnname)
         {
-            this.ColumnName = columnname;
+            this.COLUMN_NAME = columnname;
         }
     }
 

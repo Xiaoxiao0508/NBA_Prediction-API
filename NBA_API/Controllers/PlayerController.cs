@@ -61,8 +61,8 @@ namespace NBA_API.Controllers
 
         // GET: api/Player
         [Route("getPlayersFromTeam")]
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Player>>> getPlayersFromTeam([FromQuery] FullTeamRosterRequest teamReq)
+        [HttpPost]
+        public async Task<ActionResult<IEnumerable<Player>>> getPlayersFromTeam([FromBody] FullTeamRosterRequest teamReq)
         {
             var claimsIdentity = this.User.Identity as ClaimsIdentity;
             var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
