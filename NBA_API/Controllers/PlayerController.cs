@@ -5,8 +5,11 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using NBA_API.Models;
+
+
 
 namespace NBA_API.Controllers
 {
@@ -60,19 +63,49 @@ namespace NBA_API.Controllers
         }
 
         // GET: api/Player
-        [Route("getPlayersFromTeam")]
+        // [Route("getPlayersFromTeam")]
+        // [HttpPost]
+        // public async Task<ActionResult<IEnumerable<Player>>> getPlayersFromTeam([FromBody] FullTeamRosterRequest teamReq)
+        // {
+        //     var claimsIdentity = this.User.Identity as ClaimsIdentity;
+        //     var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
+        //     var pagedData = await _context.allPlayers
+        //         .FromSqlRaw("getPlayersFromTeam @p0,@p1,@p2,@p3", UserId,teamReq.TeamName,teamReq.SortString,teamReq.SortType)
+
+        //     .ToListAsync();
+        //     return Ok(new Response<List<Player>>(pagedData));
+        // }
+         [Route("getPlayersFromTeam")]
         [HttpPost]
         public async Task<ActionResult<IEnumerable<Player>>> getPlayersFromTeam([FromBody] FullTeamRosterRequest teamReq)
         {
-            var claimsIdentity = this.User.Identity as ClaimsIdentity;
+            //See all teams the current user has.
+           
+                  var claimsIdentity = this.User.Identity as ClaimsIdentity;
             var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
-            var pagedData = await _context.allPlayers
-                .FromSqlRaw("getPlayersFromTeam @p0,@p1,@p2,@p3", UserId,teamReq.TeamName,teamReq.SortString,teamReq.SortType)
 
-            .ToListAsync();
-            return Ok(new Response<List<Player>>(pagedData));
-        }
-        
+               
+                var userInput = teamReq.TeamName;
+                var usortcol = teamReq.SortString;
+                var uSortType = teamReq.SortType;
+
+                var pagedData = await _context.allPlayers.FromSqlRaw
+                    ("getPlayersFromTeam @p0,@p1,@p2,@p3", UserId, userInput, usortcol, uSortType).ToListAsync();
+                var parameterReturn = new SqlParameter
+                {
+                    ParameterName = "dtr",
+                    SqlDbType = System.Data.SqlDbType.Int,
+                    Direction = System.Data.ParameterDirection.Output,
+                };
+
+                var dtrScore = _context.Database.ExecuteSqlRaw("EXEC @dtr = [dbo].[DtrScore] @p0, @p1", UserId, userInput, parameterReturn);
+
+                int dtr = (int)parameterReturn.Value;             
+
+                var result = new { pagedData, dtr };
+
+                return Ok(result);
+        }     
         [HttpGet("SearchPlayer")]
 
         public async Task<ActionResult<IEnumerable<Player>>> GetPlayer([FromQuery] SearchPaginationFilter filter)
