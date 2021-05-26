@@ -3081,7 +3081,7 @@ GROUP BY T.TeamName, T.isFav, T.PlayerCount, T.Id;
 END;
 
 GO
-EXEC DtrScores @userId='aabe87eb-9e11-45b2-acbd-6ac8b7311ed6';
+
 
 
 GO;
