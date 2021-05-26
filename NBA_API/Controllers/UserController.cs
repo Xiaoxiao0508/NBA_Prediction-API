@@ -31,16 +31,39 @@ namespace NBA_API.Controllers
             this.roleManager = roleManager;
             _configuration = configuration;
         }
+        // [HttpPost]
+        // [Route("Register")]
+        // //checked the user exit or not,create the user if not exist
+
+        // public async Task<ActionResult<bool>> Register([FromBody] RegisterModel model)
+        // {
+        //     var userExist = await userManager.FindByNameAsync(model.Username);
+        //     if (userExist != null)
+        //         // return StatusCode(StatusCodes.Status500InternalServerError, new AuthResponse { Status = "Error", Message = "Unsuccessful,User already exist" });
+        //         return Ok(false);
+        //     ApplicationUser user = new ApplicationUser()
+        //     {
+        //         SecurityStamp = Guid.NewGuid().ToString(),
+        //         UserName = model.Username
+        //     };
+        //     var result = await userManager.CreateAsync(user, model.Password);
+        //     if (!result.Succeeded)
+        //     {
+        //         // return StatusCode(StatusCodes.Status500InternalServerError, new AuthResponse { Status = "Error", Message = "Unsuccessful,  Pasword must contain an uppercase character, lowercase character, a digit, and a non-alphanumeric character. Passwords must be at least six characters long." });
+        //         return Ok(false);
+        //     }
+        //     // return Ok(new AuthResponse { Status = "Success", Message = "User created Successfully" });
+        //     return Ok(true);
+        // }
         [HttpPost]
         [Route("Register")]
-        //checked the user exit or not,create the user if not exist
+        //checked the user exit or not,create the user if not exist,create the roles if not exist in the database,add user as user or admin
 
-        public async Task<ActionResult<bool>> Register([FromBody] RegisterModel model)
+        public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
             var userExist = await userManager.FindByNameAsync(model.Username);
             if (userExist != null)
-                // return StatusCode(StatusCodes.Status500InternalServerError, new AuthResponse { Status = "Error", Message = "Unsuccessful,User already exist" });
-                return Ok(false);
+                return StatusCode(StatusCodes.Status500InternalServerError, new AuthResponse { Status = "Error", Message = "Unsuccessful,User already exist" });
             ApplicationUser user = new ApplicationUser()
             {
                 SecurityStamp = Guid.NewGuid().ToString(),
@@ -49,18 +72,18 @@ namespace NBA_API.Controllers
             var result = await userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
             {
-                // return StatusCode(StatusCodes.Status500InternalServerError, new AuthResponse { Status = "Error", Message = "Unsuccessful,  Pasword must contain an uppercase character, lowercase character, a digit, and a non-alphanumeric character. Passwords must be at least six characters long." });
-                return Ok(false);
+                return StatusCode(StatusCodes.Status500InternalServerError, new AuthResponse { Status = "Error", Message = "Unsuccessful,Passoword must  contain an uppercase character, lowercase character, a digit, and a non-alphanumeric character. Passwords must be at least six characters long. " });
             }
-            // return Ok(new AuthResponse { Status = "Success", Message = "User created Successfully" });
-            return Ok(true);
+
+            return Ok(new AuthResponse { Status = "Success", Message = "User created Successfully" });
         }
+
 
         [HttpPost]
         [Route("Login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
-        
+
             var user = await userManager.FindByNameAsync(model.Username);
             if (user != null && await userManager.CheckPasswordAsync(user, model.Password))
             {
@@ -69,7 +92,7 @@ namespace NBA_API.Controllers
                     new Claim(ClaimTypes.Name,user.Id),
                     new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
                 };
-              
+
                 var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
                 var token = new JwtSecurityToken(
                     issuer: _configuration["JWT:ValidIssuer"],
@@ -81,12 +104,12 @@ namespace NBA_API.Controllers
                 return Ok(new
                 {
                     token = new JwtSecurityTokenHandler().WriteToken(token),
-                    
+
                 });
             }
             return Unauthorized();
-             
-           
+
+
         }
     }
 }
