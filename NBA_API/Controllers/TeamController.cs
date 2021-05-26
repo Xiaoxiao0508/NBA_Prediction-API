@@ -105,7 +105,8 @@ namespace NBA_API.Controllers
             return Ok(true);
         }
 
-        [HttpDelete("deleteteam")]
+        // [HttpDelete("deleteteam")]
+        [HttpPut("deleteteam")]
         public void DeleteTeam(string teamname)
         //  public void DeleteTeam(string teamname)
         {
@@ -132,26 +133,52 @@ namespace NBA_API.Controllers
             }
         }
 
+        // [HttpPut("setfavorites")]
+        // public void SetFavorites([FromBody] FavoriteTeams fav)
+        // {
+        //     var claimsIdentity = this.User.Identity as ClaimsIdentity;
+        //     var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
+
+        //     foreach (var team in fav.TeamNames)
+        //     {
+        //         var teamUpdate = _context.Team
+        //         .Where(t => t.TeamName == team)
+        //         .Where(t => t.Id == UserId)
+        //         .FirstOrDefault();
+
+        //         //if no team exists with that name skip team
+        //         if (teamUpdate == null) { continue; }
+
+        //         teamUpdate.isFav = fav.IsFav;
+        //         _context.SaveChangesAsync();
+        //     }
+        // }
+        //Update users current teams to favorite
         [HttpPut("setfavorites")]
         public void SetFavorites([FromBody] FavoriteTeams fav)
         {
+
             var claimsIdentity = this.User.Identity as ClaimsIdentity;
             var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
 
-            foreach (var team in fav.TeamNames)
-            {
-                var teamUpdate = _context.Team
-                .Where(t => t.TeamName == team)
-                .Where(t => t.Id == UserId)
-                .FirstOrDefault();
+            var teamUpdate = _context.Team
+            .Where(t => t.TeamName == fav.TeamNames)
+            .Where(t => t.Id == UserId)
+            .FirstOrDefault();
 
-                //if no team exists with that name skip team
-                if (teamUpdate == null) { continue; }
+            teamUpdate.isFav = fav.IsFav;
+            _context.SaveChangesAsync();
 
-                teamUpdate.isFav = fav.IsFav;
-                _context.SaveChangesAsync();
-            }
         }
+
+
+
+
+
+
+
+
+
 
 
 
