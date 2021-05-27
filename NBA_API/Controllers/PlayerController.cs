@@ -91,10 +91,11 @@ namespace NBA_API.Controllers
 
                 var pagedData = await _context.allPlayers.FromSqlRaw
                     ("getPlayersFromTeam @p0,@p1,@p2,@p3", UserId, userInput, usortcol, uSortType).ToListAsync();
-              
-                var dtrScore = _context.
 
-                int dtr = (int)parameterReturn.Value;             
+                
+               var dtr = await _context.Database.ExecuteSqlRawAsync($"DtrScore @p0, @p1", userInput, UserId);
+
+
 
                 var result = new { pagedData, dtr };
 
