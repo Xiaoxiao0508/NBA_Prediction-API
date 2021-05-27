@@ -75,14 +75,14 @@ namespace NBA_API.Controllers
         //     .ToListAsync();
         //     return Ok(new Response<List<Player>>(pagedData));
         // }
-         [Route("getPlayersFromTeam")]
+        [Route("getPlayersFromTeam")]
         [HttpPost]
         public async Task<ActionResult<IEnumerable<Player>>> getPlayersFromTeam([FromBody] FullTeamRosterRequest teamReq)
         {
             //See all teams the current user has.
            
                   var claimsIdentity = this.User.Identity as ClaimsIdentity;
-            var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
+                  var UserId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
 
                
                 var userInput = teamReq.TeamName;
@@ -91,14 +91,8 @@ namespace NBA_API.Controllers
 
                 var pagedData = await _context.allPlayers.FromSqlRaw
                     ("getPlayersFromTeam @p0,@p1,@p2,@p3", UserId, userInput, usortcol, uSortType).ToListAsync();
-                var parameterReturn = new SqlParameter
-                {
-                    ParameterName = "dtr",
-                    SqlDbType = System.Data.SqlDbType.Int,
-                    Direction = System.Data.ParameterDirection.Output,
-                };
-
-                var dtrScore = _context.Database.ExecuteSqlRaw("EXEC @dtr = [dbo].[DtrScore] @p0, @p1", UserId, userInput, parameterReturn);
+              
+                var dtrScore = _context.
 
                 int dtr = (int)parameterReturn.Value;             
 
