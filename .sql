@@ -26,4 +26,4 @@ select* from AspNetRoleClaims
 select * from AspNetUserLogins
 EXEC DtrScores @userId='aabe87eb-9e11-45b2-acbd-6ac8b7311ed6';
 
-EXEC DtrScore @UserID='aabe87eb-9e11-45b2-acbd-6ac8b7311ed6',@TeamName='team1';
+EXEC DtrScore @UserID='aabe87eb-9e11-45b2-acbd-6ac8b7311ed6',@TeamName='team2';
