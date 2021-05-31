@@ -1,8 +1,8 @@
 
 # NBA_Prediction-API
 ## Introduction
-The API is built for the NBA_Prediction web application, it's built on ASP.NET core and includes ASP.NET Identity system to support role-based authentication and secure the application.  
-[The Front end of the application can be found here]( https://github.com/Xiaoxiao0508/NBA-FrontEnd.git)  
+The API is built for the NBA_Prediction web application which is used for users to create teams and predicte the winning chances in the current NBA senson,  [The Front end of the application can be found here]( https://github.com/Xiaoxiao0508/NBA-FrontEnd.git)  
+the API IS built on ASP.NET core and includes ASP.NET Identity system to support role-based authentication and secure the application.  
 ## Install
 Clone the git repository to local directory
 ## Run the API
