@@ -102,10 +102,11 @@ namespace NBA_API.Controllers
                     signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                  );
                 return Ok(new
-                {
+                 {
                     token = new JwtSecurityTokenHandler().WriteToken(token),
-
-                });
+                    expiration = token.ValidTo,
+                    User = user.UserName
+                 });
             }
             return Unauthorized();
 
