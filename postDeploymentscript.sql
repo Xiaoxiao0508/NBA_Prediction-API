@@ -2969,6 +2969,7 @@ drop procedure if EXISTS DtrScores;
 drop procedure if EXISTS DtrScoresSearch;
 drop procedure if EXISTS DtrScoresFav;
 GO
+
 CREATE PROCEDURE [dbo].[DtrScore]
 @UserID NVARCHAR(450), @TeamName nvarchar(50)
 
@@ -2977,11 +2978,12 @@ AS
 BEGIN
     BEGIN TRY
             BEGIN
+			RETURN(
 				 SELECT 
                     SUM(A.PLUS_MINUS * A.PTS / (A.MINS/A.GP) )
                  FROM allPlayers as A
                  WHERE A.Player_key in
-                    (SELECT p.Player_key FROM PlayerSelection p WHERE p.TeamName = @teamName AND p.Id = @UserID)
+                    (SELECT p.Player_key FROM PlayerSelection p WHERE p.TeamName = @teamName AND p.Id = @UserID))
             END
     END TRY
      BEGIN CATCH
@@ -3002,13 +3004,6 @@ BEGIN
 END;
 
 GO
-
-GO
-
-
-
-
-
 -- CREATE PROCEDURE [dbo].[DtrScores]
 -- @UserId NVARCHAR(450)
 
@@ -3083,16 +3078,8 @@ END;
 
 GO
 
-
-
-GO;
-
-
-GO;
 CREATE PROCEDURE [dbo].[DtrScoresSearch]
-@UserId NVARCHAR(450), @filter NVARCHAR(50)
-
-AS
+@UserId NVARCHAR(450), @filter NVARCHAR(50) AS
 
 BEGIN
     BEGIN TRY
