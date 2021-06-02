@@ -108,7 +108,7 @@ namespace NBA_API.Controllers
         // }     
         [Route("getPlayersFromTeam")]
         [HttpPost]
-        public async Task<ActionResult<IEnumerable<Player>>> getPlayersFromTeam([FromBody] FullTeamRosterRequest teamReq)
+        public async Task<ActionResult<IEnumerable<Player>>> getPlayersFromTeam([FromQuery] FullTeamRosterRequest teamReq)
         {
             //See all teams the current user has.
             var dtrScore = 0;
